@@ -128,19 +128,19 @@
 								}
 							?>
 							<li <?php if (($page_url == "medicos.php") || ($page_url == "perfil_medico.php")) { echo 'class="active"'; } ?>>
-								<a href="medicos.php"><i class="fa fa-medkit"></i>Médicos</a>
+								<a href="medicos.php"><i class="fa fa-user-md"></i>Médicos</a>
 							</li>
 							<li <?php if (($page_url == "medicos.php") || ($page_url == "perfil_medico.php")) { echo 'class="active"'; } ?>>
-								<a href="planes.php"><i class="fa fa-medkit"></i>Planes</a>
+								<a href="planes.php"><i class="fa fa-bars"></i>Planes</a>
 							</li>
 							<li <?php if (($page_url == "medicos.php") || ($page_url == "perfil_medico.php")) { echo 'class="active"'; } ?>>
-								<a href="categorias.php"><i class="fa fa-medkit"></i>Categorias</a>
+								<a href="categorias.php"><i class="fa fa-newspaper-o"></i>Categorias</a>
 							</li>
 							<li <?php if (($page_url == "medicos.php") || ($page_url == "perfil_medico.php")) { echo 'class="active"'; } ?>>
-								<a href="subcategorias.php"><i class="fa fa-medkit"></i>SubCategorias</a>
+								<a href="subcategorias.php"><i class="fa fa-newspaper-o"></i>SubCategorias</a>
 							</li>
 							<li <?php if (($page_url == "medicos.php") || ($page_url == "perfil_medico.php")) { echo 'class="active"'; } ?>>
-								<a href="clientes.php"><i class="fa fa-medkit"></i>Clientes</a>
+								<a href="clientes.php"><i class="fa fa-user"></i>Clientes</a>
 							</li>
 						</ul>
 					</div>

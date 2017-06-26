@@ -47,7 +47,10 @@
 					$plans->setName(GetSQLValueString($_POST["txtName"], "text"));
 					$plans->setCharacteristic(GetSQLValueString($_POST["txtCharacteristic"], "text"));
 					$plans->setPrice(GetSQLValueString($_POST["txtPrice"], "text"));
-					echo json_encode($plans->CreatePlan());
+					$test = json_encode($plans->UpdatePlan());
+					if($test == 'exito')
+						echo $test;
+					else echo "No";
                     exit();
 				}
 			break;

@@ -57,7 +57,7 @@ include_once('Connection.php');
 		{
 			return $this->Name;
 		}
-		
+
 		public function getEmail()
 		{
 			return $this->Email;
@@ -87,14 +87,14 @@ include_once('Connection.php');
 		{
 			try
 			{
-				$sql = "INSERT INTO Users 
+				$sql = "INSERT INTO Users
 										(Name
 										, Email
 										, Password
 										, Phone
 										, Description
-										, Permissions) 
-										VALUES 
+										, Permissions)
+										VALUES
 										($this->Name
 										, $this->Email
 										, '$this->Password'
@@ -106,7 +106,7 @@ include_once('Connection.php');
 				$result = $this->sentence($sql);
 
 				if($result->rowCount() > 0)
-				{	
+				{
 					return "exito";
 				}
 				else
@@ -131,12 +131,12 @@ include_once('Connection.php');
 				if($res->rowCount() > 0)
 				{
 					$fetchResult = $res->fetch(PDO::FETCH_ASSOC);
-					
+
 					$this->setName($fetchResult["Name"]);
 					$this->setUserId($fetchResult["UserId"]);
 
 					return true;
-					
+
 				}
 				else
 				{
@@ -159,7 +159,7 @@ include_once('Connection.php');
 				$result = $this->sentence($sql);
 
 				if($result->rowCount() > 0)
-				{	
+				{
 					$fetchResults = $result->fetch(PDO::FETCH_ASSOC);
 					return $fetchResults;
 				}
@@ -181,7 +181,7 @@ include_once('Connection.php');
 				$result = $this->sentence($sql);
 
 				if($result->rowCount() > 0)
-				{	
+				{
 					$fetchResult = $result->fetch(PDO::FETCH_ASSOC);
 					return $fetchResult["Password"];
 				}
@@ -206,7 +206,7 @@ include_once('Connection.php');
 				$result = $this->sentence($sql);
 
 				if($result->rowCount() > 0)
-				{	
+				{
 					$fetchResult = $result->fetch(PDO::FETCH_ASSOC);
 					return $fetchResult["UserId"];
 				}
@@ -236,7 +236,7 @@ include_once('Connection.php');
 				return $result;
 			}
 			catch(Exception $e)
-			{ 
+			{
 				echo $e;
 			}
 		}
@@ -256,13 +256,14 @@ include_once('Connection.php');
 				$result = $this->sentence("SET CHARACTER SET utf8");
 				$result = $this->sentence($sql);
 
-				if($result->rowCount() > 0)
+				$query = $result->rowCount() ? true : false;
+				if($query)
 				{
 					return "exito";
 				}
 				else
 				{
-					return "error";
+					return "fallo";
 				}
 			}
 
@@ -284,7 +285,7 @@ include_once('Connection.php');
 				$result = $this->sentence($sql);
 
 				if($result->rowCount() > 0)
-				{	
+				{
 					return "exito";
 				}
 				else
@@ -310,7 +311,7 @@ include_once('Connection.php');
 				$result = $this->sentence($sql);
 
 				if($result->rowCount() > 0)
-				{	
+				{
 					return "exito";
 				}
 				else

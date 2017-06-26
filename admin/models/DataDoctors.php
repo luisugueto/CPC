@@ -24,7 +24,7 @@ include_once('Connection.php');
 		{
 			$this->Description = $value;
 		}
-		
+
 		public function setPlanId($value)
 		{
 			$this->PlanId = $value;
@@ -178,7 +178,8 @@ include_once('Connection.php');
 				$result = $this->sentence("SET CHARACTER SET utf8");
 				$result = $this->sentence($sql);
 
-				if(mysql_errno() == 0)
+				$query = $result->rowCount() ? true : false;
+				if($query)
 				{
 					return "exito";
 				}

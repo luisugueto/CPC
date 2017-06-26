@@ -347,7 +347,8 @@
 				$result = $this->sentence("SET CHARACTER SET utf8");
 				$result = $this->sentence($sql);
 
-				if(mysql_errno() == 0)
+				$query = $result->rowCount() ? true : false;
+				if($query)
 				{
 					return "exito";
 				}

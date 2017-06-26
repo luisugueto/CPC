@@ -153,7 +153,7 @@
 		{
 			try
 			{
-				$sql = "INSERT INTO Clients 
+				$sql = "INSERT INTO Clients
 										(BusinessName
 										, Identification
 										, Name
@@ -165,8 +165,8 @@
 										, Address2
 										, Country
 										, Discount
-										, Calification) 
-										VALUES 
+										, Calification)
+										VALUES
 										( $this->BusinessName
 										, $this->Identification
 										, $this->Name
@@ -184,7 +184,7 @@
 				$result = $this->sentence($sql);
 
 				if($result->rowCount() > 0)
-				{	
+				{
 					return "exito";
 				}
 				else
@@ -210,7 +210,7 @@
 				$result = $this->sentence($sql);
 
 				if($result->rowCount() > 0)
-				{	
+				{
 					$fetchResults = $result->fetch(PDO::FETCH_ASSOC);
 					return $fetchResults;
 				}
@@ -239,7 +239,7 @@
 					return $result;
 				}
 				catch(Exception $e)
-				{ 
+				{
 					echo $e;
 				}
 			}
@@ -257,7 +257,7 @@
 					return $result;
 				}
 				catch(Exception $e)
-				{ 
+				{
 					echo $e;
 				}
 			}
@@ -284,13 +284,14 @@
 				$result = $this->sentence("SET CHARACTER SET utf8");
 				$result = $this->sentence($sql);
 
-				if($result->rowCount() > 0)
+				$query = $result->rowCount() ? true : false;
+				if($query)
 				{
 					return "exito";
 				}
 				else
 				{
-					return "error";
+					return "fallo";
 				}
 			}
 

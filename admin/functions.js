@@ -1,16 +1,16 @@
 function deleteItem(content,id,name){
 	var message = 'Estas seguro que deseas eliminar el registro:<br/><strong>"'+name+'"</strong>';
 
-	swal({   
+	swal({
 		html:true,
-		title: '¿Deseas eliminar?',   
-		text: message,   
-		type: "warning",   
+		title: '¿Deseas eliminar?',
+		text: message,
+		type: "warning",
 		showCancelButton: true,
-		confirmButtonColor: "#DD6B55",   
+		confirmButtonColor: "#DD6B55",
 		confirmButtonText: "Eliminar",
-		closeOnConfirm: false 
-	}, function(){   
+		closeOnConfirm: false
+	}, function(){
 		$('#fullscreenloading').show();
 		var file = 'ajax_'+content+'.php';
 		var thisAction = "delete";
@@ -24,24 +24,24 @@ function deleteItem(content,id,name){
 			$('#fullscreenloading').hide();
 			if(returned == 'success'){
 				$('table tr#'+id).remove();
-				swal({   
+				swal({
 					html:true,
-					title: 'Eliminado!',   
-					text: 'El registro <br/><strong>"'+name+'"</strong><br/> ha sido eliminado correctamente.',   
+					title: 'Eliminado!',
+					text: 'El registro <br/><strong>"'+name+'"</strong><br/> ha sido eliminado correctamente.',
 					type: 'success',
-					confirmButtonColor: "#DD6B55",   
+					confirmButtonColor: "#DD6B55",
 					confirmButtonText: "Cerrar",
-					closeOnConfirm: false 
+					closeOnConfirm: false
 				});
 			}else{
-				swal({   
+				swal({
 					html:true,
-					title: "Error",   
-					text: "Ha ocurrido un error al guardar en la base de datos:<br/>"+returned,   
+					title: "Error",
+					text: "Ha ocurrido un error al guardar en la base de datos:<br/>"+returned,
 					type: "error",
-					confirmButtonColor: "#DD6B55",   
+					confirmButtonColor: "#DD6B55",
 					confirmButtonText: "Cerrar",
-					closeOnConfirm: false 
+					closeOnConfirm: false
 				});
 			}
 		}, "json");
@@ -58,13 +58,13 @@ function UpdateArticleStatus(art, stat) {
 		success: function (data) {
 			swal({
 				html:true,
-				title: 'Guardado!',   
-				text: 'El status del artículo ha sido modificado correctamente.',   
+				title: 'Guardado!',
+				text: 'El status del artículo ha sido modificado correctamente.',
 				type: 'success',
-				confirmButtonColor: "#DD6B55",   
+				confirmButtonColor: "#DD6B55",
 				confirmButtonText: "Cerrar",
-				closeOnConfirm: false 
-			}, function(){   
+				closeOnConfirm: false
+			}, function(){
 				$('.sweet-alert').hide();
 				$('.sweet-overlay').hide();
 				$('#fullscreenloading').show();
@@ -81,14 +81,14 @@ function UpdateArticleStatus(art, stat) {
 
 /*MODAL CALL*/
 function modalCall(content,action,id,args){
-	if (typeof args == 'undefined') { 
+	if (typeof args == 'undefined') {
 		args = '';
 	}
 	var file = 'ajax_'+content+'.php';
 	$('#modal-001').html('Cargando');
 	$("#modal-001").modal('toggle')
 	$('#modal-001').modal('show');
-		
+
 	$.post(file, {action:action,id:id,args:args}, function( returned ) {
 		$('#modal-001').html( returned );
 	});
@@ -121,14 +121,14 @@ function submitModalForm(content) {
 				if(data == "exito"){
 					$('#modal-001').modal('hide');
 					$('#fullscreenloading').hide();
-					swal({   
-						title: "Guardado",   
-						text: "Tus cambios han sido guardados correctamente.",   
+					swal({
+						title: "Guardado",
+						text: "Tus cambios han sido guardados correctamente.",
 						type: "success",
-						confirmButtonColor: "#DD6B55",   
+						confirmButtonColor: "#DD6B55",
 						confirmButtonText: "Cerrar",
-						closeOnConfirm: false 
-					}, function(){   
+						closeOnConfirm: false
+					}, function(){
 						$('.sweet-alert').hide();
 						$('.sweet-overlay').hide();
 						$('#fullscreenloading').show();
@@ -137,14 +137,14 @@ function submitModalForm(content) {
 				}else{
 					$('#modal-001').modal('hide');
 					$('#fullscreenloading').hide();
-					swal({   
+					swal({
 						html:true,
-						title: "Error",   
-						text: "Ha ocurrido un error al guardar en la base de datos:<br/>"+data,   
+						title: "Error",
+						text: "Ha ocurrido un error al guardar en la base de datos:<br/>"+data,
 						type: "error",
-						confirmButtonColor: "#DD6B55",   
+						confirmButtonColor: "#DD6B55",
 						confirmButtonText: "Cerrar",
-						closeOnConfirm: false 
+						closeOnConfirm: false
 					});
 				}
 			},
@@ -178,14 +178,14 @@ function submitPageForm(content){
 				$('#fullscreenloading').hide();
 				if(data == 'exito'){
 					$('#fullscreenloading').hide();
-					swal({   
-						title: "Guardado",   
-						text: "Tus cambios han sido guardados correctamente.",   
+					swal({
+						title: "Guardado",
+						text: "Tus cambios han sido guardados correctamente.",
 						type: "success",
-						confirmButtonColor: "#DD6B55",   
+						confirmButtonColor: "#DD6B55",
 						confirmButtonText: "Cerrar",
-						closeOnConfirm: false 
-					}, function(){   
+						closeOnConfirm: false
+					}, function(){
 						$('.sweet-alert').hide();
 						$('.sweet-overlay').hide();
 						$('#fullscreenloading').show();
@@ -193,14 +193,14 @@ function submitPageForm(content){
 					});
 				}else{
 					$('#fullscreenloading').hide();
-					swal({   
+					swal({
 						html:true,
-						title: "Error",   
-						text: "Ha ocurrido un error al guardar en la base de datos:<br/>"+data,   
+						title: "Error",
+						text: "Ha ocurrido un error al guardar en la base de datos:<br/>"+data,
 						type: "error",
-						confirmButtonColor: "#DD6B55",   
+						confirmButtonColor: "#DD6B55",
 						confirmButtonText: "Cerrar",
-						closeOnConfirm: false 
+						closeOnConfirm: false
 					});
 				}
 			},

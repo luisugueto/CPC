@@ -22,7 +22,7 @@ include_once('Connection.php');
 		{
 			return $this->CategoryId;
 		}
-		
+
 		public function getName()
 		{
 			return $this->Name;
@@ -31,16 +31,16 @@ include_once('Connection.php');
 		{
 			try
 			{
-				$sql = "INSERT INTO ArticlesCategories 
-										(Name) 
-										VALUES 
+				$sql = "INSERT INTO ArticlesCategories
+										(Name)
+										VALUES
 										($this->Name)";
 
 				$result = $this->sentence("SET CHARACTER SET utf8");
 				$result = $this->sentence($sql);
 
 				if($result->rowCount() > 0)
-				{	
+				{
 					return "exito";
 				}
 				else
@@ -66,7 +66,7 @@ include_once('Connection.php');
 				$result = $this->sentence($sql);
 
 				if($result->rowCount() > 0)
-				{	
+				{
 					$fetchResult = $result->fetch(PDO::FETCH_ASSOC);
 					return $fetchResult;
 				}
@@ -88,7 +88,7 @@ include_once('Connection.php');
 				$result = $this->sentence($sql);
 
 				if($result->rowCount() > 0)
-				{	
+				{
 					$fetchResult = $result->fetch(PDO::FETCH_ASSOC);
 					return $fetchResult["Name"];
 				}
@@ -129,7 +129,7 @@ include_once('Connection.php');
 				return $result;
 			}
 			catch(Exception $e)
-			{ 
+			{
 				echo $e;
 			}
 		}
@@ -144,7 +144,8 @@ include_once('Connection.php');
 				$result = $this->sentence("SET CHARACTER SET utf8");
 				$result = $this->sentence($sql);
 
-				if(mysql_errno() == 0)
+				$query = $result->rowCount() ? true : false;
+				if($query)
 				{
 					return "exito";
 				}
