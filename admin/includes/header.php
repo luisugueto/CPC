@@ -117,16 +117,31 @@
 								if (in_array("per_clientes_ver", $permisos_usuario))
 								{
 							?>
-									<li data-toggle="dropdown" aria-expanded="true" <?php if ($page_url == "articulos.php" || $page_url = "categorias_blog.php") { echo 'class="active"'; } ?>><a href="javascript:void(0)"><i class="fa fa-newspaper-o"></i>Blog</a></li>
-										<ul class="dropdown-menu">
-											<li><a href="articulos.php">Artículos</a></li>
-											<li><a href="categorias_blog.php">Categorías</a></li>
-										</ul>
+									<li data-toggle="dropdown" aria-expanded="true" <?php if ($page_url == "articulos.php" || $page_url = "categorias_blog.php") { echo 'class="active"'; } ?>><a href="javascript:void(0)"><i class="fa fa-newspaper-o"></i>Blog</a>
 									</li>
+									<ul class="dropdown-menu">
+										<li><a href="articulos.php">Artículos</a></li>
+										<li><a href="categorias_blog.php">Categorías</a></li>
+									</ul>
+
 							<?php
 								}
 							?>
-							<li <?php if (($page_url == "medicos.php") || ($page_url == "perfil_medico.php")) { echo 'class="active"'; } ?>><a href="medicos.php"><i class="fa fa-medkit"></i>Médicos</a></li>
+							<li <?php if (($page_url == "medicos.php") || ($page_url == "perfil_medico.php")) { echo 'class="active"'; } ?>>
+								<a href="medicos.php"><i class="fa fa-medkit"></i>Médicos</a>
+							</li>
+							<li <?php if (($page_url == "medicos.php") || ($page_url == "perfil_medico.php")) { echo 'class="active"'; } ?>>
+								<a href="planes.php"><i class="fa fa-medkit"></i>Planes</a>
+							</li>
+							<li <?php if (($page_url == "medicos.php") || ($page_url == "perfil_medico.php")) { echo 'class="active"'; } ?>>
+								<a href="categorias.php"><i class="fa fa-medkit"></i>Categorias</a>
+							</li>
+							<li <?php if (($page_url == "medicos.php") || ($page_url == "perfil_medico.php")) { echo 'class="active"'; } ?>>
+								<a href="subcategorias.php"><i class="fa fa-medkit"></i>SubCategorias</a>
+							</li>
+							<li <?php if (($page_url == "medicos.php") || ($page_url == "perfil_medico.php")) { echo 'class="active"'; } ?>>
+								<a href="clientes.php"><i class="fa fa-medkit"></i>Clientes</a>
+							</li>
 						</ul>
 					</div>
 				</div>
