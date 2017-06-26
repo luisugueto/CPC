@@ -109,7 +109,7 @@
                             <option value="" disabled>Seleccione</option>
                             <?php
                               while ($Category = $categoriesList->fetch(PDO::FETCH_ASSOC))
-                              {
+															{
                             ?>
                                   <option value="<?= $Category['CategoryId'] ?>"><?= $Category['Name'] ?></td>
                             <?php

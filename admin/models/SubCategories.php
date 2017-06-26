@@ -180,7 +180,7 @@ include_once('Connection.php');
 				$result = $this->sentence("SET CHARACTER SET utf8");
 				$result = $this->sentence("SELECT
 											SubCategoryId
-											, Name
+											, Name, CategoryId
 											FROM subcategories
 											ORDER BY Name ASC
 										");

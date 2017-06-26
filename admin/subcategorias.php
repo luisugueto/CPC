@@ -2,9 +2,12 @@
 	include("includes/header.php");
 
 	require_once("models/SubCategories.php");
+	require_once("models/Categories.php");
 
 	$subCategories = new SubCategories();
 	$subcategoriesList = $subCategories->ListSubCategories();
+
+	$categories = new Categories();
 
 	$args = array();
 	if(isset($_GET['id']) && $_GET['id'] != "")
@@ -44,7 +47,8 @@
 										<thead>
 											<tr>
 												<th scope="col" data-tablesaw-sortable-col data-tablesaw-sortable-default-col data-tablesaw-priority="persist">Id</th>
-												<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">Nombre</th>
+												<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="3">Nombre</th>
+												<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">Categoría</th>
 												<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="1">Acciones</th>
 											</tr>
 										</thead>
@@ -59,6 +63,7 @@
 													<tr id="<?= $id ?>">
 														<td><?= $id ?></td>
 														<td><?= $Category['Name'] ?></td>
+														<td><?= $categories->GetCategoryName($Category['CategoryId']); ?></td>
 														<td>
 															<a href="javascript:void(0)" onclick="modalCall('subcategorias','form','<?= $id;?>')" class="btn btn-inverse btn-custom waves-effect waves-light btn-xs"><i class="fa fa-pencil"></i></a>
 															<a href="javascript:void(0)" onclick="deleteItem('<?= $content ?>','<?= $id ?>','<?= $name ?>')" class="btn btn-danger btn-custom waves-effect waves-light btn-xs"><i class="fa fa-remove"></i></a>
