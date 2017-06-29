@@ -1,15 +1,20 @@
 <?php
 	include("includes/header.php");
 
-	require_once("models/Articles.php");
+	require_once("models/Doctors.php");
+	require_once("models/DataDoctors.php");
+	require_once("models/Plans.php");
+	require_once("models/ProceduresDoctor.php");
 
-	$articles = new Articles();
-	$articlesList = $articles->ListArticles();
+	$doctor = new Doctors();
+	$doctorList = $doctor->ListDoctors();
+
+	$plan = new Plans();
 
 	$args = array();
 	if(isset($_GET['id']) && $_GET['id'] != "")
 	{
-		$args['ArticleId'] = $_GET['id'];
+		$args['DoctorId'] = $_GET['id'];
 	}
 ?>
 		<div class="wrapper">
@@ -43,45 +48,30 @@
 									<table class="tablesaw table m-b-0" data-tablesaw-mode="swipe" data-tablesaw-sortable data-tablesaw-sortable-switch>
 										<thead>
 											<tr>
-												<th scope="col" data-tablesaw-sortable-col data-tablesaw-sortable-default-col data-tablesaw-priority="persist">Foto</th>
-												<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">Título</th>
-												<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">Categorías</th>
-												<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">Estado</th>
+												<th scope="col" data-tablesaw-sortable-col data-tablesaw-sortable-default-col data-tablesaw-priority="persist">Id</th>
+												<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">Nombre</th>
+												<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">SubTítulo</th>
+												<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">Descripción</th>
+												<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">Plan</th>
 												<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="1">Acciones</th>
 											</tr>
 										</thead>
 										<tbody>
 											<?php
-												while ($article = $articlesList->fetch(PDO::FETCH_ASSOC))
+												while ($Doctor = $doctorList->fetch(PDO::FETCH_ASSOC))
 												{
-													$content = 'articulos';
-													$id = $article["ArticleId"];
-													$name = '<strong>Artículo No.'.$id.'</strong> ('.$article['Title'].')';
+													$content = 'medicos';
+													$id = $Doctor["DoctorId"];
+													$name = '<strong>Médico No.'.$id.'</strong> ('.$Doctor['Name'].')';
 											?>
 													<tr id="<?= $id ?>">
-														<td><img src="../images/blog/<?= $article['Photo'] ?>" width="100"></td>
-														<td><?= $article['Title'] ?></td>
-														<td><?= $article['Categories'] ?></td>
-
+														<td><?= $id ?></td>
+														<td><?= $Doctor['Name'] ?></td>
+														<td><?= $Doctor['SubTitle'] ?></td>
+														<td><?= $Doctor['Description'] ?></td>
+														<td><?= $plan->GetPlanName($Doctor['PlanId']) ?></td>
 														<td>
-															<?php
-																if ($article['StatusId'] == "1")
-																{
-															?>
-																	<a href="javascript:void(0)" onclick="UpdateArticleStatus('<?= $id ?>', 2)" style="color:#4CAF50"><i class="fa fa-circle" aria-hidden="true"></i></a>
-															<?php
-																}
-																else
-																{
-															?>
-																	<a href="javascript:void(0)" onclick="UpdateArticleStatus('<?= $id ?>', 1)" style="color:#999"><i class="fa fa-circle" aria-hidden="true"></i></a>
-															<?php
-																}
-															?>
-														</td>
-
-														<td>
-															<a href="javascript:void(0)" onclick="modalCall('<?= $content ?>','form','<?= $id;?>')" class="btn btn-inverse btn-custom waves-effect waves-light btn-xs"><i class="fa fa-pencil"></i></a>
+															<a href="javascript:void(0)" onclick="modalCall('<?= $content ?>','edit','<?= $id;?>')" class="btn btn-inverse btn-custom waves-effect waves-light btn-xs"><i class="fa fa-pencil"></i></a>
 															<a href="javascript:void(0)" onclick="deleteItem('<?= $content ?>','<?= $id ?>','<?= $name ?>')" class="btn btn-danger btn-custom waves-effect waves-light btn-xs"><i class="fa fa-remove"></i></a>
 														</td>
 													</tr>

@@ -137,6 +137,28 @@ include_once('Connection.php');
 			}
 		}
 
+		public function GetCategoryContent($id)
+		{
+			try
+			{
+				$sql = "SELECT * FROM subcategories WHERE CategoryId = $id";
+
+				$result = $this->sentence("SET CHARACTER SET utf8");
+				$result = $this->sentence($sql);
+				
+				if($result->rowCount() > 0)
+				{
+					$fetchResult = $result->fetchAll();
+					return $fetchResult;
+				}
+			}
+			catch(Exception $e)
+			{
+				echo $e;
+				return false;
+			}
+		}
+
 		public function GetArticleCategoryName($catId)
 		{
 			try

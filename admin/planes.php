@@ -45,6 +45,8 @@
 											<tr>
 												<th scope="col" data-tablesaw-sortable-col data-tablesaw-sortable-default-col data-tablesaw-priority="persist">Id</th>
 												<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">Nombre</th>
+												<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">Precio</th>
+												<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">Característica</th>
 												<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="1">Acciones</th>
 											</tr>
 										</thead>
@@ -54,13 +56,15 @@
 												{
 													$content = 'planes';
 													$id = $Plan["PlanId"];
-													$name = '<strong>Plan No.'.$id.'</strong> ('.$Plan['Name'].')';	
+													$name = '<strong>Plan No.'.$id.'</strong> ('.$Plan['Name'].')';
 											?>
 													<tr id="<?= $id ?>">
 														<td><?= $id ?></td>
 														<td><?= $Plan['Name'] ?></td>
+														<td><?= $Plan['Price'] ?></td>
+														<td><?= $Plan['Characteristic'] ?></td>
 														<td>
-															<a href="javascript:void(0)" onclick="modalCall('planes','form','<?= $id;?>')" class="btn btn-inverse btn-custom waves-effect waves-light btn-xs"><i class="fa fa-pencil"></i></a>
+															<a href="javascript:void(0)" onclick="modalCall('<?= $content ?>','form','<?= $id;?>')" class="btn btn-inverse btn-custom waves-effect waves-light btn-xs"><i class="fa fa-pencil"></i></a>
 															<a href="javascript:void(0)" onclick="deleteItem('<?= $content ?>','<?= $id ?>','<?= $name ?>')" class="btn btn-danger btn-custom waves-effect waves-light btn-xs"><i class="fa fa-remove"></i></a>
 														</td>
 													</tr>
@@ -84,13 +88,13 @@
 	{
 		echo '<script type="text/javascript">swal({
 				html:true,
-				title: "Atención!",   
+				title: "Atención!",
 				text: "La URL a la que intenta ingresar, es restringida<br/>",
 				type: "error",
-				confirmButtonColor: "#DD6B55",   
+				confirmButtonColor: "#DD6B55",
 				confirmButtonText: "Cerrar",
-				closeOnConfirm: false 
-			}, function(){   
+				closeOnConfirm: false
+			}, function(){
 				$(".sweet-alert").hide();
 				$(".sweet-overlay").hide();
 				$("#fullscreenloading").show();

@@ -1,63 +1,56 @@
 <?php
 include_once('Connection.php');
 
-	Class Plans extends Connection
+	Class GalleryDoctors extends Connection
 	{
-			private $PlanId;
-			private $Name;
-	    private $Price;
-	    private $Characteristic;
+			private $GalleryDoctorId;
+			private $DoctorId;
+	    private $Location;
 
 		//SET
-		public function setPlanId($value)
+		public function setGalleryDoctorId($value)
 		{
-			$this->PlanId = $value;
+			$this->GalleryDoctorId = $value;
 		}
 
-		public function setName($value)
+		public function setDoctorId($value)
 		{
-			$this->Name = $value;
+			$this->DoctorId = $value;
 		}
 
-		public function setPrice($value)
+		public function setLocation($value)
 		{
-			$this->Price = $value;
-		}
-
-		public function setCharacteristic($value)
-		{
-			$this->Characteristic = $value;
+			$this->Location = $value;
 		}
 
 		//GET
-		public function getPlanId()
+		public function getGalleryDoctorId()
 		{
-			return $this->PlanId;
+			return $this->GalleryDoctorId;
 		}
 
-		public function getName()
+		public function getDoctorId()
 		{
-			return $this->Name;
+			return $this->DoctorId;
 		}
 
-		public function getPrice()
+		public function getLocation()
 		{
-			return $this->Price;
+			return $this->Location;
 		}
 
 		public function getCharacteristic()
 		{
 			return $this->Characteristic;
-		}
 
-		public function CreatePlan()
+		public function CreateGallery()
 		{
 			try
 			{
-				$sql = "INSERT INTO Plans
-										(Name, Price, Characteristic)
+				$sql = "INSERT INTO GalleryDoctors
+										(DoctorId, Location)
 										VALUES
-										($this->Name, $this->Price, $this->Characteristic)";
+										($this->DoctorId, $this->Location)";
 
 				$result = $this->sentence("SET CHARACTER SET utf8");
 				$result = $this->sentence($sql);
@@ -79,11 +72,11 @@ include_once('Connection.php');
 			}
 		}
 
-		public function GetPlanContent()
+		public function GetGalleryContent()
 		{
 			try
 			{
-				$sql = "SELECT PlanId, Name, Price, Characteristic FROM Plans WHERE PlanId = $this->PlanId";
+				$sql = "SELECT GalleryDoctorId, DoctorId, Location FROM GalleryDoctors WHERE GalleryDoctorId = $this->GalleryDoctorId";
 
 				$result = $this->sentence("SET CHARACTER SET utf8");
 				$result = $this->sentence($sql);
@@ -101,11 +94,11 @@ include_once('Connection.php');
 			}
 		}
 
-		public function GetPlanName($catId)
+		public function GetGalleryId($catId)
 		{
 			try
 			{
-				$sql = "SELECT Name FROM Plans WHERE PlanId = $catId";
+				$sql = "SELECT GalleryDoctors FROM Plans WHERE GalleryDoctorId = $catId";
 
 				$result = $this->sentence("SET CHARACTER SET utf8");
 				$result = $this->sentence($sql);
@@ -113,7 +106,7 @@ include_once('Connection.php');
 				if($result->rowCount() > 0)
 				{
 					$fetchResult = $result->fetch(PDO::FETCH_ASSOC);
-					return $fetchResult["Name"];
+					return $fetchResult["DoctorId"];
 				}
 			}
 			catch(Exception $e)
@@ -123,12 +116,12 @@ include_once('Connection.php');
 			}
 		}
 
-		public function GetAllPlans()
+		public function GetAllGallery()
 		{
 			try
 			{
 				$res = $this->sentence("SET CHARACTER SET utf8");
-				$res = $this->sentence("SELECT * FROM Plans");
+				$res = $this->sentence("SELECT * FROM GalleryDoctors");
 				return $res;
 			}
 			catch(Exception $e)
@@ -137,16 +130,16 @@ include_once('Connection.php');
 			}
 		}
 
-		public function ListPlans()
+		public function ListGallery()
 		{
 			try
 			{
 				$result = $this->sentence("SET CHARACTER SET utf8");
 				$result = $this->sentence("SELECT
-											PlanId
-											, Name, Price, Characteristic
-											FROM Plans
-											ORDER BY Name ASC
+											GalleryDoctorId
+											, DoctorId, Location
+											FROM GalleryDoctors
+											ORDER BY GalleryDoctorId ASC
 										");
 
 				return $result;
@@ -157,12 +150,12 @@ include_once('Connection.php');
 			}
 		}
 
-		public function UpdatePlan()
+		public function UpdateGallery()
 		{
 			try
 			{
-				$sql = "UPDATE plans SET Name = $this->Name, Price = $this->Price, Characteristic = $this->Characteristic
-										WHERE PlanId = $this->PlanId";
+				$sql = "UPDATE GalleryDoctors SET DoctorId = $this->DoctorId, Location = $this->Location
+										WHERE GalleryDoctorId = $this->GalleryDoctorId";
 
 				$result = $this->sentence("SET CHARACTER SET utf8");
 				$result = $this->sentence($sql);
@@ -185,11 +178,11 @@ include_once('Connection.php');
 			}
 		}
 
-		public function DeletePlan()
+		public function DeleteGallery()
 		{
 			try
 			{
-				$result = $this->sentence("DELETE FROM Plans WHERE PlanId = $this->PlanId");
+				$result = $this->sentence("DELETE FROM GalleryDoctors WHERE GalleryDoctorId = $this->GalleryDoctorId");
 
 				if($result->rowCount() > 0)
 				{

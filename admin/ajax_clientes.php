@@ -83,6 +83,14 @@
 					$registro = $clients->GetClientContent();
 				}
 			break;
+			case 'delete':
+				if($id != '0')
+				{
+					$plans->setClientId($id);
+					echo json_encode($plans->DeleteClient());
+                    exit();
+				}
+			break;
 		}
 	}
 
@@ -231,7 +239,7 @@
                   <ul class="social-links list-inline m-0">
                     <li><button class="btn btn-white waves-effect waves-light"> <i class="fa fa-percent m-r-5"></i> <span><?php echo $registro['Discount'];?></span> </button></li>
                     <li><button class="btn btn-white waves-effect waves-light">
-                    	<?php 
+                    	<?php
 							$emptyStars = 5-$registro['Calification'];
 							for ($i = 1; $i <= $registro['Calification']; $i++) {
 								echo '<i class="fa fa-star m-r-5"></i>';

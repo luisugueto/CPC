@@ -3,10 +3,11 @@ include_once('Connection.php');
 
 	Class Doctors extends Connection
 	{
-		private $DoctorId;
-		private $Name;
+			private $DoctorId;
+			private $Name;
 	    private $SubTitle;
 	    private $Description;
+			private $PlanId;
 	    private $CodeQR;
 
 		//SET
@@ -28,6 +29,11 @@ include_once('Connection.php');
 		public function setDescription($value)
 		{
 			$this->Description = $value;
+		}
+
+		public function setPlanId($value)
+		{
+			$this->PlanId = $value;
 		}
 
 		public function setCodeQR($value)
@@ -56,6 +62,11 @@ include_once('Connection.php');
 			return $this->Description;
 		}
 
+		public function getPlanId()
+		{
+			return $this->PlanId;
+		}
+
 		public function getCodeQR()
 		{
 			return $this->CodeQR;
@@ -66,9 +77,9 @@ include_once('Connection.php');
 			try
 			{
 				$sql = "INSERT INTO Doctors
-										(Name, Subtitle, Description, CodeQR)
+										(Name, Subtitle, Description, PlanId)
 										VALUES
-										($this->Name, $this->SubTitle, $this->Description, $this->CodeQR)";
+										($this->Name, $this->SubTitle, $this->Description, $this->PlanId)";
 
 				$result = $this->sentence("SET CHARACTER SET utf8");
 				$result = $this->sentence($sql);
@@ -155,7 +166,7 @@ include_once('Connection.php');
 				$result = $this->sentence("SET CHARACTER SET utf8");
 				$result = $this->sentence("SELECT
 											DoctorId
-											, Name
+											, Name, SubTitle, Description, PlanId
 											FROM Doctors
 											ORDER BY Name ASC
 										");
@@ -172,7 +183,7 @@ include_once('Connection.php');
 		{
 			try
 			{
-				$sql = "UPDATE Doctors SET Name = $this->Name
+				$sql = "UPDATE Doctors SET Name = $this->Name, SubTitle = $this->SubTitle, Description = $this->Description, PlanId = $this->PlanId
 										WHERE DoctorId = $this->DoctorId";
 
 				$result = $this->sentence("SET CHARACTER SET utf8");
@@ -216,6 +227,29 @@ include_once('Connection.php');
 			{
 				echo $e;
 			}
+		}
+
+		public function lastDoctorId()
+		{
+			try
+			{
+				$sql = "SELECT DoctorId FROM Doctors ORDER BY DoctorId DESC LIMIT 1";
+
+				$result = $this->sentence("SET CHARACTER SET utf8");
+				$result = $this->sentence($sql);
+
+				if($result->rowCount() > 0)
+				{
+					$fetchResult = $result->fetch(PDO::FETCH_ASSOC);
+					return $fetchResult["DoctorId"];
+				}
+			}
+			catch(Exception $e)
+			{
+				echo $e;
+				return false;
+			}
+
 		}
 
 	}

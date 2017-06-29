@@ -79,25 +79,21 @@ include_once('Connection.php');
 			}
 		}
 
-		public function GetProceduresDoctorContent()
+		public function GetProceduresDoctorforDoctor($id)
 		{
 			try
 			{
-				$sql = "SELECT * FROM ProceduresDoctor WHERE ProceduresDoctorId = $this->ProceduresDoctorId";
-
 				$result = $this->sentence("SET CHARACTER SET utf8");
-				$result = $this->sentence($sql);
+				$result = $this->sentence("SELECT
+											DoctorId
+											FROM ProceduresDoctor WHERE DoctorId = $id
+										");
 
-				if($result->rowCount() > 0)
-				{
-					$fetchResult = $result->fetch(PDO::FETCH_ASSOC);
-					return $fetchResult;
-				}
+				return $result;
 			}
 			catch(Exception $e)
 			{
 				echo $e;
-				return false;
 			}
 		}
 

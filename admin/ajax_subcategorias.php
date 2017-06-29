@@ -108,16 +108,18 @@
                           <select class="form-control" name="txtCategoria">
                             <option value="" disabled>Seleccione</option>
                             <?php
-                              while ($Category = $categoriesList->fetch(PDO::FETCH_ASSOC))
+															while ($Category = $categoriesList->fetch(PDO::FETCH_ASSOC))
 															{
-                            ?>
-                                  <option value="<?= $Category['CategoryId'] ?>"><?= $Category['Name'] ?></td>
-                            <?php
-                              }
-                            ?>
-
+																	if($Category['CategoryId'] == $registro['CategoryId']){
+														?>
+																	<option value="<?= $Category['CategoryId'] ?>" selected><?= $Category['Name'] ?></option></td>
+														<?php } else { ?>
+																	<option value="<?= $Category['CategoryId'] ?>"><?= $Category['Name'] ?></option></td>
+														<?php
+																	}
+															}
+														?>
                           </select>
-                            <!-- <input name="txtName" type="text" class="form-control" parsley-trigger="change" required placeholder="" value="<?php echo $registro['Name'];?>"/> -->
                         </div>
                     </div>
 

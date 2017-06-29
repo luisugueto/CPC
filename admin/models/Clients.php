@@ -302,6 +302,28 @@
 			}
 		}
 
+		public function DeleteClient()
+		{
+			try
+			{
+				$result = $this->sentence("DELETE FROM clients WHERE ClientId = $this->ClientId");
+
+				if($result->rowCount() > 0)
+				{
+					return "success";
+				}
+				else
+				{
+					return "fallo";
+				}
+			}
+
+			catch(Exception $e)
+			{
+				echo $e;
+			}
+		}
+
 	}
 
 ?>
