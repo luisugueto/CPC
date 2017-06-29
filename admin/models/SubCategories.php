@@ -145,7 +145,7 @@ include_once('Connection.php');
 
 				$result = $this->sentence("SET CHARACTER SET utf8");
 				$result = $this->sentence($sql);
-				
+
 				if($result->rowCount() > 0)
 				{
 					$fetchResult = $result->fetchAll();
@@ -159,7 +159,7 @@ include_once('Connection.php');
 			}
 		}
 
-		public function GetArticleCategoryName($catId)
+		public function GetSubCategoryName($catId)
 		{
 			try
 			{

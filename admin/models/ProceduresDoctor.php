@@ -85,7 +85,7 @@ include_once('Connection.php');
 			{
 				$result = $this->sentence("SET CHARACTER SET utf8");
 				$result = $this->sentence("SELECT
-											DoctorId
+											DoctorId, CategoryId, SubCategoryId
 											FROM ProceduresDoctor WHERE DoctorId = $id
 										");
 

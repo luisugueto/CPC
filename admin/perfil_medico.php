@@ -1,5 +1,10 @@
 <?php
 	include("includes/header.php");
+	require_once("models/Doctors.php");
+	$id = $_GET['id'];
+	$doctors = new Doctors();
+	$doctors->setDoctorId($id);
+	$content = $doctors->GetDoctorContent();
 ?>
 		<div class="wrapper">
 			<div class="container">
@@ -12,7 +17,7 @@
 								<a href="index.php">Inicio</a>
 							</li>
 							<li class="active">
-								Dr. John García
+								Dr.  <?= $content["Name"] ?>
 							</li>
 						</ol>
 					</div>
@@ -38,7 +43,7 @@
 								</div>
 
 								<div class="member-info">
-									<h4 class="m-t-0 m-b-5 header-title"><b>Dr John García</b></h4>
+									<h4 class="m-t-0 m-b-5 header-title"><b>Dr  <?= $content["Name"] ?></b></h4>
 									<p class="text-muted">Cali, Colombia</p>
 									<div class="m-t-20">
 
@@ -90,7 +95,7 @@
 						<div class="card-box">
 							<h4 class="m-t-0 m-b-20 header-title"><b>Descripción</b></h4>
 							<p>
-								Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+								 <?= $content["Description"] ?>
 							</p>
 
 							<?php

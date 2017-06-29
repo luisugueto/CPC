@@ -71,6 +71,7 @@
 														<td><?= $Doctor['Description'] ?></td>
 														<td><?= $plan->GetPlanName($Doctor['PlanId']) ?></td>
 														<td>
+															<a href="perfil_medico.php?id=<?= $Doctor['DoctorId']?>"class="btn btn-primary btn-custom waves-effect waves-light btn-xs"><i class="fa fa-eye"></i></a>
 															<a href="javascript:void(0)" onclick="modalCall('<?= $content ?>','edit','<?= $id;?>')" class="btn btn-inverse btn-custom waves-effect waves-light btn-xs"><i class="fa fa-pencil"></i></a>
 															<a href="javascript:void(0)" onclick="deleteItem('<?= $content ?>','<?= $id ?>','<?= $name ?>')" class="btn btn-danger btn-custom waves-effect waves-light btn-xs"><i class="fa fa-remove"></i></a>
 														</td>

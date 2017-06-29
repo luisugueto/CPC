@@ -3,15 +3,15 @@ include_once('Connection.php');
 
 	Class DataDoctors extends Connection
 	{
-			private $DataDoctorId;
-			private $DoctorId;
-			private $Name;
-	    private $Description;
+    	private $DataId;
+		private $DoctorId;
+		private $Name;
+    	private $Description;
 
 		//SET
-		public function setDataDoctorId($value)
+		public function setDataId($value)
 		{
-			$this->DataDoctorId = $value;
+			$this->DataId = $value;
 		}
 
 		public function setDoctorId($value)
@@ -24,18 +24,15 @@ include_once('Connection.php');
 			$this->Name = $value;
 		}
 
-
 		public function setDescription($value)
 		{
 			$this->Description = $value;
 		}
 
-
-
 		//GET
-		public function getDataDoctorId()
+		public function getDataId()
 		{
-			return $this->DataDoctorId;
+			return $this->DataId;
 		}
 
 		public function getDoctorId()
@@ -53,11 +50,11 @@ include_once('Connection.php');
 			return $this->Description;
 		}
 
-		public function CreateDataDoctor()
+		public function CreateData()
 		{
 			try
 			{
-				$result = $this->connection->prepare("INSERT INTO DataDoctors (DoctorId, Name, Description) VALUES (?, ?, ?)");
+				$result = $this->connection->prepare("INSERT INTO data (DoctorId, Name, Description) VALUES (?, ?, ?)");
 				$result->bindParam(1, $DoctorId);
 				$result->bindParam(2, $Name);
 				$result->bindParam(3, $Description);
@@ -80,30 +77,24 @@ include_once('Connection.php');
 			} catch(Exception $e){
 
 					echo $e->getMessage() ;
-					//send errors to system error reporting
-
 					}
 		}
 
-		public function GetDoctorContent()
+		public function GetDataforDoctor($id)
 		{
 			try
 			{
-				$sql = "SELECT * FROM Doctors WHERE DoctorId = $this->DoctorId";
-
 				$result = $this->sentence("SET CHARACTER SET utf8");
-				$result = $this->sentence($sql);
+				$result = $this->sentence("SELECT
+											DataDoctorId,DoctorId, Name, Description
+											FROM data WHERE DoctorId = $id
+										");
 
-				if($result->rowCount() > 0)
-				{
-					$fetchResult = $result->fetch(PDO::FETCH_ASSOC);
-					return $fetchResult;
-				}
+				return $result;
 			}
 			catch(Exception $e)
 			{
 				echo $e;
-				return false;
 			}
 		}
 
@@ -111,7 +102,7 @@ include_once('Connection.php');
 		{
 			try
 			{
-				$sql = "SELECT Name FROM Doctors WHERE DoctorId = $catId";
+				$sql = "SELECT Name FROM data WHERE DoctorId = $catId";
 
 				$result = $this->sentence("SET CHARACTER SET utf8");
 				$result = $this->sentence($sql);
@@ -129,38 +120,30 @@ include_once('Connection.php');
 			}
 		}
 
-		public function GetAllDataDoctorsforDoctor($id)
+		public function GetAllData()
 		{
 			try
 			{
-				$sql = "SELECT * FROM datadoctors WHERE DoctorId = $id";
-
-				$result = $this->sentence("SET CHARACTER SET utf8");
-				$result = $this->sentence($sql);
-
-				if($result->rowCount() > 0)
-				{
-					$fetchResult = $result->fetchAll();
-					return $fetchResult;
-				}
+				$res = $this->sentence("SET CHARACTER SET utf8");
+				$res = $this->sentence("SELECT * FROM Data");
+				return $res;
 			}
 			catch(Exception $e)
 			{
 				echo $e;
-				return false;
 			}
 		}
 
-		public function ListDoctors()
+		public function ListData()
 		{
 			try
 			{
 				$result = $this->sentence("SET CHARACTER SET utf8");
 				$result = $this->sentence("SELECT
-											DoctorId
-											, Name, SubTitle, Description, PlanId
-											FROM Doctors
-											ORDER BY Name ASC
+											DataId
+											, DoctorId
+											FROM Data
+											ORDER BY DoctorId ASC
 										");
 
 				return $result;
@@ -171,12 +154,12 @@ include_once('Connection.php');
 			}
 		}
 
-		public function UpdateDoctor()
+		public function UpdateData()
 		{
 			try
 			{
-				$sql = "UPDATE Doctors SET Name = $this->Name, SubTitle = $this->SubTitle, Description = $this->Description, PlanId = $this->PlanId
-										WHERE DoctorId = $this->DoctorId";
+				$sql = "UPDATE Data SET DoctorId = $this->DoctorId, Name = $this->Name, Description = $this->Description
+										WHERE DataId = $this->DataId";
 
 				$result = $this->sentence("SET CHARACTER SET utf8");
 				$result = $this->sentence($sql);
@@ -199,11 +182,18 @@ include_once('Connection.php');
 			}
 		}
 
-		public function DeleteDoctor()
+		public function DeleteData($id)
 		{
 			try
 			{
-				$result = $this->sentence("DELETE FROM Doctors WHERE DoctorId = $this->DoctorId");
+				$result = $this->connection->prepare("DELETE FROM data WHERE DataDoctorId = ?");
+				$result->bindParam(1, $DataDoctorId);
+
+				// insertar una fila
+				$DataDoctorId = $id;
+
+				$result->execute();
+
 
 				if($result->rowCount() > 0)
 				{
@@ -219,29 +209,6 @@ include_once('Connection.php');
 			{
 				echo $e;
 			}
-		}
-
-		public function lastDoctorId()
-		{
-			try
-			{
-				$sql = "SELECT DoctorId FROM Doctors ORDER BY DoctorId DESC LIMIT 1";
-
-				$result = $this->sentence("SET CHARACTER SET utf8");
-				$result = $this->sentence($sql);
-
-				if($result->rowCount() > 0)
-				{
-					$fetchResult = $result->fetch(PDO::FETCH_ASSOC);
-					return $fetchResult["DoctorId"];
-				}
-			}
-			catch(Exception $e)
-			{
-				echo $e;
-				return false;
-			}
-
 		}
 
 	}
