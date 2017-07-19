@@ -1,0 +1,12 @@
+RewriteEngine on
+RewriteCond %{HTTP_HOST} ^ciguriaplasticacolombia.com [NC]
+RewriteRule ^(.*)$ http://www.ciguriaplasticacolombia.com/$1 [L,R=301]
+
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^([^\.]+)$ $1.php [NC,L]
+
+RewriteCond %{SCRIPT_FILENAME} !-d
+RewriteCond %{SCRIPT_FILENAME} !-f
+
+Rewriterule ^inicio index.php

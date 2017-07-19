@@ -3,9 +3,9 @@ include_once('Connection.php');
 
 	Class CalificationDoctors extends Connection
 	{
-		private $CalificationDoctorId;
+		  private $CalificationDoctorId;
     	private $DoctorId;
-		private $NameUser;
+		  private $NameUser;
 	    private $CountStars;
 	    private $Email;
 	    private $Comment;
@@ -15,6 +15,11 @@ include_once('Connection.php');
 		public function setCalificationDoctorId($value)
 		{
 			$this->CalificationDoctorId = $value;
+		}
+
+		public function setDoctorId($value)
+		{
+			$this->DoctorId = $value;
 		}
 
 		public function setNameUser($value)
@@ -43,6 +48,11 @@ include_once('Connection.php');
 			return $this->CalificationDoctorId;
 		}
 
+		public function getDoctorId()
+		{
+			return $this->DoctorId;
+		}
+
 		public function getNameUser()
 		{
 			return $this->NameUser;
@@ -68,9 +78,9 @@ include_once('Connection.php');
 			try
 			{
 				$sql = "INSERT INTO CalificationDoctors
-										(NameUser, CountStars, Email, Comment, DateComment)
+										(DoctorId, NameUser, CountStars, Email, Comment, DateComment)
 										VALUES
-										($this->NameUser, $this->CountStars, $this->Email, $this->Comment, 'now()')";
+										($this->DoctorId, $this->NameUser, $this->CountStars, $this->Email, $this->Comment, 'now()')";
 
 				$result = $this->sentence("SET CHARACTER SET utf8");
 				$result = $this->sentence($sql);
@@ -96,7 +106,7 @@ include_once('Connection.php');
 		{
 			try
 			{
-				$sql = "SELECT * FROM CalificationDoctors WHERE CalificationDoctorId = $this->CalificationDoctorId";
+				$sql = "SELECT * FROM CalificationDoctors WHERE DoctorId = $this->DoctorId";
 
 				$result = $this->sentence("SET CHARACTER SET utf8");
 				$result = $this->sentence($sql);

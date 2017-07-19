@@ -9,7 +9,7 @@
 	include("includes/functions.php");
 
 	$doctors = new Doctors();
-  $plans = new Plans();
+  	$plans = new Plans();
 	$planList = $plans->ListPlans();
 	$categories = new Categories();
 	$categoriesList = $categories->ListCategories();

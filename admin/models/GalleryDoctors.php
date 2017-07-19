@@ -5,7 +5,7 @@ include_once('Connection.php');
 	{
 			private $GalleryDoctorId;
 			private $DoctorId;
-	    private $Location;
+			private $Location;
 
 		//SET
 		public function setGalleryDoctorId($value)
@@ -23,6 +23,7 @@ include_once('Connection.php');
 			$this->Location = $value;
 		}
 
+
 		//GET
 		public function getGalleryDoctorId()
 		{
@@ -39,11 +40,7 @@ include_once('Connection.php');
 			return $this->Location;
 		}
 
-		public function getCharacteristic()
-		{
-			return $this->Characteristic;
-
-		public function CreateGallery()
+		public function CreateGalleryDoctor()
 		{
 			try
 			{
@@ -76,7 +73,7 @@ include_once('Connection.php');
 		{
 			try
 			{
-				$sql = "SELECT GalleryDoctorId, DoctorId, Location FROM GalleryDoctors WHERE GalleryDoctorId = $this->GalleryDoctorId";
+				$sql = "SELECT DoctorId, Location FROM GalleryDoctors WHERE DoctorId = $this->DoctorId";
 
 				$result = $this->sentence("SET CHARACTER SET utf8");
 				$result = $this->sentence($sql);
@@ -94,11 +91,11 @@ include_once('Connection.php');
 			}
 		}
 
-		public function GetGalleryId($catId)
+		public function GetGalleryLocation($catId)
 		{
 			try
 			{
-				$sql = "SELECT GalleryDoctors FROM Plans WHERE GalleryDoctorId = $catId";
+				$sql = "SELECT Location FROM GalleryDoctors WHERE GalleryDoctorId = $catId";
 
 				$result = $this->sentence("SET CHARACTER SET utf8");
 				$result = $this->sentence($sql);
@@ -106,7 +103,7 @@ include_once('Connection.php');
 				if($result->rowCount() > 0)
 				{
 					$fetchResult = $result->fetch(PDO::FETCH_ASSOC);
-					return $fetchResult["DoctorId"];
+					return $fetchResult["Location"];
 				}
 			}
 			catch(Exception $e)
@@ -116,7 +113,7 @@ include_once('Connection.php');
 			}
 		}
 
-		public function GetAllGallery()
+		public function GetAllDoctors()
 		{
 			try
 			{
@@ -136,10 +133,10 @@ include_once('Connection.php');
 			{
 				$result = $this->sentence("SET CHARACTER SET utf8");
 				$result = $this->sentence("SELECT
-											GalleryDoctorId
-											, DoctorId, Location
+											DoctorId
+											, Location
 											FROM GalleryDoctors
-											ORDER BY GalleryDoctorId ASC
+											ORDER BY Location ASC
 										");
 
 				return $result;
@@ -150,12 +147,12 @@ include_once('Connection.php');
 			}
 		}
 
-		public function UpdateGallery()
+		public function UpdateDoctor()
 		{
 			try
 			{
-				$sql = "UPDATE GalleryDoctors SET DoctorId = $this->DoctorId, Location = $this->Location
-										WHERE GalleryDoctorId = $this->GalleryDoctorId";
+				$sql = "UPDATE GalleryDoctors SET Location = $this->Location
+										WHERE DoctorId = $this->DoctorId";
 
 				$result = $this->sentence("SET CHARACTER SET utf8");
 				$result = $this->sentence($sql);
@@ -178,11 +175,11 @@ include_once('Connection.php');
 			}
 		}
 
-		public function DeleteGallery()
+		public function DeleteGalleryDoctor()
 		{
 			try
 			{
-				$result = $this->sentence("DELETE FROM GalleryDoctors WHERE GalleryDoctorId = $this->GalleryDoctorId");
+				$result = $this->sentence("DELETE FROM GalleryDoctor WHERE GalleryDoctorId = $this->DoctorId");
 
 				if($result->rowCount() > 0)
 				{

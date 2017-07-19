@@ -85,12 +85,13 @@ function modalCall(content,action,id,args){
 		args = '';
 	}
 	var file = 'ajax_'+content+'.php';
-	$('#modal-001').html('Cargando');
-	$("#modal-001").modal('toggle')
-	$('#modal-001').modal('show');
+	var modal = $('#modal-001');
+	modal.html('Cargando');
+	modal.modal('toggle')
+	modal.modal('show');
 
 	$.post(file, {action:action,id:id,args:args}, function( returned ) {
-		$('#modal-001').html( returned );
+		modal.html( returned );
 	});
 };
 
@@ -150,6 +151,8 @@ function submitModalForm(content) {
 			},
 			error: function(){
 				$('#fullscreenloading').hide();
+				console.log($('#modalForm').serialize());
+				$("#submitButton").html('<i class="fa fa-check m-r-5"></i> <span>Guardar</span>');
 				alert("Error #EJS3432");
 			}
 		});

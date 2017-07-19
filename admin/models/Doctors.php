@@ -9,6 +9,7 @@ include_once('Connection.php');
 	    private $Description;
 			private $PlanId;
 	    private $CodeQR;
+			private $Logo;
 
 		//SET
 		public function setDoctorId($value)
@@ -34,6 +35,11 @@ include_once('Connection.php');
 		public function setPlanId($value)
 		{
 			$this->PlanId = $value;
+		}
+
+		public function setLogo($value)
+		{
+			$this->Logo = $value;
 		}
 
 		public function setCodeQR($value)
@@ -65,6 +71,10 @@ include_once('Connection.php');
 		public function getPlanId()
 		{
 			return $this->PlanId;
+		}
+		public function getLogo()
+		{
+			return $this->Logo;
 		}
 
 		public function getCodeQR()
@@ -250,6 +260,33 @@ include_once('Connection.php');
 				return false;
 			}
 
+		}
+
+		public function UpdateDoctorLogo()
+		{
+			try
+			{
+				$sql = "UPDATE Doctors SET Name = $this->Logo	WHERE DoctorId = $this->DoctorId";
+
+				$result = $this->sentence("SET CHARACTER SET utf8");
+				$result = $this->sentence($sql);
+
+				$query = $result->rowCount() ? true : false;
+				if($query)
+				{
+					return "exito";
+				}
+				else
+				{
+					return "fallo";
+				}
+			}
+
+			catch(Exception $e)
+			{
+				echo $e;
+				return false;
+			}
 		}
 
 	}

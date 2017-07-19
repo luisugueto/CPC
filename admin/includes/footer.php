@@ -16,6 +16,18 @@
 				</footer>
 			</div>
 		</div>
+		<?php
+			require_once("models/Publicitys.php");
+
+			$Publicitys = new Publicitys();
+			$publicityList = $Publicitys->ListPublicitys();
+
+
+			while ($Publicitys = $publicityList->fetch(PDO::FETCH_ASSOC))
+			{
+				echo rawurldecode($Publicitys['Content']);
+			}
+		 ?>
 
 		<!-- jQuery  -->
         <script src="assets/js/jquery.min.js"></script>

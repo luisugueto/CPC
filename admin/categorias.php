@@ -9,7 +9,7 @@
 	$args = array();
 	if(isset($_GET['id']) && $_GET['id'] != "")
 	{
-		$args['UserId'] = $_GET['id'];
+		$args['CategoryId'] = $_GET['id'];
 	}
 ?>
 		<div class="wrapper">
@@ -54,7 +54,7 @@
 												{
 													$content = 'categorias_proce';
 													$id = $Category["CategoryId"];
-													$name = '<strong>Categoría No.'.$id.'</strong> ('.$Category['Name'].')';	
+													$name = '<strong>Categoría No.'.$id.'</strong> ('.$Category['Name'].')';
 											?>
 													<tr id="<?= $id ?>">
 														<td><?= $id ?></td>
@@ -84,13 +84,13 @@
 	{
 		echo '<script type="text/javascript">swal({
 				html:true,
-				title: "Atención!",   
+				title: "Atención!",
 				text: "La URL a la que intenta ingresar, es restringida<br/>",
 				type: "error",
-				confirmButtonColor: "#DD6B55",   
+				confirmButtonColor: "#DD6B55",
 				confirmButtonText: "Cerrar",
-				closeOnConfirm: false 
-			}, function(){   
+				closeOnConfirm: false
+			}, function(){
 				$(".sweet-alert").hide();
 				$(".sweet-overlay").hide();
 				$("#fullscreenloading").show();

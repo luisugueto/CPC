@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	<link type="text/css" rel="stylesheet" href="css/materialize.min.css" media="screen,projection" />
-	
+
 	<link type="text/css" rel="stylesheet" href="css/owl.carousel.min.css" />
 	<link type="text/css" rel="stylesheet" href="css/owl.theme.default.min.css" />
 
@@ -14,8 +14,23 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<link rel="shortcut icon" href="favicon.ico">
 
+	<link href="admin/assets/plugins/sweetalert/dist/sweetalert.css" rel="stylesheet" type="text/css">
+
+
+	<!-- HTML5 Shiv and Respond.js IE8 support of HTML5 elements and media queries -->
+			<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+			<!--[if lt IE 9]>
+			<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+			<script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+			<![endif]-->
+
+			<script src="admin/assets/js/modernizr.min.js"></script>
+
 	<title>Cirugía Plástica Colombia</title>
 </head>
+
+<!-- Modal -->
+<div class="modal fade" id="modal-001"></div>
 
 <body>
 
@@ -76,7 +91,7 @@
 				<div class="nav-wrapper">
 
 					<!-- Logo -->
-					<a href="#!" class="brand-logo">
+					<a href="inicio" class="brand-logo">
 						<img src="images/logo.png">
 					</a>
 					<!-- Logo -->
@@ -87,12 +102,12 @@
 
 					<!-- Menú de navegación web -->
 					<ul class="right hide-on-med-and-down">
-						<li><a href="#">Inicio</a></li>
+						<li><a href="index.php">Inicio</a></li>
 						<li><a href="#">Procedimientos</a></li>
-						<li><a href="#">Directorio</a></li>
-						<li><a href="#">Blog</a></li>
-						<li><a href="#">Videos</a></li>
-						<li><a href="#">Contáctanos</a></li>
+						<li><a href="directorio.php">Directorio</a></li>
+						<li><a href="blog.php">Blog</a></li>
+						<li><a href="videos.php">Videos</a></li>
+						<li><a href="contacto.php">Contáctanos</a></li>
 					</ul>
 					<!-- Fin de menú navegación web -->
 
@@ -108,12 +123,12 @@
 
 						<hr class="menu-divider">
 
-						<li><a href="#"><i class="material-icons left">home</i> Inicio</a></li>
-						<li><a href="#"><i class="material-icons left">work</i> Procedimientos</a></li>
-						<li><a href="#"><i class="material-icons left">perm_contact_calendar</i> Directorio</a></li>
-						<li><a href="#"><i class="material-icons left">speaker_notes</i> Blog</a></li>
-						<li><a href="#"><i class="material-icons left">video_library</i> Videos</a></li>
-						<li><a href="#"><i class="material-icons left">email</i> Contáctanos</a></li>
+						<li><a href="inicio"><i class="material-icons left">home</i> Inicio</a></li>
+						<li><a href="procedimientos"><i class="material-icons left">work</i> Procedimientos</a></li>
+						<li><a href="directorio"><i class="material-icons left">perm_contact_calendar</i> Directorio</a></li>
+						<li><a href="blog"><i class="material-icons left">speaker_notes</i> Blog</a></li>
+						<li><a href="videos"><i class="material-icons left">video_library</i> Videos</a></li>
+						<li><a href="contactanos"><i class="material-icons left">email</i> Contáctanos</a></li>
 					</ul>
 					<!-- Fin Menú Responsive -->
 
@@ -165,7 +180,7 @@
 						<br><br>
 						<a class="waves-effect waves-light btn" style="background-color:#ffa101 !important">Califica a tu cirujano</a>
 					</div>
-					
+
 				</div>
 			</div>
 			<!-- Fin imagen cabecera -->

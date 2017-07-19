@@ -1,5 +1,5 @@
 <?php
-    require_once("../models/Restaurants.php");
+    require_once("../models/Doctors.php");
     include("../includes/functions.php");
     require_once('slim.php');
 
@@ -49,7 +49,7 @@ if (!isset($image['output']['data'])) {
 $namePhoto = slugify($image['input']['name']);
 
 // Save the file
-$file = Slim::saveFile($image['output']['data'], $namePhoto, "../img/restaurantes");
+$file = Slim::saveFile($image['output']['data'], $namePhoto, "../img/doctors");
 
 // Return results as JSON
 Slim::outputJSON(array(
@@ -58,9 +58,9 @@ Slim::outputJSON(array(
     'path' => $file['path']
 ));
 
-$restaurants = new Restaurants();
-$restaurants->setRestaurantId($_GET["id"]);
-$restaurants->setLogo($file['name']);
-$restaurants->UpdateLogo();
+$doctors = new Doctors();
+$doctors->setDoctorId($_GET["id"]);
+$doctors->setLogo($file['name']);
+$doctors->UpdateDoctorLogo();
 
 ?>

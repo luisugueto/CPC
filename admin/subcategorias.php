@@ -12,7 +12,7 @@
 	$args = array();
 	if(isset($_GET['id']) && $_GET['id'] != "")
 	{
-		$args['UserId'] = $_GET['id'];
+		$args['SubCategoryId'] = $_GET['id'];
 	}
 ?>
 		<div class="wrapper">

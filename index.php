@@ -1,4 +1,21 @@
-<?php include("includes/header.php"); ?>
+<?php
+	include("includes/header.php");
+	require_once("admin/models/Doctors.php");
+	require_once("admin/models/DataDoctors.php");
+	require_once("admin/models/Plans.php");
+	require_once("admin/models/ProceduresDoctor.php");
+	require_once("admin/models/CalificationDoctors.php");
+
+	$doctor = new Doctors();
+	$doctorList = $doctor->ListDoctors();
+
+	$data = new DataDoctors();
+
+	$plan = new Plans();
+	$planList = $plan->ListPlans();
+
+	$califications = new CalificationDoctors();
+?>
 
 	<!-- Contenido -->
 	<div class="container">
@@ -17,25 +34,83 @@
 				<div class="row">
 
 					<div class="col m6 s12">
-						
+
+						<?php
+							while ($Doctor = $doctorList->fetch(PDO::FETCH_ASSOC))
+							{
+								$content = 'medicos';
+								$id = $Doctor["DoctorId"];
+								$name = '<strong>Médico No.'.$id.'</strong> ('.$Doctor['Name'].')';
+								$dataList = $data->GetDataforDoctor($id);
+						?>
 						<ul class="collection">
-							<a class="collection-item avatar truncate cirujanos">
+							<a class="collection-item avatar truncate cirujanos" href="directorio-detalle.php?id=<?= $id ?>">
 								<div class="circle" style="background-image: url('http://cirugiaplasticacolombia.com/wp-content/uploads/2015/09/Dra-Maria-Mercedes-Valencia-cirujana-plastica-cirugia-plastica-colombia-plastic-surgery-Mauro-Rebolledo-Photography-274x199.jpg')">
 								</div>
-								<span class="title">Dr. John Garcia</span>
-								<p style="color:#b9b9b9;">Cirujano plástico (Cali, Colombia)</p>
-								<div class="stars-rate">
-									<i class="material-icons left">star</i>
-									<i class="material-icons left">star</i>
-									<i class="material-icons left">star</i>
-									<i class="material-icons inactive left">star</i>
-									<i class="material-icons inactive left">star</i>
-									<span style="margin-left:10px; color: black">203 Comentarios</span>
-								</div>
-							</a>
-						</ul>
+										<span class="title">Dr. <?= $Doctor['Name'] ?></span>
+											<p style="color:#b9b9b9;"><?= $Doctor['Description'] ?> (<?php
+												$i = 0;
+												while ($Data = $dataList->fetch(PDO::FETCH_ASSOC))
+												{
+													if($Data['Name'] == 'Ciudad')
+													{
+														$ciudad = $Data['Description'];
+													}
+													elseif($Data['Name'] == 'País')
+													{
+														$pais = $Data['Description'];
+													}
 
-						<ul class="collection">
+													if(isset($ciudad) || isset($pais))
+													{
+														if(isset($ciudad) && isset($pais))
+														{
+															echo $ciudad.', '.$pais;
+														}
+														elseif(isset($ciudad))
+															if($i>0)
+																echo ', '.$ciudad;
+															else
+																echo $ciudad;
+														else echo $pais.',';
+													}
+													$i++;
+												}
+											?>)</p>
+
+											<?php
+											$califications->setDoctorId($id);
+											$calificationsList = $califications->GetCalificationDoctorContent();
+												if(count($calificationsList == 0))
+													echo "<div class='stars-rate'>
+														<i class='material-icons inactive left'>star</i>
+														<i class='material-icons inactive left'>star</i>
+														<i class='material-icons inactive left'>star</i>
+														<i class='material-icons inactive left'>star</i>
+														<i class='material-icons inactive left'>star</i>
+														<span style='margin-left:10px; color: black'>0 Comentarios</span>
+													</div>";
+											?>
+											<!-- <div class="stars-rate">
+												<i class="material-icons left">star</i>
+												<i class="material-icons left">star</i>
+												<i class="material-icons left">star</i>
+												<i class="material-icons inactive left">star</i>
+												<i class="material-icons inactive left">star</i>
+												<span style="margin-left:10px; color: black">203 Comentarios</span>
+											</div> -->
+										</a>
+									</ul>
+
+								<?php
+									}
+								?>
+
+
+
+
+
+						<!-- <ul class="collection">
 							<a class="collection-item avatar truncate cirujanos">
 								<div class="circle" style="background-image: url('http://cirugiaplasticacolombia.com/wp-content/uploads/2015/09/Dra-Maria-Mercedes-Valencia-cirujana-plastica-cirugia-plastica-colombia-plastic-surgery-Mauro-Rebolledo-Photography-274x199.jpg')">
 								</div>
@@ -72,23 +147,6 @@
 					</div>
 
 					<div class="col m6 s12">
-						
-						<ul class="collection">
-							<a class="collection-item avatar truncate cirujanos">
-								<div class="circle" style="background-image: url('http://cirugiaplasticacolombia.com/wp-content/uploads/2015/09/Dra-Maria-Mercedes-Valencia-cirujana-plastica-cirugia-plastica-colombia-plastic-surgery-Mauro-Rebolledo-Photography-274x199.jpg')">
-								</div>
-								<span class="title">Dr. John Garcia</span>
-								<p style="color:#b9b9b9;">Cirujano plástico (Cali, Colombia)</p>
-								<div class="stars-rate">
-									<i class="material-icons left">star</i>
-									<i class="material-icons left">star</i>
-									<i class="material-icons left">star</i>
-									<i class="material-icons inactive left">star</i>
-									<i class="material-icons inactive left">star</i>
-									<span style="margin-left:10px; color: black">203 Comentarios</span>
-								</div>
-							</a>
-						</ul>
 
 						<ul class="collection">
 							<a class="collection-item avatar truncate cirujanos">
@@ -123,6 +181,23 @@
 								</div>
 							</a>
 						</ul>
+
+						<ul class="collection">
+							<a class="collection-item avatar truncate cirujanos">
+								<div class="circle" style="background-image: url('http://cirugiaplasticacolombia.com/wp-content/uploads/2015/09/Dra-Maria-Mercedes-Valencia-cirujana-plastica-cirugia-plastica-colombia-plastic-surgery-Mauro-Rebolledo-Photography-274x199.jpg')">
+								</div>
+								<span class="title">Dr. John Garcia</span>
+								<p style="color:#b9b9b9;">Cirujano plástico (Cali, Colombia)</p>
+								<div class="stars-rate">
+									<i class="material-icons left">star</i>
+									<i class="material-icons left">star</i>
+									<i class="material-icons left">star</i>
+									<i class="material-icons inactive left">star</i>
+									<i class="material-icons inactive left">star</i>
+									<span style="margin-left:10px; color: black">203 Comentarios</span>
+								</div>
+							</a>
+						</ul> -->
 
 					</div>
 

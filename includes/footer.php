@@ -60,6 +60,16 @@
 			});
 		});
 	</script>
+	<script src="admin/assets/js/bootstrap.min.js"></script>
+	<script src="admin/assets/js/jquery.blockUI.js"></script>
+	<script src="admin/functions.js"></script>
+	<!-- Sweet-Alert  -->
+	<script src="admin/assets/plugins/sweetalert/dist/sweetalert.min.js"></script>
+	<script src="admin/assets/pages/jquery.sweet-alert.init.js"></script>
+
+	<!-- Parsleyjs -->
+	<script type="text/javascript" src="admin/assets/plugins/parsleyjs/dist/parsley.min.js"></script>
+	<script src="admin/assets/plugins/parsleyjs/src/i18n/es.js"></script>
 </body>
 
 </html>

@@ -3,8 +3,8 @@ include_once('Connection.php');
 
 	Class CommentCalifications extends Connection
 	{
-		private $CommentCalificationId;
-		private $NameUser;
+		  private $CommentCalificationId;
+		  private $NameUser;
 	    private $Email;
 	    private $Comment;
 	    private $DateComment;

@@ -9,7 +9,7 @@
 						<h1>
 							¡Bienvenido, <?= $_COOKIE['UserName'] ?>!
 							<br>
-							<small>Menú del día</small>
+							<small>Bienvenido!</small>
 						</h1>
 					</div>
 				</div>

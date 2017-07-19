@@ -1,10 +1,25 @@
 <?php
 	include("includes/header.php");
 	require_once("models/Doctors.php");
+	require_once("models/DataDoctors.php");
+	require_once("models/CalificationDoctors.php");
+	require_once("models/GalleryDoctors.php");
+
 	$id = $_GET['id'];
 	$doctors = new Doctors();
 	$doctors->setDoctorId($id);
 	$content = $doctors->GetDoctorContent();
+
+	$data = new DataDoctors();
+	$dataList = $data->GetDataforDoctor($id);
+
+	$califications = new CalificationDoctors();
+	$califications->setDoctorId($id);
+	$calificationsList = $califications->GetCalificationDoctorContent();
+
+	$gallery = new GalleryDoctors();
+	$gallery->setDoctorId($id);
+	$galleryList = $gallery->GetGalleryContent();
 ?>
 		<div class="wrapper">
 			<div class="container">
@@ -29,7 +44,7 @@
 							<div class="contact-card">
 
 								<div class="slim profile-picture"
-									data-service="server/async.php?id="
+									data-service="server/async.php?id=<?= $id ?>"
 									data-label="Subir logo"
 									data-ratio="1:1"
 									data-size="400, 400"
@@ -44,7 +59,37 @@
 
 								<div class="member-info">
 									<h4 class="m-t-0 m-b-5 header-title"><b>Dr  <?= $content["Name"] ?></b></h4>
-									<p class="text-muted">Cali, Colombia</p>
+									<p class="text-muted">
+										<?php
+											$i = 0;
+											while ($Data = $dataList->fetch(PDO::FETCH_ASSOC))
+											{
+												if($Data['Name'] == 'Ciudad')
+												{
+													$ciudad = $Data['Description'];
+												}
+												elseif($Data['Name'] == 'País')
+												{
+													$pais = $Data['Description'];
+												}
+
+												if(isset($ciudad) || isset($pais))
+												{
+													if(isset($ciudad) && isset($pais))
+													{
+														echo $ciudad.', '.$pais;
+													}
+													elseif(isset($ciudad))
+														if($i>0)
+															echo ', '.$ciudad;
+														else
+															echo $ciudad;
+													else echo $pais.',';
+												}
+												$i++;
+											}
+										?>
+										</p>
 									<div class="m-t-20">
 
 										<?php
@@ -57,7 +102,7 @@
 											else
 											{
 										?>
-												<a href="javascript:void(0)" onclick="modalCall('restaurante','form_general','<?php echo $id;?>')" class="btn btn-success waves-effect waves-light btn-sm">Editar</a>
+												<a href="javascript:void(0)" onclick="modalCall('medicos','edit','<?php echo $id;?>')" class="btn btn-success waves-effect waves-light btn-sm">Editar</a>
 										<?php
 											}
 										?>
@@ -83,7 +128,7 @@
 				                <div class="modal-content">
 				                    <div class="modal-header">
 				                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				                        <h4 class="modal-title"><strong>Código QR: <?= $rsRestaurante["Name"] ?></strong></h4>
+				                        <h4 class="modal-title"><strong>Código QR: <?= $content["Name"] ?></strong></h4>
 				                    </div>
 				                    <div class="modal-body text-center">
 				                    	<img src="" style="max-width:100%;">
@@ -116,6 +161,10 @@
 
 						<div class="card-box fotos-galery">
 							<h4 class="m-t-0 m-b-20 header-title"><b>Fotos / Videos</b></h4>
+							<?php
+								if(count($galleryList == 0))
+									echo "No posee Fotos / Videos";
+							?>
 						</div>
 
 						<div class="card-box">
@@ -127,10 +176,10 @@
 								{
 							?>
 									<form id="pageForm" data-parsley-validate novalidate>
-										<input type="hidden" name="Latitude" id="txtLatitude" value="<?= $rsRestaurante['Latitude'] ?>" parsley-trigger="change" required>
-										<input type="hidden" name="Longitude" id="txtLongitude" value="<?= $rsRestaurante['Longitude'] ?>" parsley-trigger="change" required>
+										<input type="hidden" name="Latitude" id="txtLatitude" value="<?= $content['Latitude'] ?>" parsley-trigger="change" required>
+										<input type="hidden" name="Longitude" id="txtLongitude" value="<?= $content['Longitude'] ?>" parsley-trigger="change" required>
 										<input type="hidden" name="hdGeneralAction" value="edit_map">
-										<input type="hidden" name="RestaurantId" value="<?= $rsRestaurante['RestaurantId'] ?>">
+										<input type="hidden" name="Doctor" value="<?= $content['DoctorId'] ?>">
 										<input type="hidden" name="action" value="submit">
 									</form>
 									<button id="submitButton" class="btn btn-default waves-effect waves-light" disabled="disabled" onclick="submitPageForm('restaurante');"> <i class="fa fa-check m-r-5"></i> <span>ok</span> </button>
@@ -161,7 +210,11 @@
 											</tr>
 										</thead>
 										<tbody>
-											<tr id="1">
+											<?php
+												if(count($calificationsList == 0))
+													echo "<tr><td colspan='3'>No posee Calificaciones</td></tr>";
+											?>
+											<!-- <tr id="1">
 												<td>
 													<i class="fa fa-star m-r-5"></i>
 													<i class="fa fa-star m-r-5"></i>
@@ -176,7 +229,7 @@
 												<td>
 													14/05/2017
 												</td>
-											</tr>
+											</tr> -->
 										</tbody>
 									</table>
 								</div>
@@ -200,7 +253,7 @@
 													</tr>
 												</thead>
 												<tbody>
-													<tr id="1">
+													<!-- <tr id="1">
 														<td>
 															Jose Perez
 														</td>
@@ -216,7 +269,7 @@
 														<td>
 															<a href="javascript:void(0)" onclick="deleteItem('','','')" class="btn btn-danger btn-custom waves-effect waves-light btn-xs"><i class="fa fa-remove"></i></a>
 														</td>
-													</tr>
+													</tr> -->
 												</tbody>
 											</table>
 										</div>
