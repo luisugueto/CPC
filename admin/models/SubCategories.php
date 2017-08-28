@@ -1,12 +1,13 @@
 <?php
-include_once('Connection.php');
+	include_once('Connection.php');
 
 	Class SubCategories extends Connection
 	{
 		private $SubCategoryId;
 		private $CategoryId;
 		private $Name;
-	    private $Description;
+		private $Description;
+		private $Content;
 	    private $Photo;
 
 		//SET
@@ -30,33 +31,13 @@ include_once('Connection.php');
 			$this->Description = $value;
 		}
 
+		public function setContent($value)
+		{
+			$this->Content = $value;
+		}
+
 		public function setPhoto($value)
 		{
-			// $file = $value["file"]["name"];
-
-			// if(!is_dir("files/"))
-			// 	mkdir("files/", 0777);
-			//
-			// switch($value["file"]["type"]){
-			// 				case 'image/jpg':
-			// 				case 'image/jpeg':
-			// 					$extension = 'jpeg';
-			// 				break;
-			// 				case 'image/png':
-			// 					$extension = 'png';
-			// 				break;
-			// 				}
-			//
-			//
-			// $nombre = $_POST['name']. ".".$extension;
-			// if($value["file"]["type"] == "image/jpeg" or $value["file"]["type"] == "image/jpg" or $value["file"]["type"] == "image/png")
-			// {
-			// 	if($file && move_uploaded_file($value["file"]["tmp_name"], "files/$nombre"))
-			// 	{
-			//
-			// 	}
-			// }
-
 			$this->Photo = $value;
 		}
 
@@ -81,6 +62,11 @@ include_once('Connection.php');
 			return $this->Desciption;
 		}
 
+		public function getContent()
+		{
+			return $this->Content;
+		}
+
 		public function getPhoto()
 		{
 			return $this->Photo;
@@ -90,10 +76,10 @@ include_once('Connection.php');
 		{
 			try
 			{
-				$sql = "INSERT INTO subcategories
-										(CategoryId, Name,Description)
+				$sql = "INSERT INTO SubCategories
+										(CategoryId, Name, Description, Content, Photo)
 										VALUES
-										($this->CategoryId, $this->Name, $this->Description)";
+										($this->CategoryId, $this->Name, $this->Description, '$this->Content', '$this->Photo')";
 
 				$result = $this->sentence("SET CHARACTER SET utf8");
 				$result = $this->sentence($sql);
@@ -119,7 +105,7 @@ include_once('Connection.php');
 		{
 			try
 			{
-				$sql = "SELECT * FROM subcategories WHERE SubCategoryId = $this->SubCategoryId";
+				$sql = "SELECT * FROM SubCategories WHERE SubCategoryId = $this->SubCategoryId";
 
 				$result = $this->sentence("SET CHARACTER SET utf8");
 				$result = $this->sentence($sql);
@@ -141,7 +127,7 @@ include_once('Connection.php');
 		{
 			try
 			{
-				$sql = "SELECT * FROM subcategories WHERE CategoryId = $id";
+				$sql = "SELECT * FROM SubCategories WHERE CategoryId = $id";
 
 				$result = $this->sentence("SET CHARACTER SET utf8");
 				$result = $this->sentence($sql);
@@ -163,7 +149,7 @@ include_once('Connection.php');
 		{
 			try
 			{
-				$sql = "SELECT Name FROM subcategories WHERE SubCategoryId = $catId";
+				$sql = "SELECT Name FROM SubCategories WHERE SubCategoryId = $catId";
 
 				$result = $this->sentence("SET CHARACTER SET utf8");
 				$result = $this->sentence($sql);
@@ -186,7 +172,21 @@ include_once('Connection.php');
 			try
 			{
 				$res = $this->sentence("SET CHARACTER SET utf8");
-				$res = $this->sentence("SELECT * FROM subcategories");
+				$res = $this->sentence("SELECT * FROM SubCategories");
+				return $res;
+			}
+			catch(Exception $e)
+			{
+				echo $e;
+			}
+		}
+
+		public function GetSubCategoriesByCategory()
+		{
+			try
+			{
+				$res = $this->sentence("SET CHARACTER SET utf8");
+				$res = $this->sentence("SELECT * FROM SubCategories WHERE CategoryId = $this->CategoryId");
 				return $res;
 			}
 			catch(Exception $e)
@@ -202,8 +202,8 @@ include_once('Connection.php');
 				$result = $this->sentence("SET CHARACTER SET utf8");
 				$result = $this->sentence("SELECT
 											SubCategoryId
-											, Name, CategoryId
-											FROM subcategories
+											, Name, CategoryId, Photo
+											FROM SubCategories
 											ORDER BY Name ASC
 										");
 
@@ -219,7 +219,7 @@ include_once('Connection.php');
 		{
 			try
 			{
-				$sql = "UPDATE subcategories SET Name = $this->Name, CategoryId = $this->CategoryId, Description = $this->Description
+				$sql = "UPDATE SubCategories SET Name = $this->Name, CategoryId = $this->CategoryId, Description = $this->Description, Content = '$this->Content', Photo = '$this->Photo'
 										WHERE SubCategoryId = $this->SubCategoryId";
 
 				$result = $this->sentence("SET CHARACTER SET utf8");
@@ -247,7 +247,7 @@ include_once('Connection.php');
 		{
 			try
 			{
-				$result = $this->sentence("DELETE FROM subcategories WHERE SubCategoryId = $this->SubCategoryId");
+				$result = $this->sentence("DELETE FROM SubCategories WHERE SubCategoryId = $this->SubCategoryId");
 
 				if($result->rowCount() > 0)
 				{

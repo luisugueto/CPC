@@ -50,6 +50,21 @@
         <script src="js/slim.kickstart.min.js"></script>
         <script src="functions.js"></script>
 
+		<script src="js/moment.js"></script>
+		<script src="js/cropper.min.js"></script>
+
+		<script src="js/bootstrap-datetimepicker.js"></script>
+		<script src="js/bootstrap-switch.min.js"></script>
+		<script src="js/fileinput.js"></script>
+		<script src="js/jquery.cropit.js"></script>
+		<script src="js/jquery.gridster.min.js"></script>
+		<script src="js/jquery.iframe-transport.js"></script>
+		<script src="js/jquery.slugify.js"></script>
+		<script src="js/jquery.tablednd.js"></script>
+
+		<script src="js/slugify.js"></script>
+		<script src="js/speakingurl.min.js"></script>
+
         <!-- Sweet-Alert  -->
 		<script src="assets/plugins/sweetalert/dist/sweetalert.min.js"></script>
 		<script src="assets/pages/jquery.sweet-alert.init.js"></script>
@@ -62,6 +77,11 @@
         <script src="assets/plugins/moment/moment.js"></script>
         <script src='assets/plugins/fullcalendar/dist/fullcalendar.js'></script>
         <script src='assets/plugins/fullcalendar/dist/lang/es.js'></script>
-
+				<script src='assets/js/jquery.dataTables.min.js'></script>
+				<script src='assets/js/dataTables.bootstrap.min.js'></script>
+				<script type="text/javascript">
+					$('#example').DataTable();
+					$('#example1').DataTable();
+				</script>
 	</body>
 </html>

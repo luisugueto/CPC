@@ -1,15 +1,17 @@
 <?php
-include_once('Connection.php');
+	include_once('Connection.php');
 
 	Class CalificationDoctors extends Connection
 	{
-		  private $CalificationDoctorId;
+		private $CalificationDoctorId;
     	private $DoctorId;
-		  private $NameUser;
+		private $NameUser;
 	    private $CountStars;
 	    private $Email;
 	    private $Comment;
 	    private $DateComment;
+		private $Status;
+		private $StatusDoctor;
 
 		//SET
 		public function setCalificationDoctorId($value)
@@ -40,6 +42,16 @@ include_once('Connection.php');
 		public function setComment($value)
 		{
 			$this->Comment = $value;
+		}
+
+		public function setStatus($value)
+		{
+			$this->Status = $value;
+		}
+
+		public function setStatusDoctor($value)
+		{
+			$this->StatusDoctor = $value;
 		}
 
 		//GET
@@ -73,14 +85,32 @@ include_once('Connection.php');
 			return $this->Comment;
 		}
 
+		public function getStatus()
+		{
+			return $this->Status;
+		}
+
+		public function getStatusDoctor()
+		{
+			return $this->StatusDoctor;
+		}
+
 		public function CreateCalificationDoctor()
 		{
 			try
 			{
-				$sql = "INSERT INTO CalificationDoctors
-										(DoctorId, NameUser, CountStars, Email, Comment, DateComment)
-										VALUES
-										($this->DoctorId, $this->NameUser, $this->CountStars, $this->Email, $this->Comment, 'now()')";
+				if($this->StatusDoctor){
+					$sql = "INSERT INTO CalificationDoctors
+					(DoctorId, NameUser, CountStars, Email, Comment, DateComment, Status, StatusDoctor)
+					VALUES
+					($this->DoctorId, $this->NameUser, $this->CountStars, $this->Email, $this->Comment, NOW(), 'Inactive', 'Active')";
+				}
+				else{
+					$sql = "INSERT INTO CalificationDoctors
+					(DoctorId, NameUser, CountStars, Email, Comment, DateComment, Status)
+					VALUES
+					($this->DoctorId, $this->NameUser, $this->CountStars, $this->Email, $this->Comment, NOW(), 'Inactive')";
+				}
 
 				$result = $this->sentence("SET CHARACTER SET utf8");
 				$result = $this->sentence($sql);
@@ -93,8 +123,63 @@ include_once('Connection.php');
 				{
 					return "fallo";
 				}
+
 			}
 
+			catch(Exception $e)
+			{
+				echo $e;
+				return false;
+			}
+		}
+
+		public function numCalificationsForDoctor()
+		{
+			try
+			{
+				$sql = "SELECT * FROM CalificationDoctors WHERE DoctorId = $this->DoctorId";
+
+				$result = $this->sentence("SET CHARACTER SET utf8");
+				$result = $this->sentence($sql);
+
+				return $result->rowCount();
+			}
+			catch(Exception $e)
+			{
+				echo $e;
+				return false;
+			}
+		}
+
+		public function numCalificationsTotalForDoctor($number)
+		{
+			try
+			{
+				$sql = "SELECT * FROM CalificationDoctors WHERE DoctorId = $this->DoctorId AND CountStars = $number";
+
+				$result = $this->sentence("SET CHARACTER SET utf8");
+				$result = $this->sentence($sql);
+
+				return $result->rowCount();
+			}
+			catch(Exception $e)
+			{
+				echo $e;
+				return false;
+			}
+		}
+
+		public function GetLastCalifications()
+		{
+			try
+			{
+				$sql = "SELECT CD.*, D.* FROM CalificationDoctors CD INNER JOIN Doctors D ON D.DoctorId = CD.DoctorID ORDER BY CD.CalificationDoctorId DESC LIMIT 5";
+
+				$result = $this->sentence("SET CHARACTER SET utf8");
+				$result = $this->sentence($sql);
+
+				return $result;
+			}
 			catch(Exception $e)
 			{
 				echo $e;
@@ -111,10 +196,28 @@ include_once('Connection.php');
 				$result = $this->sentence("SET CHARACTER SET utf8");
 				$result = $this->sentence($sql);
 
+				return $result;
+			}
+			catch(Exception $e)
+			{
+				echo $e;
+				return false;
+			}
+		}
+
+		public function GetCalificationDoctor()
+		{
+			try
+			{
+				$sql = "SELECT * FROM CalificationDoctors WHERE CalificationDoctorId = '$this->CalificationDoctorId'";
+
+				$result = $this->sentence("SET CHARACTER SET utf8");
+				$result = $this->sentence($sql);
+
 				if($result->rowCount() > 0)
 				{
-					$fetchResult = $result->fetch(PDO::FETCH_ASSOC);
-					return $fetchResult;
+					$fetchResults = $result->fetch(PDO::FETCH_ASSOC);
+					return $fetchResults;
 				}
 			}
 			catch(Exception $e)
@@ -124,11 +227,73 @@ include_once('Connection.php');
 			}
 		}
 
-		public function GetCalificationDoctorNameUser($catId)
+		public function GetCommentsForDoctor()
 		{
 			try
 			{
-				$sql = "SELECT Name FROM CalificationDoctors WHERE CalificationDoctorId = $catId";
+				$sql = "SELECT * FROM CalificationDoctors WHERE DoctorId = $this->DoctorId";
+
+				$result = $this->sentence("SET CHARACTER SET utf8");
+				$result = $this->sentence($sql);
+
+				return $result;
+			}
+			catch(Exception $e)
+			{
+				echo $e;
+				return false;
+			}
+		}
+
+		public function GetStatusCalification($catId)
+		{
+			try
+			{
+				$sql = "SELECT * FROM CalificationDoctors WHERE CalificationDoctorId = $catId";
+
+				$result = $this->sentence("SET CHARACTER SET utf8");
+				$result = $this->sentence($sql);
+
+				if($result->rowCount() > 0)
+				{
+					$fetchResult = $result->fetch(PDO::FETCH_ASSOC);
+					return $fetchResult["Status"];
+				}
+			}
+			catch(Exception $e)
+			{
+				echo $e;
+				return false;
+			}
+		}
+
+		public function GetStatusDoctorCalification($catId)
+		{
+			try
+			{
+				$sql = "SELECT * FROM CalificationDoctors WHERE CalificationDoctorId = $catId";
+
+				$result = $this->sentence("SET CHARACTER SET utf8");
+				$result = $this->sentence($sql);
+
+				if($result->rowCount() > 0)
+				{
+					$fetchResult = $result->fetch(PDO::FETCH_ASSOC);
+					return $fetchResult["StatusDoctor"];
+				}
+			}
+			catch(Exception $e)
+			{
+				echo $e;
+				return false;
+			}
+		}
+
+		public function GetCalificationforId($catId)
+		{
+			try
+			{
+				$sql = "SELECT * FROM CalificationDoctors WHERE CalificationDoctorId = $catId";
 
 				$result = $this->sentence("SET CHARACTER SET utf8");
 				$result = $this->sentence($sql);
@@ -138,6 +303,28 @@ include_once('Connection.php');
 					$fetchResult = $result->fetch(PDO::FETCH_ASSOC);
 					return $fetchResult["NameUser"];
 				}
+			}
+			catch(Exception $e)
+			{
+				echo $e;
+				return false;
+			}
+		}
+
+		public function verifyContestCalification($catId)
+		{
+			try
+			{
+				$sql = "SELECT c.*, c.CalificationDoctorId as calificationId, ct.* FROM CalificationDoctors as c INNER JOIN ContestCalificationDoctors as ct ON c.CalificationDoctorId=ct.CalificationDoctorId WHERE c.CalificationDoctorId = $catId";
+
+				$result = $this->sentence("SET CHARACTER SET utf8");
+				$result = $this->sentence($sql);
+
+				if($result->rowCount() > 0)
+					return true;
+				else
+					return false;
+
 			}
 			catch(Exception $e)
 			{
@@ -180,12 +367,12 @@ include_once('Connection.php');
 			}
 		}
 
-		public function UpdateCalificationDoctor()
+		public function UpdateCalificationDoctor($id)
 		{
 			try
 			{
-				$sql = "UPDATE CalificationDoctors SET NameUser = $this->NameUser
-										WHERE CalificationDoctorId = $this->CalificationDoctorId";
+				$sql = "UPDATE CalificationDoctors SET Status = 'Active'
+										WHERE CalificationDoctorId = $id"; 
 
 				$result = $this->sentence("SET CHARACTER SET utf8");
 				$result = $this->sentence($sql);
@@ -206,6 +393,29 @@ include_once('Connection.php');
 				echo $e;
 				return false;
 			}
+		}
+
+		public function lastCalificationDoctorId()
+		{
+			try
+			{
+				$sql = "SELECT CalificationDoctorId FROM CalificationDoctors ORDER BY CalificationDoctorId DESC LIMIT 1";
+
+				$result = $this->sentence("SET CHARACTER SET utf8");
+				$result = $this->sentence($sql);
+
+				if($result->rowCount() > 0)
+				{
+					$fetchResult = $result->fetch(PDO::FETCH_ASSOC);
+					return $fetchResult["CalificationDoctorId"];
+				}
+			}
+			catch(Exception $e)
+			{
+				echo $e;
+				return false;
+			}
+
 		}
 
 		public function DeleteCalificationDoctor()

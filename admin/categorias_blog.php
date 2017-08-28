@@ -40,7 +40,7 @@
 						<div class="row">
 							<div class="col-sm-12">
 								<div class="card-box m-b-0">
-									<table class="tablesaw table m-b-0" data-tablesaw-mode="swipe" data-tablesaw-sortable data-tablesaw-sortable-switch>
+									<table class="tablesaw table m-b-0" data-tablesaw-mode="swipe" data-tablesaw-sortable data-tablesaw-sortable-switch id="example">
 										<thead>
 											<tr>
 												<th scope="col" data-tablesaw-sortable-col data-tablesaw-sortable-default-col data-tablesaw-priority="persist">Id</th>
@@ -54,7 +54,7 @@
 												{
 													$content = 'categorias';
 													$id = $Category["CategoryId"];
-													$name = '<strong>Categoría No.'.$id.'</strong> ('.$Category['Name'].')';	
+													$name = '<strong>Categoría No.'.$id.'</strong> ('.$Category['Name'].')';
 											?>
 													<tr id="<?= $id ?>">
 														<td><?= $id ?></td>
@@ -84,13 +84,13 @@
 	{
 		echo '<script type="text/javascript">swal({
 				html:true,
-				title: "Atención!",   
+				title: "Atención!",
 				text: "La URL a la que intenta ingresar, es restringida<br/>",
 				type: "error",
-				confirmButtonColor: "#DD6B55",   
+				confirmButtonColor: "#DD6B55",
 				confirmButtonText: "Cerrar",
-				closeOnConfirm: false 
-			}, function(){   
+				closeOnConfirm: false
+			}, function(){
 				$(".sweet-alert").hide();
 				$(".sweet-overlay").hide();
 				$("#fullscreenloading").show();

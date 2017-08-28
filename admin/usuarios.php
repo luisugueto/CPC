@@ -1,6 +1,5 @@
 <?php
 	include("includes/header.php");
-
 	require_once("models/Users.php");
 
 	$users = new Users();
@@ -16,14 +15,21 @@
 			<div class="container">
 
 				<?php
-					if (in_array("per_usuarios_ver", $permisos_usuario))
+					if (in_array("per_usuarios_crear", $permisos_usuario) || in_array("per_usuarios_editar", $permisos_usuario) || in_array("per_usuarios_eliminar", $permisos_usuario))
 					{
 				?>
 
 						<div class="row">
 							<div class="col-sm-12">
 								<div class="btn-group pull-right m-t-15">
-									<a href="javascript:void(0)" onclick="modalCall('usuarios','form','0')" class="btn btn-default btn-md waves-effect waves-light m-b-30"><i class="md md-add"></i> Agregar</a>
+									<?php
+										if (in_array("per_usuarios_crear", $permisos_usuario))
+										{
+									?>
+											<a href="javascript:void(0)" onclick="modalCall('usuarios','form','0')" class="btn btn-default btn-md waves-effect waves-light m-b-30"><i class="md md-add"></i> Agregar</a>
+									<?php
+										}
+									?>
 								</div>
 								<h4 class="page-title">Usuarios</h4>
 								<ol class="breadcrumb">
@@ -36,11 +42,10 @@
 								</ol>
 							</div>
 						</div>
-
 						<div class="row">
 							<div class="col-sm-12">
 								<div class="card-box m-b-0">
-									<table class="tablesaw table m-b-0" data-tablesaw-mode="swipe" data-tablesaw-sortable data-tablesaw-sortable-switch>
+									<table class="tablesaw table m-b-0" data-tablesaw-mode="swipe" data-tablesaw-sortable data-tablesaw-sortable-switch id="example">
 										<thead>
 											<tr>
 												<th scope="col" data-tablesaw-sortable-col data-tablesaw-sortable-default-col data-tablesaw-priority="persist">Id</th>
@@ -57,7 +62,7 @@
 												{
 													$content = 'usuarios';
 													$id = $user["UserId"];
-													$name = '<strong>Usuario No.'.$id.'</strong> ('.$user['Name'].')';	
+													$name = '<strong>Usuario No.'.$id.'</strong> ('.$user['Name'].')';
 											?>
 													<tr id="<?= $id ?>">
 														<td><?= $id ?></td>
@@ -66,8 +71,20 @@
 														<td><?= $user['Phone'] ?></td>
 														<td></td>
 														<td>
-															<a href="javascript:void(0)" onclick="modalCall('<?= $content ?>','form','<?= $id;?>')" class="btn btn-inverse btn-custom waves-effect waves-light btn-xs"><i class="fa fa-pencil"></i></a>
-															<a href="javascript:void(0)" onclick="deleteItem('<?= $content ?>','<?= $id ?>','<?= $name ?>')" class="btn btn-danger btn-custom waves-effect waves-light btn-xs"><i class="fa fa-remove"></i></a>
+															<?php
+																if (in_array("per_usuarios_editar", $permisos_usuario))
+																{
+															?>
+																	<a href="javascript:void(0)" onclick="modalCall('<?= $content ?>','form','<?= $id;?>')" class="btn btn-inverse btn-custom waves-effect waves-light btn-xs"><i class="fa fa-pencil"></i></a>
+															<?php
+																}	
+																if (in_array("per_usuarios_eliminar", $permisos_usuario))
+																{
+															?>
+																	<a href="javascript:void(0)" onclick="deleteItem('<?= $content ?>','<?= $id ?>','<?= $name ?>')" class="btn btn-danger btn-custom waves-effect waves-light btn-xs"><i class="fa fa-remove"></i></a>
+															<?php
+																}
+															?>
 														</td>
 													</tr>
 											<?php
@@ -78,24 +95,23 @@
 								</div>
 							</div>
 						</div>
-
 				<?php
 					}
 				?>
 
 <?php
 	include("includes/footer.php");
-	if (!in_array("per_usuarios_ver", $permisos_usuario))
+	if (!in_array("per_usuarios_crear", $permisos_usuario) && !in_array("per_usuarios_editar", $permisos_usuario) && !in_array("per_usuarios_eliminar", $permisos_usuario))
 	{
 		echo '<script type="text/javascript">swal({
 				html:true,
-				title: "Atención!",   
+				title: "Atención!",
 				text: "La URL a la que intenta ingresar, es restringida<br/>",
 				type: "error",
-				confirmButtonColor: "#DD6B55",   
+				confirmButtonColor: "#DD6B55",
 				confirmButtonText: "Cerrar",
-				closeOnConfirm: false 
-			}, function(){   
+				closeOnConfirm: false
+			}, function(){
 				$(".sweet-alert").hide();
 				$(".sweet-overlay").hide();
 				$("#fullscreenloading").show();

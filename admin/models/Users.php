@@ -1,5 +1,5 @@
 <?php
-include_once('Connection.php');
+	include_once('Connection.php');
 
 	Class Users extends Connection
 	{
@@ -10,6 +10,8 @@ include_once('Connection.php');
 		private $Phone;
 		private $Description;
 		private $Permissions;
+		private $Type;
+		private $TypeId;
 
 		//SET
 		public function setUserId($value)
@@ -47,6 +49,16 @@ include_once('Connection.php');
 			$this->Permissions = $value;
 		}
 
+		public function setType($value)
+		{
+			$this->Type = $value;
+		}
+
+		public function setTypeId($value)
+		{
+			$this->TypeId = $value;
+		}
+
 		//GET
 		public function getUserId()
 		{
@@ -81,6 +93,16 @@ include_once('Connection.php');
 		public function getPermissions()
 		{
 			return $this->Permissions;
+		}
+
+		public function getType()
+		{
+			return $this->Type;
+		}
+
+		public function getTypeId()
+		{
+			return $this->TypeId;
 		}
 
 		public function CreateUser()
@@ -122,6 +144,84 @@ include_once('Connection.php');
 			}
 		}
 
+		public function CreateUserType()
+		{
+			try
+			{
+				$sql = "INSERT INTO Users
+										(Name
+										, Email
+										, Password
+										, Phone
+										, Description, Type, TypeId)
+										VALUES
+										($this->Name
+										, $this->Email
+										, '$this->Password'
+										, $this->Phone
+										, $this->Description
+										, '$this->Type'
+										,$this->TypeId)";
+
+				$result = $this->sentence("SET CHARACTER SET utf8");
+				$result = $this->sentence($sql);
+
+				if($result->rowCount() > 0)
+				{
+					return "exito";
+				}
+				else
+				{
+					return "fallo";
+				}
+			}
+
+			catch(Exception $e)
+			{
+				echo $e;
+				return false;
+			}
+		}
+
+		public function CreateUserPerfil()
+		{
+			try
+			{
+				$sql = "INSERT INTO Users
+										(Name
+										, Email
+										, Password
+										, Phone
+										, Description, Type, TypeId)
+										VALUES
+										($this->Name
+										, $this->Email
+										, '$this->Password'
+										, $this->Phone
+										, $this->Description
+										, 'UserDoctor'
+										,$this->TypeId)";
+
+				$result = $this->sentence("SET CHARACTER SET utf8");
+				$result = $this->sentence($sql);
+
+				if($result->rowCount() > 0)
+				{
+					return "exito";
+				}
+				else
+				{
+					return "fallo";
+				}
+			}
+
+			catch(Exception $e)
+			{
+				echo $e;
+				return false;
+			}
+		}
+
 		public function Login()
 		{
 			try
@@ -134,6 +234,16 @@ include_once('Connection.php');
 
 					$this->setName($fetchResult["Name"]);
 					$this->setUserId($fetchResult["UserId"]);
+
+					if($fetchResult["Type"] == 'Doctor')
+					{
+						$this->setType('Doctor');
+						$this->setTypeId($fetchResult["TypeId"]);
+					}
+					elseif($fetchResult["Type"] == 'Client'){
+						$this->setType('Doctor');
+						$this->setTypeId($fetchResult["TypeId"]);
+					}
 
 					return true;
 
@@ -229,6 +339,25 @@ include_once('Connection.php');
 				$result = $this->sentence("SET CHARACTER SET utf8");
 				$result = $this->sentence("SELECT
 											*
+											FROM Users WHERE TypeId IS NULL
+											ORDER BY UserId ASC
+										");
+
+				return $result;
+			}
+			catch(Exception $e)
+			{
+				echo $e;
+			}
+		}
+
+		public function ListUser()
+		{
+			try
+			{
+				$result = $this->sentence("SET CHARACTER SET utf8");
+				$result = $this->sentence("SELECT
+											*
 											FROM Users
 											ORDER BY UserId ASC
 										");
@@ -273,6 +402,40 @@ include_once('Connection.php');
 				return false;
 			}
 		}
+
+		public function UpdateUserPerfil()
+		{
+			try
+			{
+				$sql = "UPDATE Users SET Name = $this->Name
+										, Email = $this->Email
+										, Password = '$this->Password'
+										, Phone = $this->Phone
+										, Description = $this->Description
+										, TypeId = '$this->TypeId'
+										WHERE UserId = $this->UserId";
+
+				$result = $this->sentence("SET CHARACTER SET utf8");
+				$result = $this->sentence($sql);
+
+				$query = $result->rowCount() ? true : false;
+				if($query)
+				{
+					return "exito";
+				}
+				else
+				{
+					return "fallo";
+				}
+			}
+
+			catch(Exception $e)
+			{
+				echo $e;
+				return false;
+			}
+		}
+
 
 		public function UpdatePassword($pass)
 		{
@@ -349,25 +512,22 @@ include_once('Connection.php');
 			}
 		}
 
-		public function DeleteUserFromRestaurant()
+		public function GetUsersForDoctor($id)
 		{
 			try
 			{
-				$result = $this->sentence("DELETE FROM RestaurantUsers WHERE UserId = $this->UserId");
+				$sql = "SELECT * FROM Users WHERE TypeId = $id AND Type = '$this->Type'";
 
-				if($result->rowCount() > 0)
-				{
-					return "success";
-				}
-				else
-				{
-					return "fallo";
-				}
+				$result = $this->sentence("SET CHARACTER SET utf8");
+				$result = $this->sentence($sql);
+
+
+				return $result;
 			}
-
 			catch(Exception $e)
 			{
 				echo $e;
+				return false;
 			}
 		}
 

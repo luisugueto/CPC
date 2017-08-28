@@ -5,6 +5,7 @@
 	require_once("models/Categories.php");
 	require_once("models/SubCategories.php");
 	require_once("models/ProceduresDoctor.php");
+	require_once("models/Clients.php");
 
 	include("includes/functions.php");
 
@@ -15,6 +16,8 @@
 	$categoriesList = $categories->ListCategories();
 	$subcategories = new SubCategories();
 	$subcategoriesList = $subcategories->ListSubCategories();
+	$clients = new Clients();
+	$clientsNotPlan = $clients->ListClients();
 
 	if(!isset($_POST['action']))
 	{
@@ -38,7 +41,9 @@
 		'Name' => '',
 		'SubTitle' => '',
 		'Description' => '',
-		'PlanId' => ''
+		'PlanId' => '',
+		'Code' => '',
+		'Email' => ''
 	);
 
 	if($id != '')
@@ -49,60 +54,108 @@
 				if($id != '0')
 				{
 					$doctors->setDoctorId($id);
+
+					if(isset($_POST["hdGeneralAction"])){
+						if ($_POST["hdGeneralAction"] == "client_form")
+						{
+							$doctors->setClientId(GetSQLValueString($_POST["txtClient"], "text"));
+							echo json_encode($doctors->UpdateClient());
+							exit;
+						}
+
+						if ($_POST["hdGeneralAction"] == "description")
+						{
+							$doctors->setDescription(GetSQLValueString($_POST["txtDescription"], "text"));
+							echo json_encode($doctors->UpdateDoctorDescription());
+							exit;
+						}
+					}
+
 					$doctors->setName(GetSQLValueString($_POST["txtName"], "text"));
 					$doctors->setSubTitle(GetSQLValueString($_POST["txtSubTitle"], "text"));
-					$doctors->setDescription(GetSQLValueString($_POST["txtDescription"], "text"));
 					$doctors->setPlanId($_POST["txtPlan"]);
+					$doctors->setEmail(GetSQLValueString($_POST["txtEmail"], "text"));
+					$doctors->setCode(GetSQLValueString($_POST["txtCode"], "text"));
 
 					if($doctors->UpdateDoctor() == 'exito')
 					{
-							if(isset($_POST['txtDescriptionContact']) && isset($_POST['txtTypeContact'])){
-								$descriptionContact = $_POST['txtDescriptionContact'];
-								$typeContact = $_POST['txtTypeContact'];
+						if(isset($_POST['txtDescriptionContact']) && isset($_POST['txtTypeContact'])){
+							$descriptionContact = $_POST['txtDescriptionContact'];
+							$typeContact = $_POST['txtTypeContact'];
 
-								foreach($descriptionContact as $key => $value)
-								{
-									$newData = new DataDoctors();
-									if($typeContact[$key] == '1')
-										$newData->setName('Direccion');
-									elseif($typeContact[$key] == '2')
-										$newData->setName('Ciudad');
-									elseif($typeContact[$key] == '3')
-										$newData->setName('Pais');
-									elseif($typeContact[$key] == '4')
-										$newData->setName('Telefono');
-									elseif($typeContact[$key] == '5')
-										$newData->setName('Correo');
-									elseif($typeContact[$key] == '6')
-										$newData->setName('Whatsapp');
-
-									$newData->setDoctorId($id);
-									$newData->setDescription($value);
-									$newData->CreateData();
-								}
-							}
-
-							elseif(isset($_POST['deleteContact']))
+							foreach($descriptionContact as $key => $value)
 							{
-								$deleteContact = $_POST['deleteContact'];
-								foreach ($deleteContact as $k => $val)
-								{
-									$deleteData = new DataDoctors();
-									$deleteData->DeleteData($val);
-								}
-							}
+								$newData = new DataDoctors();
+								if($typeContact[$key] == '1')
+									$newData->setName('Dirección');
+								elseif($typeContact[$key] == '2')
+									$newData->setName('Ciudad');
+								elseif($typeContact[$key] == '3')
+									$newData->setName('País');
+								elseif($typeContact[$key] == '4')
+									$newData->setName('Teléfono');
+								elseif($typeContact[$key] == '5')
+									$newData->setName('Correo');
+								elseif($typeContact[$key] == '6')
+									$newData->setName('Whatsapp');
+								elseif($typeContact[$key] == '7')
+									$newData->setName('Página Web');
 
-							echo json_encode("exito");
-							exit();
+								$newData->setDoctorId($id);
+								$newData->setDescription($value);
+								$newData->CreateData();
+							}
+						}
+
+		              	if(isset($_POST['txtCategorie']) && isset($_POST['txtSubCategory'])){
+		                	$procedureCategory = $_POST['txtCategorie'];
+		    				$procedureSubCategory = $_POST['txtSubCategory'];
+		                	foreach ($procedureCategory as $key => $value) {
+
+		                  		$procedures = new ProceduresDoctor();
+		      					$procedures->setCategoryId($value);
+		      					$procedures->setSubCategoryId($procedureSubCategory[$key]);
+		      					$procedures->setDoctorId($id);
+		      					$procedures->CreateProceduresDoctor();
+		                	}
+		              	}
+
+						if(isset($_POST['deleteContact']))
+						{
+							$deleteContact = $_POST['deleteContact'];
+							foreach ($deleteContact as $k => $val)
+							{
+								$deleteData = new DataDoctors();
+								$deleteData->setDataId($val);
+								$deleteData->DeleteData();
+							}
+						}
+
+          				if(isset($_POST['deleteProcedures']))
+						{
+							$deletePro = $_POST['deleteProcedures'];
+							foreach ($deletePro as $k => $val)
+							{
+								$deleteProcedure = new ProceduresDoctor();
+								$deleteProcedure->setProceduresDoctorId($val);
+								$deleteProcedure->DeleteProceduresDoctor();
+							}
+						}
+
+						echo json_encode("exito");
+						exit();
 					}
 
 				}
 				else
 				{
+					$doctors->setClientId(GetSQLValueString($_POST["txtClient"], "text"));
 					$doctors->setName(GetSQLValueString($_POST["txtName"], "text"));
 					$doctors->setSubTitle(GetSQLValueString($_POST["txtSubTitle"], "text"));
 					$doctors->setDescription(GetSQLValueString($_POST["txtDescription"], "text"));
 					$doctors->setPlanId($_POST["txtPlan"]);
+					$doctors->setEmail(GetSQLValueString($_POST["txtEmail"], "text"));
+					$doctors->setCode(GetSQLValueString($_POST["txtCode"], "text"));
 
 					$test = $doctors->CreateDoctor();
 					if($test == 'exito'){
@@ -112,17 +165,19 @@
 						foreach($descriptionContact as $key => $value) {
 							$data = new DataDoctors();
 							if($typeContact[$key] == '1')
-								$data->setName('Direccion');
+								$data->setName('Dirección');
 							elseif($typeContact[$key] == '2')
 								$data->setName('Ciudad');
 							elseif($typeContact[$key] == '3')
-								$data->setName('Pais');
+								$data->setName('País');
 							elseif($typeContact[$key] == '4')
-								$data->setName('Telefono');
+								$data->setName('Teléfono');
 							elseif($typeContact[$key] == '5')
 								$data->setName('Correo');
 							elseif($typeContact[$key] == '6')
 								$data->setName('Whatsapp');
+							elseif($typeContact[$key] == '7')
+								$data->setName('Página Web');
 
 							$data->setDoctorId($doctors->lastDoctorId());
 							$data->setDescription($value);
@@ -131,13 +186,15 @@
 
 						$procedureCategory = $_POST['txtCategorie'];
 						$procedureSubCategory = $_POST['txtSubCategory'];
+            $lastId = $doctors->lastDoctorId();
+            foreach ($procedureCategory as $key => $value) {
 
-						$procedures = new ProceduresDoctor();
-						$procedures->setCategoryId($procedureCategory);
-						$procedures->setSubCategoryId($procedureSubCategory);
-						$procedures->setDoctorId($doctors->lastDoctorId());
-						$procedures->CreateProceduresDoctor();
-
+              $procedures = new ProceduresDoctor();
+  						$procedures->setCategoryId($value);
+  						$procedures->setSubCategoryId($procedureSubCategory[$key]);
+  						$procedures->setDoctorId($lastId);
+  						$procedures->CreateProceduresDoctor();
+            }
 						echo json_encode("exito");
 						          exit();
 					}
@@ -145,6 +202,22 @@
 			break;
 
 			case 'form':
+				if($id != '0')
+				{
+					$doctors->setDoctorId($id);
+					$registro = $doctors->GetDoctorContent();
+				}
+			break;
+
+			case 'client_form':
+				if($id != '0')
+				{
+					$doctors->setDoctorId($id);
+					$registro = $doctors->GetDoctorContent();
+				}
+			break;
+
+			case 'description':
 				if($id != '0')
 				{
 					$doctors->setDoctorId($id);
@@ -176,6 +249,118 @@
 		}
 	}
 
+?>
+
+<?php
+	if($_POST['action'] == 'description')
+	{
+?>
+<script src="custom.js"></script>
+<script src="functions.js"></script>
+
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      	<h2>Médico</h2>
+      </div>
+      <div id="modal-result" class="modal-body">
+        <div class="row">
+            <div class="col-md-12">
+                <form class="form-horizontal group-border-dashed" action="#" id="modalForm" data-parsley-validate novalidat>
+                    <input type="hidden" name="action" value="submit" />
+                    <input type="hidden" name="DoctorId" value="<?php echo $registro['DoctorId']; ?>" />
+										<div class="deleted"></div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Registro ID.</label>
+                        <div class="col-sm-6">
+                            <input type="text" disabled="disabled" class="form-control" value="<?php echo $registro['DoctorId'];?>"/>
+                        </div>
+                    </div>
+										<div class="form-group">
+                        <label class="col-sm-3 control-label">Descripción</label>
+                        <div class="col-sm-6">
+                            <textarea name="txtDescription" class="form-control" parsley-trigger="change" required placeholder=""><?php echo $registro['Description'];?></textarea>
+                        </div>
+                    </div>
+										<input type="hidden" name="hdGeneralAction" value="<?= $_POST['action'] ?>">
+                </form>
+            </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-inverse btn-custom waves-effect waves-light" data-dismiss="modal" aria-label="Close"><i class="fa fa-undo m-r-5"></i> <span>Cancelar</span></button>
+        <button id="submitButton" class="btn btn-default waves-effect waves-light" disabled="disabled" onclick="submitModalForm('medicos');"> <i class="fa fa-check m-r-5"></i> <span>ok</span> </button>
+      </div>
+    </div>
+</div>
+<?php
+	}
+?>
+
+<?php
+	if($_POST['action'] == 'client_form')
+	{
+?>
+<script src="custom.js"></script>
+<script src="functions.js"></script>
+
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      	<h2>Médico</h2>
+      </div>
+      <div id="modal-result" class="modal-body">
+        <div class="row">
+            <div class="col-md-12">
+                <form class="form-horizontal group-border-dashed" action="#" id="modalForm" data-parsley-validate novalidat>
+                    <input type="hidden" name="action" value="submit" />
+                    <input type="hidden" name="DoctorId" value="<?php echo $registro['DoctorId']; ?>" />
+										<div class="deleted"></div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Registro ID.</label>
+                        <div class="col-sm-6">
+                            <input type="text" disabled="disabled" class="form-control" value="<?php echo $registro['DoctorId'];?>"/>
+                        </div>
+                    </div>
+										<div class="form-group">
+                        <label class="col-sm-3 control-label">Cliente</label>
+                        <div class="col-sm-6">
+													<select class="form-control" name="txtClient" required>
+                            <?php
+                              while ($Client = $clientsNotPlan->fetch(PDO::FETCH_ASSOC))
+															{
+																if ($Client["ClientId"] == $registro["ClientId"])
+																{
+														?>
+																	<option value="<?= $Client['ClientId'] ?>" selected><?= $Client['Name'] ?></option>
+														<?php
+																}
+																else
+																{
+														?>
+																	<option value="<?= $Client['ClientId'] ?>"><?= $Client['Name'] ?></option>
+														<?php
+																}
+															}
+                            ?>
+                          </select>
+                        </div>
+                    </div>
+										<input type="hidden" name="hdGeneralAction" value="<?= $_POST['action'] ?>">
+                </form>
+            </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-inverse btn-custom waves-effect waves-light" data-dismiss="modal" aria-label="Close"><i class="fa fa-undo m-r-5"></i> <span>Cancelar</span></button>
+        <button id="submitButton" class="btn btn-default waves-effect waves-light" disabled="disabled" onclick="submitModalForm('medicos');"> <i class="fa fa-check m-r-5"></i> <span>ok</span> </button>
+      </div>
+    </div>
+</div>
+<?php
+	}
 ?>
 
 <?php
@@ -217,9 +402,9 @@
                         </div>
                     </div>
 										<div class="form-group">
-                        <label class="col-sm-3 control-label">Descripción</label>
+                        <label class="col-sm-3 control-label">Correo</label>
                         <div class="col-sm-6">
-                            <input name="txtDescription" type="text" class="form-control" parsley-trigger="change" required placeholder="" value="<?php echo $registro['Description'];?>"/>
+                            <input name="txtEmail" type="email" class="form-control" parsley-trigger="change" required placeholder="" value="<?php echo $registro['Email'];?>"/>
                         </div>
                     </div>
 										<div class="form-group">
@@ -269,14 +454,12 @@
 												<button type="button" class="btn btn-success waves-effect waves-light" onclick="agregarContacto()"><i class="fa fa-plus m-r-5"></i> <span>Agregar Contacto</span></button>
 										</div>
 										<hr></hr>
-
-										<div class="form-group">
+										<?php
+											while ($Procedure = $proceduresList->fetch(PDO::FETCH_ASSOC))
+											{
+										?>
+                    <div class="form-group" id="procedimiento<?= $Procedure['ProceduresDoctorId']?>">
                         <label class="col-sm-3 control-label">Procedimiento</label>
-												<?php
-													while ($Procedure = $proceduresList->fetch(PDO::FETCH_ASSOC))
-													{
-
-												?>
 												<div class="col-sm-3">
 														<label>Categoría</label>
 														<input readonly type="text" class="form-control" parsley-trigger="change" required placeholder="" value="<?= $categories->GetCategoryName($Procedure['CategoryId'])?>"/>
@@ -285,12 +468,25 @@
 													<label>SubCategoría</label>
 													<input type="text" readonly class="form-control" parsley-trigger="change" required placeholder="" value="<?= $subcategories->GetSubCategoryName($Procedure['SubCategoryId'])?>"/>
 												</div>
-												<?php
-													}
-												?>
-
+                        <div class="col-sm-3">
+  												<button type="button" class="btn btn-danger waves-effect waves-light" onclick="borrarProcedimiento(<?= $Procedure['ProceduresDoctorId'] ?>)"><i class="fa fa-close m-r-5"></i>Borrar<span></span></button>
+  											</div>
                     </div>
-
+										<?php
+											}
+										?>
+                    <div class="addP">
+										</div>
+										<div class="center" align="center">
+												<button type="button" class="btn btn-success waves-effect waves-light" onclick="agregarProcedimiento()"><i class="fa fa-plus m-r-5"></i> <span>Agregar Procedimiento</span></button>
+										</div>
+										<hr>
+										<div class="form-group">
+                        <label class="col-sm-3 control-label">Código</label>
+                        <div class="col-sm-6">
+                            <input name="txtCode" type="text" pattern='^\d{4}$' maxlength="4" class="form-control" parsley-trigger="change" required placeholder="" value="<?= $registro['Code'];?>"/>
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>
@@ -305,13 +501,48 @@
 <script>
 
 function agregarContacto(){
-	$(".add").append('<div class="form-group"><label class="col-sm-3 control-label">Contacto</label><div class="col-sm-3"><select class="form-control" name="txtTypeContact[]"><option value="" disabled>Seleccione</option><option value="1">Dirección</option><option value="2">Ciudad</option><option value="3">País</option><option value="4">Teléfono</option><option value="5">Correo</option><option value="6">Whatsapp</option></select></div><div class="col-sm-3"><input name="txtDescriptionContact[]" type="text" class="form-control" parsley-trigger="change" required placeholder="" value=""/></div></div>');
+	$(".add").append('<div class="form-group"><label class="col-sm-3 control-label">Contacto</label><div class="col-sm-3"><select class="form-control" name="txtTypeContact[]"><option value="" disabled>Seleccione</option><option value="1">Dirección</option><option value="2">Ciudad</option><option value="3">País</option><option value="4">Teléfono</option><option value="5">Correo</option><option value="6">Whatsapp</option><option value="7">Página Web</option></select></div><div class="col-sm-3"><input name="txtDescriptionContact[]" type="text" class="form-control" parsley-trigger="change" required placeholder="" value=""/></div></div>');
 }
 
 function borrarContacto(value){
 	$(".deleted").append('<input name="deleteContact[]" type="hidden" value="'+value+'"/>');
 	$("#contact"+value).hide();
 }
+
+function borrarProcedimiento(value){
+	$(".deleted").append('<input name="deleteProcedures[]" type="hidden" value="'+value+'"/>');
+	$("#procedimiento"+value).hide();
+}
+
+var i = 0;
+function agregarProcedimiento(){
+	$(".addP").append('<div class="form-group">'+
+      '<label class="col-sm-3 control-label">Procedimiento</label>'+
+      '<div class="col-sm-3">'+
+        '<label>Categoría</label>'+
+        '<select class="form-control" name="txtCategorie[]" onchange="addSubCategorie('+i+')" id="category'+i+'" required>'+
+          '<option value="" disabled selected>Seleccione</option>'+
+          '<?php
+            $categoriesList = $categories->ListCategories();
+            while ($Categorie = $categoriesList->fetch(PDO::FETCH_ASSOC))
+            {
+          ?>'+
+          '<option value="<?= $Categorie['CategoryId'] ?>"><?= $Categorie['Name'] ?></option>'+
+          '<?php
+            }
+          ?>'+
+        '</select>'+
+      '</div>'+
+      '<div class="col-sm-3">'+
+        '<label>SubCategoría</label>'+
+        '<select class="form-control" name="txtSubCategory[]" id="subcategory'+i+'" required>'+
+          '<option value="" disabled selected>Seleccione</option>'+
+        '</select>'+
+      '</div>'+
+  '</div>');
+  i++;
+}
+
 
 function addSubCategory(){
 		var idCategory = $('#category').val();
@@ -331,6 +562,29 @@ function addSubCategory(){
 					$('#subcategory').empty();
 					$.each(data,function(index, el){
 						$('#subcategory').append('<option value='+el.SubCategoryId+'>'+el.Name+'</option>');
+					});
+				}
+			}
+		});
+}
+function addSubCategorie(id){
+		var idCategory = $('#category'+id).val();
+
+		$.ajax({
+			data: { id : idCategory},
+			type: 'GET',
+			url: 'controllers/GetSubCategories.php',
+			contentType: "application/json; charset=utf-8",
+			dataType: "json",
+			success: function (data) {
+				if(data == null){
+					$('#subcategory'+id).empty();
+					$('#subcategory'+id).append('<option value="" disabled selected>Seleccione</option>');
+				}
+				else{
+					$('#subcategory'+id).empty();
+					$.each(data,function(index, el){
+						$('#subcategory'+id).append('<option value='+el.SubCategoryId+'>'+el.Name+'</option>');
 					});
 				}
 			}
@@ -367,6 +621,22 @@ function addSubCategory(){
                             <input type="text" disabled="disabled" class="form-control" value="<?php echo $registro['DoctorId'];?>"/>
                         </div>
                     </div>
+										<div class="form-group">
+                        <label class="col-sm-3 control-label">Cliente</label>
+                        <div class="col-sm-6">
+													<select class="form-control" name="txtClient" required>
+                            <option value="" disabled selected>Seleccione</option>
+                            <?php
+                              while ($Client = $clientsNotPlan->fetch(PDO::FETCH_ASSOC))
+															{
+														?>
+																<option value="<?= $Client['ClientId'] ?>"><?= $Client['Name'] ?></option></td>
+                            <?php
+															}
+                            ?>
+                          </select>
+                        </div>
+                    </div>
                     <div class="form-group">
                         <label class="col-sm-3 control-label">Nombre</label>
                         <div class="col-sm-6">
@@ -382,29 +652,49 @@ function addSubCategory(){
 										<div class="form-group">
                         <label class="col-sm-3 control-label">Descripción</label>
                         <div class="col-sm-6">
-                            <input name="txtDescription" type="text" class="form-control" parsley-trigger="change" required placeholder="" value="<?php echo $registro['Description'];?>"/>
+                            <textarea name="txtDescription" class="form-control" parsley-trigger="change" required placeholder=""><?php echo $registro['Description'];?></textarea>
                         </div>
                     </div>
 										<div class="form-group">
-                        <label class="col-sm-3 control-label">Plan</label>
+                        <label class="col-sm-3 control-label">Correo</label>
                         <div class="col-sm-6">
-                          <select class="form-control" name="txtPlan">
-                            <option value="" disabled>Seleccione</option>
-                            <?php
-                              while ($Plan = $planList->fetch(PDO::FETCH_ASSOC))
-															{
-																	if($Plan['PlanId'] == $registro['PlanId']){
-                            ?>
-                                  <option value="<?= $Plan['PlanId'] ?>" selected><?= $Plan['Name'] ?></option></td>
-														<?php } else { ?>
-																	<option value="<?= $Plan['PlanId'] ?>"><?= $Plan['Name'] ?></option></td>
-                            <?php
-																	}
-															}
-                            ?>
-                          </select>
+                            <input name="txtEmail" type="text" class="form-control" parsley-trigger="change" required placeholder="" value="<?php echo $registro['Email'];?>"/>
                         </div>
-                    </div>
+										</div>
+										
+										<?php
+											if (in_array("per_planes_editar", $permisos_usuario))
+											{
+										?>
+												<div class="form-group">
+														<label class="col-sm-3 control-label">Plan</label>
+														<div class="col-sm-6">
+															<select class="form-control" name="txtPlan">
+																<option value="" disabled>Seleccione</option>
+																<?php
+																	while ($Plan = $planList->fetch(PDO::FETCH_ASSOC))
+																	{
+																			if($Plan['PlanId'] == $registro['PlanId']){
+																?>
+																			<option value="<?= $Plan['PlanId'] ?>" selected><?= $Plan['Name'] ?></option></td>
+																<?php } else { ?>
+																			<option value="<?= $Plan['PlanId'] ?>"><?= $Plan['Name'] ?></option></td>
+																<?php
+																			}
+																	}
+																?>
+															</select>
+														</div>
+												</div>
+										<?php
+											}
+											else
+											{
+										?>
+												<input type="hidden" name="txtPlan" value="<?= $registro['PlanId'] ?>">
+										<?php
+											}
+										?>
 										<hr></hr>
 										<div class="form-group">
                         <label class="col-sm-3 control-label">Contacto</label>
@@ -417,6 +707,7 @@ function addSubCategory(){
 														<option value="4">Teléfono</option>
 														<option value="5">Correo</option>
 														<option value="6">Whatsapp</option>
+														<option value="7">Página Web</option>
                           </select>
                         </div>
 												<div class="col-sm-3">
@@ -433,16 +724,18 @@ function addSubCategory(){
                         <label class="col-sm-3 control-label">Procedimiento</label>
                         <div class="col-sm-3">
 													<label>Categoría</label>
-                          <select class="form-control" name="txtCategorie" onchange="addSubCategory()" id="category" required>
+                          <select class="form-control" name="txtCategorie[]" onchange="addSubCategory()" id="category" required>
                             <option value="" disabled selected>Seleccione</option>
                             <?php
+                              $categories = new Categories();
+                              $categoriesList = $categories->ListCategories();
                               while ($Categorie = $categoriesList->fetch(PDO::FETCH_ASSOC))
 															{
 																	if($Categorie['CategoryId'] == $registro['CategoryId']){
                             ?>
-                                  <option value="<?= $Categorie['CategoryId'] ?>" selected><?= $Categorie['Name'] ?></option></td>
+                                  <option value="<?= $Categorie['CategoryId'] ?>" selected><?= $Categorie['Name'] ?></option>
 														<?php } else { ?>
-																	<option value="<?= $Categorie['CategoryId'] ?>"><?= $Categorie['Name'] ?></option></td>
+																	<option value="<?= $Categorie['CategoryId'] ?>"><?= $Categorie['Name'] ?></option>
                             <?php
 																	}
 															}
@@ -451,11 +744,25 @@ function addSubCategory(){
                         </div>
 												<div class="col-sm-3">
 													<label>SubCategoría</label>
-													<select class="form-control" name="txtSubCategory" id="subcategory" required>
+													<select class="form-control" name="txtSubCategory[]" id="subcategory" required>
                             <option value="" disabled selected>Seleccione</option>
                           </select>
                         </div>
                     </div>
+
+                    <div class="addP">
+										</div>
+										<div class="center" align="center">
+												<button type="button" class="btn btn-success waves-effect waves-light" onclick="agregarProcedimiento()"><i class="fa fa-plus m-r-5"></i> <span>Agregar Procedimiento</span></button>
+										</div>
+
+										<hr>
+										<div class="form-group">
+												<label class="col-sm-3 control-label">Código</label>
+												<div class="col-sm-6">
+													<input name="txtCode" type="text" pattern='^\d{4}$' maxlength="4" class="form-control" parsley-trigger="change" required placeholder="" value="<?= $registro['Code'];?>"/>
+												</div>
+										</div>
 
                 </form>
             </div>
@@ -471,6 +778,34 @@ function addSubCategory(){
 
 function agregarContacto(){
 	$(".add").append('<div class="form-group"><label class="col-sm-3 control-label">Contacto</label><div class="col-sm-3"><select class="form-control" name="txtTypeContact[]"><option value="" disabled>Seleccione</option><option value="1">Dirección</option><option value="2">Ciudad</option><option value="3">País</option><option value="4">Teléfono</option><option value="5">Correo</option><option value="6">Whatsapp</option></select></div><div class="col-sm-3"><input name="txtDescriptionContact[]" type="text" class="form-control" parsley-trigger="change" required placeholder="" value="<?php echo $registro['Description'];?>"/></div></div>');
+}
+var i = 0;
+function agregarProcedimiento(){
+	$(".addP").append('<div class="form-group">'+
+      '<label class="col-sm-3 control-label">Procedimiento</label>'+
+      '<div class="col-sm-3">'+
+        '<label>Categoría</label>'+
+        '<select class="form-control" name="txtCategorie[]" onchange="addSubCategorie('+i+')" id="category'+i+'" required>'+
+          '<option value="" disabled selected>Seleccione</option>'+
+          '<?php
+            $categoriesList = $categories->ListCategories();
+            while ($Categorie = $categoriesList->fetch(PDO::FETCH_ASSOC))
+            {
+          ?>'+
+          '<option value="<?= $Categorie['CategoryId'] ?>"><?= $Categorie['Name'] ?></option>'+
+          '<?php
+            }
+          ?>'+
+        '</select>'+
+      '</div>'+
+      '<div class="col-sm-3">'+
+        '<label>SubCategoría</label>'+
+        '<select class="form-control" name="txtSubCategory[]" id="subcategory'+i+'" required>'+
+          '<option value="" disabled selected>Seleccione</option>'+
+        '</select>'+
+      '</div>'+
+  '</div>');
+  i++;
 }
 
 function addSubCategory(){
@@ -491,6 +826,30 @@ function addSubCategory(){
 					$('#subcategory').empty();
 					$.each(data,function(index, el){
 						$('#subcategory').append('<option value='+el.SubCategoryId+'>'+el.Name+'</option>');
+					});
+				}
+			}
+		});
+}
+
+function addSubCategorie(id){
+		var idCategory = $('#category'+id).val();
+
+		$.ajax({
+			data: { id : idCategory},
+			type: 'GET',
+			url: 'controllers/GetSubCategories.php',
+			contentType: "application/json; charset=utf-8",
+			dataType: "json",
+			success: function (data) {
+				if(data == null){
+					$('#subcategory'+id).empty();
+					$('#subcategory'+id).append('<option value="" disabled selected>Seleccione</option>');
+				}
+				else{
+					$('#subcategory'+id).empty();
+					$.each(data,function(index, el){
+						$('#subcategory'+id).append('<option value='+el.SubCategoryId+'>'+el.Name+'</option>');
 					});
 				}
 			}

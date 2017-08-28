@@ -4,7 +4,8 @@ include_once('Connection.php');
   	Class PlanClients extends Connection
 	{
 		private $PlanClientId;
-    	private $ClientId;
+    private $DoctorId;
+    private $PlanId;
 		private $Status;
 
 		//SET
@@ -13,9 +14,14 @@ include_once('Connection.php');
 			$this->PlanClientId = $value;
 		}
 
-		public function setClientId($value)
+		public function setDoctorId($value)
 		{
-			$this->ClientId = $value;
+			$this->DoctorId = $value;
+		}
+
+    public function setPlanId($value)
+		{
+			$this->PlanId = $value;
 		}
 
 		public function setStatus($value)
@@ -29,9 +35,14 @@ include_once('Connection.php');
 			return $this->PlanClientId;
 		}
 
-		public function getClientId()
+		public function getDoctorId()
 		{
-			return $this->ClientId;
+			return $this->DoctorId;
+		}
+
+    public function getPlanId()
+		{
+			return $this->PlanId;
 		}
 
 		public function getStatus()
@@ -44,9 +55,9 @@ include_once('Connection.php');
 			try
 			{
 				$sql = "INSERT INTO PlanClients
-										(ClientId, Status)
+										(DoctorId, PlanId)
 										VALUES
-										($this->ClientId, $this->Status)";
+										($this->DoctorId, $this->PlanId)";
 
 				$result = $this->sentence("SET CHARACTER SET utf8");
 				$result = $this->sentence($sql);
@@ -145,6 +156,36 @@ include_once('Connection.php');
 				echo $e;
 			}
 		}
+
+    public function ListPlanClientsJoin()
+    {
+      try
+			{
+				$result = $this->sentence("SET CHARACTER SET utf8");
+				$result = $this->sentence("SELECT * FROM PlanClients as pl INNER JOIN Doctors as cl ON cl.DoctorId = pl.DoctorId");
+
+				return $result;
+			}
+			catch(Exception $e)
+			{
+				echo $e;
+			}
+    }
+
+    public function numPlanClient($clientId)
+    {
+      try
+			{
+				$result = $this->sentence("SET CHARACTER SET utf8");
+				$result = $this->sentence("SELECT * FROM PlanClients as pl INNER JOIN Doctors as cl ON cl.DoctorId = pl.DoctorId WHERE cl.DoctorId = $clientId");
+
+				return $result->rowCount();
+			}
+			catch(Exception $e)
+			{
+				echo $e;
+			}
+    }
 
 		public function UpdatePlanClient()
 		{

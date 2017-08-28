@@ -3,9 +3,9 @@
 	{
 		//Produccion
 //		protected $hostname = "localhost";
-//		protected $dbusrname = "";
-//		protected $dbpassword = "";
-//		protected $dbname = "";
+//		protected $dbusrname = "ideohos1_adm";
+//		protected $dbpassword = "waH_bSv1wDX*";
+//		protected $dbname = "ideohos1_cpcp";
 
 		//Local
 		protected $hostname = "localhost";

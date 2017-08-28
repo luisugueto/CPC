@@ -1,15 +1,21 @@
 <?php
-include_once('Connection.php');
+	include_once('Connection.php');
 
 	Class Publicitys extends Connection
 	{
-			private $PublicityId;
-			private $Content;
+		private $PublicityId;
+		private $Title;
+		private $Content;
 
 		//SET
 		public function setPublicityId($value)
 		{
 			$this->PublicityId = $value;
+		}
+
+		public function setTitle($value)
+		{
+			$this->Title = $value;
 		}
 
 		public function setContent($value)
@@ -23,6 +29,11 @@ include_once('Connection.php');
 			return $this->PublicityId;
 		}
 
+		public function getTitle()
+		{
+			return $this->Title;
+		}
+
 		public function getContent()
 		{
 			return $this->Content;
@@ -33,10 +44,10 @@ include_once('Connection.php');
 
 			try
 			{
-				$sql = "INSERT INTO publicitys
-										(Content)
+				$sql = "INSERT INTO Publicitys
+										(Title, Content)
 										VALUES
-										($this->Content)";
+										($this->Title, $this->Content)";
 
 				$result = $this->sentence("SET CHARACTER SET utf8");
 				$result = $this->sentence($sql);
@@ -62,7 +73,7 @@ include_once('Connection.php');
 		{
 			try
 			{
-				$sql = "SELECT PublicityId, Content FROM publicitys WHERE PublicityId = $this->PublicityId";
+				$sql = "SELECT * FROM Publicitys WHERE PublicityId = $this->PublicityId";
 
 				$result = $this->sentence("SET CHARACTER SET utf8");
 				$result = $this->sentence($sql);
@@ -85,7 +96,7 @@ include_once('Connection.php');
 			try
 			{
 				$res = $this->sentence("SET CHARACTER SET utf8");
-				$res = $this->sentence("SELECT * FROM publicitys");
+				$res = $this->sentence("SELECT * FROM Publicitys");
 				return $res;
 			}
 			catch(Exception $e)
@@ -100,10 +111,9 @@ include_once('Connection.php');
 			{
 				$result = $this->sentence("SET CHARACTER SET utf8");
 				$result = $this->sentence("SELECT
-											PublicityId
-											, Content
-											FROM publicitys
-											ORDER BY Content ASC
+											*
+											FROM Publicitys
+											ORDER BY Title ASC
 										");
 
 				return $result;
@@ -118,7 +128,8 @@ include_once('Connection.php');
 		{
 			try
 			{
-				$sql = "UPDATE publicitys SET Content = $this->Content
+				$sql = "UPDATE Publicitys SET Title = $this->Title,
+										Content = $this->Content
 										WHERE PublicityId = $this->PublicityId";
 
 				$result = $this->sentence("SET CHARACTER SET utf8");
@@ -146,7 +157,7 @@ include_once('Connection.php');
 		{
 			try
 			{
-				$result = $this->sentence("DELETE FROM publicitys WHERE PublicityId = $this->PublicityId");
+				$result = $this->sentence("DELETE FROM Publicitys WHERE PublicityId = $this->PublicityId");
 
 				if($result->rowCount() > 0)
 				{

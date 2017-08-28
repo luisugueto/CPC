@@ -16,14 +16,21 @@
 			<div class="container">
 
 				<?php
-					if (!in_array("per_articulos_ver", $permisos_usuario))
+					if (in_array("per_blog_crear", $permisos_usuario) || in_array("per_blog_editar", $permisos_usuario) || in_array("per_blog_eliminar", $permisos_usuario))
 					{
 				?>
 
 						<div class="row">
 							<div class="col-sm-12">
 								<div class="btn-group pull-right m-t-15">
-									<a href="javascript:void(0)" onclick="modalCall('articulos','form','0')" class="btn btn-default btn-md waves-effect waves-light m-b-30"><i class="md md-add"></i> Agregar</a>
+									<?php
+										if (in_array("per_blog_crear", $permisos_usuario))
+										{
+									?>
+											<a href="agregar_articulo.php" class="btn btn-default btn-md waves-effect waves-light m-b-30"><i class="md md-add"></i> Agregar</a>
+									<?php
+										}
+									?>
 								</div>
 								<h4 class="page-title">Artículos</h4>
 								<ol class="breadcrumb">
@@ -40,7 +47,7 @@
 						<div class="row">
 							<div class="col-sm-12">
 								<div class="card-box m-b-0">
-									<table class="tablesaw table m-b-0" data-tablesaw-mode="swipe" data-tablesaw-sortable data-tablesaw-sortable-switch>
+									<table class="tablesaw table m-b-0" data-tablesaw-mode="swipe" data-tablesaw-sortable data-tablesaw-sortable-switch id="example">
 										<thead>
 											<tr>
 												<th scope="col" data-tablesaw-sortable-col data-tablesaw-sortable-default-col data-tablesaw-priority="persist">Foto</th>
@@ -56,7 +63,7 @@
 												{
 													$content = 'articulos';
 													$id = $article["ArticleId"];
-													$name = '<strong>Artículo No.'.$id.'</strong> ('.$article['Title'].')';	
+													$name = '<strong>Artículo No.'.$id.'</strong> ('.$article['Title'].')';
 											?>
 													<tr id="<?= $id ?>">
 														<td><img src="../images/blog/<?= $article['Photo'] ?>" width="100"></td>
@@ -68,21 +75,33 @@
 																if ($article['StatusId'] == "1")
 																{
 															?>
-																	<a href="javascript:void(0)" onclick="UpdateArticleStatus('<?= $id ?>', 2)" style="color:#4CAF50"><i class="fa fa-circle" aria-hidden="true"></i></a>
+																	<a href="javascript:void(0)" onclick="UpdateArticleStatus('<?= $id ?>', '2')" style="color:#4CAF50"><i class="fa fa-circle" aria-hidden="true"></i></a>
 															<?php
 																}
 																else
 																{
 															?>
-																	<a href="javascript:void(0)" onclick="UpdateArticleStatus('<?= $id ?>', 1)" style="color:#999"><i class="fa fa-circle" aria-hidden="true"></i></a>
+																	<a href="javascript:void(0)" onclick="UpdateArticleStatus('<?= $id ?>', '1')" style="color:#999"><i class="fa fa-circle" aria-hidden="true"></i></a>
 															<?php
 																}
 															?>
 														</td>
 
 														<td>
-															<a href="javascript:void(0)" onclick="modalCall('<?= $content ?>','form','<?= $id;?>')" class="btn btn-inverse btn-custom waves-effect waves-light btn-xs"><i class="fa fa-pencil"></i></a>
-															<a href="javascript:void(0)" onclick="deleteItem('<?= $content ?>','<?= $id ?>','<?= $name ?>')" class="btn btn-danger btn-custom waves-effect waves-light btn-xs"><i class="fa fa-remove"></i></a>
+															<?php
+																if (in_array("per_blog_editar", $permisos_usuario))
+																{
+															?>
+																	<a href="editar_articulo.php?id=<?= $id ?>" class="btn btn-inverse btn-custom waves-effect waves-light btn-xs"><i class="fa fa-pencil"></i></a>
+															<?php
+																}	
+																if (in_array("per_blog_eliminar", $permisos_usuario))
+																{
+															?>
+																	<a href="javascript:void(0)" onclick="deleteItem('<?= $content ?>','<?= $id ?>','<?= $name ?>')" class="btn btn-danger btn-custom waves-effect waves-light btn-xs"><i class="fa fa-remove"></i></a>
+															<?php
+																}
+															?>
 														</td>
 													</tr>
 											<?php
@@ -100,21 +119,21 @@
 
 <?php
 	include("includes/footer.php");
-	/*if (!in_array("per_articulos_ver", $permisos_usuario))
+	if ((!in_array("per_blog_crear", $permisos_usuario)) && (!in_array("per_blog_editar", $permisos_usuario)) && (!in_array("per_blog_eliminar", $permisos_usuario)))
 	{
 		echo '<script type="text/javascript">swal({
 				html:true,
-				title: "Atención!",   
+				title: "Atención!",
 				text: "La URL a la que intenta ingresar, es restringida<br/>",
 				type: "error",
-				confirmButtonColor: "#DD6B55",   
+				confirmButtonColor: "#DD6B55",
 				confirmButtonText: "Cerrar",
-				closeOnConfirm: false 
-			}, function(){   
+				closeOnConfirm: false
+			}, function(){
 				$(".sweet-alert").hide();
 				$(".sweet-overlay").hide();
 				$("#fullscreenloading").show();
 				location.href = "index.php";
 			});</script>';
-	}*/
+	}
 ?>

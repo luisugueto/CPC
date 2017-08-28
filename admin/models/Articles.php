@@ -13,8 +13,6 @@
 		private $Slug;
 		private $MetaTitle;
 		private $MetaDescription;
-		private $Featured;
-		private $Keywords;
 
 		//SET
 		public function setArticleId($value)
@@ -65,16 +63,6 @@
 		public function setMetaDescription($value)
 		{
 			$this->MetaDescription = $value;
-		}
-
-		public function setFeatured($value)
-		{
-			$this->Featured = $value;
-		}
-
-		public function setKeywords($value)
-		{
-			$this->Keywords = $value;
 		}
 
 		//GET
@@ -128,16 +116,6 @@
 			return $this->MetaDescription;
 		}
 
-		public function getFeatured()
-		{
-			return $this->Featured;
-		}
-
-		public function getKeywords()
-		{
-			return $this->Keywords;
-		}
-
 		public function CreateArticle()
 		{
 			try
@@ -151,9 +129,7 @@
 										, Author
 										, Slug
 										, MetaTitle
-										, MetaDescription
-										, Featured
-										, Keywords)
+										, MetaDescription)
 										VALUES
 										('$this->Title'
 										, '$this->Photo'
@@ -163,9 +139,7 @@
 										, '$this->Author'
 										, '$this->Slug'
 										, '$this->MetaTitle'
-										, '$this->MetaDescription'
-										, '$this->Featured'
-										, '$this->Keywords')";
+										, '$this->MetaDescription')";
 
 				$result = $this->sentence("SET CHARACTER SET utf8");
 				$result = $this->sentence($sql);
@@ -340,9 +314,7 @@
 										, Slug = '$this->Slug'
 										, MetaTitle = '$this->MetaTitle'
 										, MetaDescription = '$this->MetaDescription'
-										, Featured = '$this->Featured'
-										, Keywords = '$this->Keywords'
-										WHERE ArticleId = $this->ArticleId";
+										WHERE ArticleId = '$this->ArticleId'";
 
 				$result = $this->sentence("SET CHARACTER SET utf8");
 				$result = $this->sentence($sql);
@@ -402,7 +374,7 @@
 				$result = $this->sentence("SET CHARACTER SET utf8");
 				$result = $this->sentence($sql);
 
-				if(mysql_errno() == 0)
+				if($result->rowCount() > 0)
 				{
 					return "exito";
 				}
@@ -440,8 +412,6 @@
 					$this->setAuthor($fetchResult["Author"]);
 					$this->setMetaTitle($fetchResult["MetaTitle"]);
 					$this->setMetaDescription($fetchResult["MetaDescription"]);
-					$this->setFeatured($fetchResult["Featured"]);
-					$this->setKeywords($fetchResult["Keywords"]);
 					return true;
 				}
 			}
@@ -460,7 +430,7 @@
 
 				if($result->rowCount() > 0)
 				{
-					return "exito";
+					return "success";
 				}
 				else
 				{
@@ -548,7 +518,7 @@
 											, A.Photo
 											, A.Title
 											, A.StatusId
-											, (SELECT GROUP_CONCAT((ACS.Name) SEPARATOR ', ') FROM ArticleCategories AC INNER JOIN ArticlesCategories ACS ON ACS.CategoryId = AC.CategoryId WHERE AC.ArticleId = A.ArticleId) AS Categories
+											, (SELECT GROUP_CONCAT((ACS.Name) SEPARATOR ', ') FROM ArticleCategories AC INNER JOIN SubCategories ACS ON ACS.SubCategoryId = AC.CategoryId WHERE AC.ArticleId = A.ArticleId) AS Categories
 											FROM Articles A
 											ORDER BY PublishDate DESC
 										");
@@ -584,34 +554,6 @@
 			}
 		}
 
-		public function GetFeaturedArticles($today)
-		{
-			try
-			{
-				$res = $this->sentence("SET CHARACTER SET utf8");
-				$res = $this->sentence("SELECT
-										A.ArticleId
-										,A.Title
-										,A.Photo
-										,A.Content
-										,A.PublishDate
-										,A.Author
-										,A.MetaDescription
-										,A.Slug
-									FROM Articles A
-									WHERE A.PublishDate <= '$today'
-									AND A.StatusId = 1
-									AND A.Featured = 1
-									ORDER BY A.PublishDate DESC
-									LIMIT 2");
-				return $res;
-			}
-			catch(Exception $e)
-			{
-				echo $e;
-			}
-		}
-
 		public function GetAllArticles($pag, $num, $today)
 		{
 			try
@@ -633,100 +575,8 @@
 									WHERE A.PublishDate <= '$today'
 									AND A.StatusId = 1
 									AND (SELECT AC.CategoryId FROM ArticleCategories AC WHERE AC.ArticleId = A.ArticleId LIMIT 1) != '8'
-									ORDER BY A.Title ASC
+									ORDER BY A.PublishDate DESC
 									LIMIT $begin, $num");
-				return $res;
-			}
-			catch(Exception $e)
-			{
-				echo $e;
-			}
-		}
-
-		public function GetAllArticlesBySearch($pag, $num, $today, $search)
-		{
-			try
-			{
-
-				$begin = ($pag - 1) * $num;
-
-				$res = $this->sentence("SET CHARACTER SET utf8");
-				$res = $this->sentence("SELECT
-										A.ArticleId
-										,A.Title
-										,A.Photo
-										,A.Content
-										,A.PublishDate
-										,A.Author
-										,A.MetaDescription
-										,A.Slug
-										,A.Keywords
-									FROM Articles A
-									WHERE A.PublishDate <= '$today'
-									AND A.StatusId = 1
-									AND (SELECT AC.CategoryId FROM ArticleCategories AC WHERE AC.ArticleId = A.ArticleId LIMIT 1) != '8'
-									AND MATCH (A.Keywords) AGAINST ('$search' IN BOOLEAN MODE)
-									LIMIT $begin, $num");
-				return $res;
-			}
-			catch(Exception $e)
-			{
-				echo $e;
-			}
-		}
-
-		public function GetTotalArticlesBySearch($search)
-		{
-			try
-			{
-				$res = $this->sentence("SET CHARACTER SET utf8");
-				$res = $this->sentence("SELECT A.ArticleId, COUNT(*) AS Total FROM Articles A WHERE (SELECT AC.CategoryId FROM ArticleCategories AC WHERE AC.ArticleId = A.ArticleId LIMIT 1) != '8' AND MATCH (Keywords) AGAINST ('$search' IN BOOLEAN MODE)");
-				return $res;
-			}
-			catch(Exception $e)
-			{
-				echo $e;
-			}
-		}
-
-		public function GetAllArticlesBySearchExamenes($pag, $num, $today, $search)
-		{
-			try
-			{
-
-				$begin = ($pag - 1) * $num;
-
-				$res = $this->sentence("SET CHARACTER SET utf8");
-				$res = $this->sentence("SELECT
-										A.ArticleId
-										,A.Title
-										,A.Photo
-										,A.Content
-										,A.PublishDate
-										,A.Author
-										,A.MetaDescription
-										,A.Slug
-										,A.Keywords
-									FROM Articles A
-									WHERE A.PublishDate <= '$today'
-									AND A.StatusId = 1
-									AND (SELECT AC.CategoryId FROM ArticleCategories AC WHERE AC.ArticleId = A.ArticleId LIMIT 1) = '8'
-									AND MATCH (A.Keywords) AGAINST ('$search' IN BOOLEAN MODE)
-									LIMIT $begin, $num");
-				return $res;
-			}
-			catch(Exception $e)
-			{
-				echo $e;
-			}
-		}
-
-		public function GetTotalArticlesBySearchExamenes($search)
-		{
-			try
-			{
-				$res = $this->sentence("SET CHARACTER SET utf8");
-				$res = $this->sentence("SELECT A.ArticleId, COUNT(*) AS Total FROM Articles A WHERE (SELECT AC.CategoryId FROM ArticleCategories AC WHERE AC.ArticleId = A.ArticleId LIMIT 1) = '8' AND MATCH (Keywords) AGAINST ('$search' IN BOOLEAN MODE)");
 				return $res;
 			}
 			catch(Exception $e)

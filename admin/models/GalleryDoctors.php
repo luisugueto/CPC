@@ -1,11 +1,13 @@
 <?php
-include_once('Connection.php');
+	include_once('Connection.php');
 
 	Class GalleryDoctors extends Connection
 	{
-			private $GalleryDoctorId;
-			private $DoctorId;
-			private $Location;
+		private $GalleryDoctorId;
+		private $DoctorId;
+		private $Location;
+		private $Type;
+		private $CalificationDoctorId;
 
 		//SET
 		public function setGalleryDoctorId($value)
@@ -23,6 +25,15 @@ include_once('Connection.php');
 			$this->Location = $value;
 		}
 
+		public function setType($value)
+		{
+			$this->Type = $value;
+		}
+
+		public function setCalificationDoctorId($value)
+		{
+			$this->CalificationDoctorId = $value;
+		}
 
 		//GET
 		public function getGalleryDoctorId()
@@ -40,17 +51,33 @@ include_once('Connection.php');
 			return $this->Location;
 		}
 
+		public function getType()
+		{
+			return $this->Type;
+		}
+
+		public function getCalificationDoctorId()
+		{
+			return $this->CalificationDoctorId;
+		}
+
 		public function CreateGalleryDoctor()
 		{
 			try
 			{
-				$sql = "INSERT INTO GalleryDoctors
-										(DoctorId, Location)
-										VALUES
-										($this->DoctorId, $this->Location)";
+				$result = $this->connection->prepare("INSERT INTO GalleryDoctors (DoctorId, Location, Type, CalificationDoctorId) VALUES (?, ?, ?, ?)");
+				$result->bindParam(1, $DoctorId);
+				$result->bindParam(2, $Location);
+				$result->bindParam(3, $Type);
+				$result->bindParam(4, $CalificationDoctorId);
 
-				$result = $this->sentence("SET CHARACTER SET utf8");
-				$result = $this->sentence($sql);
+				// insertar una fila
+				$Location = $this->Location;
+				$Type = $this->Type;
+				$CalificationDoctorId = $this->CalificationDoctorId;
+				$DoctorId = $this->DoctorId;
+
+				$result->execute();
 
 				if($result->rowCount() > 0)
 				{
@@ -60,8 +87,23 @@ include_once('Connection.php');
 				{
 					return "fallo";
 				}
-			}
+			} catch(Exception $e){
 
+					echo $e->getMessage() ;
+					}
+		}
+
+		public function GetGalleryDoctorContent()
+		{
+			try
+			{
+				$sql = "SELECT * FROM GalleryDoctors WHERE DoctorId = $this->DoctorId AND Type = '$this->Type' AND CalificationDoctorId IS NULL";
+
+				$result = $this->sentence("SET CHARACTER SET utf8");
+				$result = $this->sentence($sql);
+
+				return $result;
+			}
 			catch(Exception $e)
 			{
 				echo $e;
@@ -69,20 +111,70 @@ include_once('Connection.php');
 			}
 		}
 
-		public function GetGalleryContent()
+		public function GetAllVideosCalificationActive()
 		{
 			try
 			{
-				$sql = "SELECT DoctorId, Location FROM GalleryDoctors WHERE DoctorId = $this->DoctorId";
+				$sql = "SELECT g.*, g.DoctorId as galleryDId, cd.* FROM GalleryDoctors as g INNER JOIN CalificationDoctors as cd ON cd.CalificationDoctorId = g.CalificationDoctorId WHERE cd.Status = 'Active' AND g.Type = 'Video'";
 
 				$result = $this->sentence("SET CHARACTER SET utf8");
 				$result = $this->sentence($sql);
 
-				if($result->rowCount() > 0)
-				{
-					$fetchResult = $result->fetch(PDO::FETCH_ASSOC);
-					return $fetchResult;
-				}
+				return $result;
+			}
+			catch(Exception $e)
+			{
+				echo $e;
+				return false;
+			}
+		}
+
+		public function GetAllVideosCalificationNull()
+		{
+			try
+			{
+				$sql = "SELECT * FROM GalleryDoctors WHERE Type = 'Video' AND CalificationDoctorId IS NULL";
+
+				$result = $this->sentence("SET CHARACTER SET utf8");
+				$result = $this->sentence($sql);
+
+				return $result;
+			}
+			catch(Exception $e)
+			{
+				echo $e;
+				return false;
+			}
+		}
+
+		public function GetGalleryUserContent()
+		{
+			try
+			{
+				$sql = "SELECT g.*, g.DoctorId as galleryDId, cd.* FROM GalleryDoctors as g INNER JOIN CalificationDoctors as cd ON cd.CalificationDoctorId = g.CalificationDoctorId WHERE cd.DoctorId = $this->DoctorId AND cd.Status = 'Active' AND g.Type = '$this->Type'";
+
+				$result = $this->sentence("SET CHARACTER SET utf8");
+				$result = $this->sentence($sql);
+
+				return $result;
+			}
+			catch(Exception $e)
+			{
+				echo $e;
+				return false;
+			}
+		}
+
+		public function GetGalleryForComment($catId)
+		{
+			try
+			{
+				$sql = "SELECT g.*, g.DoctorId as galleryDId, cd.* FROM GalleryDoctors as g INNER JOIN CalificationDoctors as cd ON cd.CalificationDoctorId = g.CalificationDoctorId WHERE cd.CalificationDoctorId = $catId";
+				 
+				$result = $this->sentence("SET CHARACTER SET utf8");
+				$result = $this->sentence($sql);
+
+				return $result;
 			}
 			catch(Exception $e)
 			{
@@ -151,7 +243,7 @@ include_once('Connection.php');
 		{
 			try
 			{
-				$sql = "UPDATE GalleryDoctors SET Location = $this->Location
+				$sql = "UPDATE GalleryDoctors SET CalificationDoctorId = $this->CalificationDoctorId
 										WHERE DoctorId = $this->DoctorId";
 
 				$result = $this->sentence("SET CHARACTER SET utf8");
@@ -179,7 +271,7 @@ include_once('Connection.php');
 		{
 			try
 			{
-				$result = $this->sentence("DELETE FROM GalleryDoctor WHERE GalleryDoctorId = $this->DoctorId");
+				$result = $this->sentence("DELETE FROM GalleryDoctors WHERE GalleryDoctorId = $this->GalleryDoctorId");
 
 				if($result->rowCount() > 0)
 				{
@@ -195,6 +287,68 @@ include_once('Connection.php');
 			{
 				echo $e;
 			}
+		}
+
+		public function numGalleryForDoctor()
+		{
+			try
+			{
+				$sql = "SELECT * FROM GalleryDoctors WHERE DoctorId = $this->DoctorId";
+
+				$result = $this->sentence("SET CHARACTER SET utf8");
+				$result = $this->sentence($sql);
+
+				return $result->rowCount();
+			}
+			catch(Exception $e)
+			{
+				echo $e;
+				return false;
+			}
+		}
+
+		public function numGalleryForDoctorUser()
+		{
+			try
+			{
+				$sql = "SELECT g.*, g.DoctorId as galleryDId, cd.* FROM GalleryDoctors as g INNER JOIN CalificationDoctors as cd ON cd.CalificationDoctorId = g.CalificationDoctorId WHERE cd.DoctorId = $this->DoctorId AND cd.Status = 'Active'";
+
+				$result = $this->sentence("SET CHARACTER SET utf8");
+				$result = $this->sentence($sql);
+
+				return $result->rowCount();
+			}
+			catch(Exception $e)
+			{
+				echo $e;
+				return false;
+			}
+		}
+
+		public function GetGalleryType($catId)
+		{
+			try
+			{
+				$sql = "SELECT Type FROM GalleryDoctors WHERE GalleryDoctorId = $catId";
+
+				$result = $this->sentence("SET CHARACTER SET utf8");
+				$result = $this->sentence($sql);
+
+				if($result->rowCount() > 0)
+				{
+					$fetchResult = $result->fetch(PDO::FETCH_ASSOC);
+					return $fetchResult["Type"];
+				}
+			}
+			catch(Exception $e)
+			{
+				echo $e;
+				return false;
+			}
+		}
+
+		public function deleteFile($file){
+			return unlink($file);
 		}
 
 	}

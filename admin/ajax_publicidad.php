@@ -23,6 +23,7 @@
 
 	$registro = array(
 		'PublicityId' => $id,
+		'Title' => '',
 		'Content' => ''
 	);
 
@@ -34,12 +35,14 @@
 				if($id != '0')
 				{
 					$publicity->setPublicityId($id);
+					$publicity->setTitle(GetSQLValueString($_POST["txtTitle"], "text"));
 					$publicity->setContent(GetSQLValueString($_POST["txtContent"], "text"));
 					echo json_encode($publicity->UpdatePublicity());
                     exit();
 				}
 				else
 				{
+					$publicity->setTitle(GetSQLValueString($_POST["txtTitle"], "text"));
 					$publicity->setContent(GetSQLValueString($_POST["txtContent"], "text"));
 					echo json_encode($publicity->CreatePublicity());
                     exit();
@@ -79,7 +82,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-      	<h2>Planes</h2>
+      	<h2>Publicidad</h2>
       </div>
       <div id="modal-result" class="modal-body">
         <div class="row">
@@ -93,10 +96,18 @@
                             <input type="text" disabled="disabled" class="form-control" value="<?php echo $registro['PublicityId'];?>"/>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">Content</label>
+					<div class="form-group">
+                        <label class="col-sm-3 control-label">Título</label>
                         <div class="col-sm-6">
-                            <input name="txtContent" type="text" class="form-control" parsley-trigger="change" required placeholder="" value="<?php echo $registro['Content'];?>"/>
+                            <input name="txtTitle" type="text" class="form-control" parsley-trigger="change" required placeholder="" value="<?php echo $registro['Title'];?>"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Contenido</label>
+                        <div class="col-sm-6">
+							<textarea name="txtContent" class="form-control" parsley-trigger="change" required placeholder="">
+								<?php echo $registro['Content'];?>
+							</textarea>
                         </div>
                     </div>
                 </form>

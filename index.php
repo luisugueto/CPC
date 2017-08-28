@@ -1,13 +1,57 @@
 <?php
+	require_once("admin/models/Sections.php");
+	$section = new Sections();
+	$section->setSectionId(1);
+	$contentSection = $section->GetSectionContent();
+
 	include("includes/header.php");
 	require_once("admin/models/Doctors.php");
+	require_once("admin/models/Articles.php");
 	require_once("admin/models/DataDoctors.php");
 	require_once("admin/models/Plans.php");
 	require_once("admin/models/ProceduresDoctor.php");
 	require_once("admin/models/CalificationDoctors.php");
+	require_once("admin/models/ValidationCalificationDoctors.php");
+	require_once("admin/models/GalleryDoctors.php");
+	require_once("admin/models/Categories.php");
+
+	$page = (isset($_GET['page'])) ? $_GET['page'] : 1;
+	$doctorByPage = 6;
 
 	$doctor = new Doctors();
+	$doctorRedirect = new Doctors();
 	$doctorList = $doctor->ListDoctors();
+
+	///// Pagination Doctors
+	
+	$listDoctor = $doctor->ListDoctorsForClientwithPlanPagination($page, $doctorByPage);
+	$totalDoctors = $doctor->GetTotalDoctors();
+
+	$totall = $doctor->numDoctorswithPlan();
+	$totallPages = ceil($totall / $doctorByPage);
+
+	///// Fin Pagination Doctors
+
+	$categories = new Categories();
+	$categoriesList = $categories->ListCategories();
+
+	$procedures = new ProceduresDoctor();
+
+	$articlesByPage = 15;
+
+	$tomorrowDay = date('d', time());
+	$tomorrowMonth = date('m', time());
+	$tomorrowYear = date('Y', time());
+
+	$tomorrow = $tomorrowYear."-".$tomorrowMonth."-".$tomorrowDay;
+
+	$articles = new Articles();
+	$listArticles = $articles->GetAllArticles($page, $articlesByPage, $tomorrow);
+	$totalArticles = $articles->GetTotalArticles();
+
+	$total = $totalArticles->fetch(PDO::FETCH_ASSOC);
+	$totalPages = ceil($total["Total"] / $articlesByPage);
+	$total = $total["Total"];
 
 	$data = new DataDoctors();
 
@@ -15,6 +59,47 @@
 	$planList = $plan->ListPlans();
 
 	$califications = new CalificationDoctors();
+	$validationCalification = new ValidationCalificationDoctors();
+	$gallery = new GalleryDoctors();
+	$galleryList = $gallery->ListGallery();
+
+	if(isset($_GET['validationComment'])){
+		$validationCommentParts = explode("-", $_GET['validationComment']);
+		$doctorRedirect->setDoctorId($validationCommentParts[1]);
+		$contentRedirect = $doctorRedirect->GetDoctorContent();
+		$validationCalification->UpdateValidationCalificationDoctor($validationCommentParts[0]);
+		$calificationDoctorId = $validationCalification->GetCalificationDoctorIdForCode($validationCommentParts[0]);
+
+		$updateCalification = $califications->UpdateCalificationDoctor($calificationDoctorId);
+		if(trim($updateCalification) == 'exito')
+		{
+			echo "<script>
+					window.location.href='/doctor/".$validationCommentParts[1]."_".slugify($contentRedirect['Name'])."';
+				</script>"; 
+		}
+		else{
+			echo "<script>
+					alert('El Código de validación para la calificación es Incorrecto o la calificación ya está validada.');
+			</script>";
+		}
+	}
+
+	$doctorss = $doctor->ListDoctorsName();
+	$arrayDoctors = array();
+
+	while($Doctor = $doctorss->fetch(PDO::FETCH_ASSOC)){
+		$arrayDoctors[$Doctor['DoctorName']." - ".$Doctor['SubTitle']. " [Doctor]"] = null;
+	}
+	$jsonDoctors = json_encode($arrayDoctors);
+
+	$proceduress = $procedures->ListProceduresName();
+	$arrayProcedures = array();
+
+	while($Procedures = $categoriesList->fetch(PDO::FETCH_ASSOC)){
+		$arrayProcedures[$Procedures['Name']." - ".$Procedures['CategoryId']." - [Procedimiento]"] = null;
+	}
+	$jsonProcedures = json_encode($arrayProcedures);
+	$arrayMerge = array_merge($arrayDoctors, $arrayProcedures);
 ?>
 
 	<!-- Contenido -->
@@ -31,196 +116,155 @@
 				<!-- Fin título -->
 
 				<!-- Listado doctores -->
-				<div class="row">
+				<?php
+					$count_doctors = 0;
 
-					<div class="col m6 s12">
+					while ($Doctor = $listDoctor->fetch(PDO::FETCH_ASSOC))
+					{
+						$content = 'medicos';
+						$id = $Doctor["DoctorId"];
+						$name = '<strong>Médico No.'.$id.'</strong> ('.$Doctor['Name'].')';
+						$dataList = $data->GetDataforDoctor($id);
+						$logo = ($Doctor['Logo'] != '') ? 'admin/img/doctors/'.$Doctor['Logo'] : 'images/placeholder.jpg';
 
-						<?php
-							while ($Doctor = $doctorList->fetch(PDO::FETCH_ASSOC))
-							{
-								$content = 'medicos';
-								$id = $Doctor["DoctorId"];
-								$name = '<strong>Médico No.'.$id.'</strong> ('.$Doctor['Name'].')';
-								$dataList = $data->GetDataforDoctor($id);
-						?>
+						if ($count_doctors == 0)
+						{
+							echo "<div class='row'>";
+							echo "<div class='col m6 s12'>";
+						}
+						elseif ($count_doctors == 1)
+						{
+							echo "<div class='col m6 s12'>";
+						}
+				?>
 						<ul class="collection">
-							<a class="collection-item avatar truncate cirujanos" href="directorio-detalle.php?id=<?= $id ?>">
-								<div class="circle" style="background-image: url('http://cirugiaplasticacolombia.com/wp-content/uploads/2015/09/Dra-Maria-Mercedes-Valencia-cirujana-plastica-cirugia-plastica-colombia-plastic-surgery-Mauro-Rebolledo-Photography-274x199.jpg')">
-								</div>
-										<span class="title">Dr. <?= $Doctor['Name'] ?></span>
-											<p style="color:#b9b9b9;"><?= $Doctor['Description'] ?> (<?php
-												$i = 0;
-												while ($Data = $dataList->fetch(PDO::FETCH_ASSOC))
-												{
-													if($Data['Name'] == 'Ciudad')
-													{
-														$ciudad = $Data['Description'];
-													}
-													elseif($Data['Name'] == 'País')
-													{
-														$pais = $Data['Description'];
-													}
+							<a class="collection-item avatar truncate cirujanos" href="doctor/<?= $id ?>_<?= slugify($Doctor['Name']) ?>">
+								<div class="circle" style="background-image: url(<?= $logo ?>)"></div>
+								<span class="title">Dr. <?= $Doctor['Name'] ?></span>
+								<p style="color:#626262;">
+									<?php
+										if (strlen($Doctor['Description']) > 50)
+										{
+											echo substr($Doctor['Description'], 0, 50)."...";
+										}
+										else
+										{
+											echo $Doctor['Description'];
+										}
+									?>
+								</p>
 
-													if(isset($ciudad) || isset($pais))
-													{
-														if(isset($ciudad) && isset($pais))
-														{
-															echo $ciudad.', '.$pais;
-														}
-														elseif(isset($ciudad))
-															if($i>0)
-																echo ', '.$ciudad;
-															else
-																echo $ciudad;
-														else echo $pais.',';
-													}
-													$i++;
-												}
-											?>)</p>
+				<?php
+								$califications->setDoctorId($id);
+								$calificationsList = $califications->GetCalificationDoctorContent();
 
-											<?php
-											$califications->setDoctorId($id);
-											$calificationsList = $califications->GetCalificationDoctorContent();
-												if(count($calificationsList == 0))
-													echo "<div class='stars-rate'>
-														<i class='material-icons inactive left'>star</i>
-														<i class='material-icons inactive left'>star</i>
-														<i class='material-icons inactive left'>star</i>
-														<i class='material-icons inactive left'>star</i>
-														<i class='material-icons inactive left'>star</i>
-														<span style='margin-left:10px; color: black'>0 Comentarios</span>
-													</div>";
-											?>
-											<!-- <div class="stars-rate">
-												<i class="material-icons left">star</i>
-												<i class="material-icons left">star</i>
-												<i class="material-icons left">star</i>
-												<i class="material-icons inactive left">star</i>
-												<i class="material-icons inactive left">star</i>
-												<span style="margin-left:10px; color: black">203 Comentarios</span>
-											</div> -->
-										</a>
-									</ul>
+								if($califications->numCalificationsForDoctor() > 0)
+								{
+									$countStars = 0;
+									$i = 0;
 
-								<?php
+									while($Calification = $calificationsList->fetch(PDO::FETCH_ASSOC))
+									{
+										$countStars+=$Calification['CountStars'];
+										$i++;
 									}
-								?>
 
+									$totalStars = intval($countStars/$i);
+									$emptyStars = 5 - $totalStars;
 
-
-
-
-						<!-- <ul class="collection">
-							<a class="collection-item avatar truncate cirujanos">
-								<div class="circle" style="background-image: url('http://cirugiaplasticacolombia.com/wp-content/uploads/2015/09/Dra-Maria-Mercedes-Valencia-cirujana-plastica-cirugia-plastica-colombia-plastic-surgery-Mauro-Rebolledo-Photography-274x199.jpg')">
-								</div>
-								<span class="title">Dr. John Garcia</span>
-								<p style="color:#b9b9b9;">Cirujano plástico (Cali, Colombia)</p>
-								<div class="stars-rate">
-									<i class="material-icons left">star</i>
-									<i class="material-icons left">star</i>
-									<i class="material-icons left">star</i>
-									<i class="material-icons inactive left">star</i>
-									<i class="material-icons inactive left">star</i>
-									<span style="margin-left:10px; color: black">203 Comentarios</span>
-								</div>
+				?>
+									<div class='stars-rate'>
+				<?php
+										for ($x = 0; $x < $totalStars; $x++)
+										{
+											echo "<i class='material-icons left'>star</i>";
+										}
+										for ($x = 0; $x < $emptyStars; $x++)
+										{
+											echo "<i class='material-icons inactive left'>star</i>";
+										}
+										if ($i == 1)
+										{
+											$comment = "Reseña";
+										}
+										else
+										{
+											$comment = "Reseñas";
+										}
+				?>
+										<span style='margin-left:10px; color: black'><?= $i ?> <?= $comment ?></span>
+									</div>
+				<?php
+								}
+								else
+								{
+									echo "<div class='stars-rate'><i class='material-icons inactive left'>star</i><i class='material-icons inactive left'>star</i><i class='material-icons inactive left'>star</i><i class='material-icons inactive left'>star</i><i class='material-icons inactive left'>star</i><span style='margin-left:10px; color: black'>0 Reseñas</span></div>";
+								}
+				?>
 							</a>
 						</ul>
-
-						<ul class="collection">
-							<a class="collection-item avatar truncate cirujanos">
-								<div class="circle" style="background-image: url('http://cirugiaplasticacolombia.com/wp-content/uploads/2015/09/Dra-Maria-Mercedes-Valencia-cirujana-plastica-cirugia-plastica-colombia-plastic-surgery-Mauro-Rebolledo-Photography-274x199.jpg')">
-								</div>
-								<span class="title">Dr. John Garcia</span>
-								<p style="color:#b9b9b9;">Cirujano plástico (Cali, Colombia)</p>
-								<div class="stars-rate">
-									<i class="material-icons left">star</i>
-									<i class="material-icons left">star</i>
-									<i class="material-icons left">star</i>
-									<i class="material-icons inactive left">star</i>
-									<i class="material-icons inactive left">star</i>
-									<span style="margin-left:10px; color: black">203 Comentarios</span>
-								</div>
-							</a>
-						</ul>
-
-					</div>
-
-					<div class="col m6 s12">
-
-						<ul class="collection">
-							<a class="collection-item avatar truncate cirujanos">
-								<div class="circle" style="background-image: url('http://cirugiaplasticacolombia.com/wp-content/uploads/2015/09/Dra-Maria-Mercedes-Valencia-cirujana-plastica-cirugia-plastica-colombia-plastic-surgery-Mauro-Rebolledo-Photography-274x199.jpg')">
-								</div>
-								<span class="title">Dr. John Garcia</span>
-								<p style="color:#b9b9b9;">Cirujano plástico (Cali, Colombia)</p>
-								<div class="stars-rate">
-									<i class="material-icons left">star</i>
-									<i class="material-icons left">star</i>
-									<i class="material-icons left">star</i>
-									<i class="material-icons inactive left">star</i>
-									<i class="material-icons inactive left">star</i>
-									<span style="margin-left:10px; color: black">203 Comentarios</span>
-								</div>
-							</a>
-						</ul>
-
-						<ul class="collection">
-							<a class="collection-item avatar truncate cirujanos">
-								<div class="circle" style="background-image: url('http://cirugiaplasticacolombia.com/wp-content/uploads/2015/09/Dra-Maria-Mercedes-Valencia-cirujana-plastica-cirugia-plastica-colombia-plastic-surgery-Mauro-Rebolledo-Photography-274x199.jpg')">
-								</div>
-								<span class="title">Dr. John Garcia</span>
-								<p style="color:#b9b9b9;">Cirujano plástico (Cali, Colombia)</p>
-								<div class="stars-rate">
-									<i class="material-icons left">star</i>
-									<i class="material-icons left">star</i>
-									<i class="material-icons left">star</i>
-									<i class="material-icons inactive left">star</i>
-									<i class="material-icons inactive left">star</i>
-									<span style="margin-left:10px; color: black">203 Comentarios</span>
-								</div>
-							</a>
-						</ul>
-
-						<ul class="collection">
-							<a class="collection-item avatar truncate cirujanos">
-								<div class="circle" style="background-image: url('http://cirugiaplasticacolombia.com/wp-content/uploads/2015/09/Dra-Maria-Mercedes-Valencia-cirujana-plastica-cirugia-plastica-colombia-plastic-surgery-Mauro-Rebolledo-Photography-274x199.jpg')">
-								</div>
-								<span class="title">Dr. John Garcia</span>
-								<p style="color:#b9b9b9;">Cirujano plástico (Cali, Colombia)</p>
-								<div class="stars-rate">
-									<i class="material-icons left">star</i>
-									<i class="material-icons left">star</i>
-									<i class="material-icons left">star</i>
-									<i class="material-icons inactive left">star</i>
-									<i class="material-icons inactive left">star</i>
-									<span style="margin-left:10px; color: black">203 Comentarios</span>
-								</div>
-							</a>
-						</ul> -->
-
-					</div>
-
-				</div>
+				<?php
+						if ($count_doctors == 0)
+						{
+							echo "</div>";
+							$count_doctors++;
+						}
+						elseif ($count_doctors == 1)
+						{
+							$count_doctors = 0;
+							echo "</div>";
+							echo "</div>";
+						}
+					}
+				?>
 				<!-- Fin listado doctores -->
 
-				<!-- Paginador -->
-				<div class="row">
-					<div class="col s12 center-align">
+				<?php
+					if ($totallPages > 1)
+					{
+				?>
+						<!-- Paginador -->
+						<div class="row">
+							<div class="col s12 center-align">
 
-						<ul class="pagination">
-							<li class="waves-effect"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
-							<li class="waves-effect"><a href="#!">1</a></li>
-							<li class="waves-effect"><a href="#!">2</a></li>
-							<li class="waves-effect"><a href="#!">3</a></li>
-							<li class="waves-effect"><a href="#!">4</a></li>
-							<li class="waves-effect"><a href="#!">5</a></li>
-							<li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
-						</ul>
+								<ul class="pagination">
+									<?php
+										if($page > 1)
+										{
+									?>
+											<li class="waves-effect"><a href="inicio_<?=$page-1?>"><i class="material-icons">chevron_left</i></a></li>
+									<?php 
+										}
+										for ($i = 0; $i < $totallPages; $i++) 
+										{
+											if($page == $i+1)
+											{
+									?>
+												<li class="waves-effect active"><a href="inicio_<?=$i+1?>"><?= $i+1 ?></a></li>
+									<?php 
+											}	
+											else
+											{
+									?>
+												<li class="waves-effect"><a href="inicio_<?=$i+1?>"><?= $i+1 ?></a></li>
+									<?php
+											}
+										}
+										if($page < ($totallPages))
+										{
+									?>
+											<li class="waves-effect"><a href="inicio_<?=$page+1 ?>"><i class="material-icons">chevron_right</i></a></li>
+									<?php
+										}
+									?>
+								</ul>
 
-					</div>
-				</div>
-				<!-- Fin de paginador -->
+							</div>
+						</div>
+						<!-- Fin de paginador -->
+				<?php
+					}
+				?>
 
 				<!-- Bloque de acción -->
 				<div class="row">
@@ -232,7 +276,7 @@
 									Comparte tus casos clínicos con otros pacientes cómo tu.
 								</p>
 								<br>
-								<a class="waves-effect waves-light btn blue-principal" style="border-radius: 20px;">Calificar</a>
+								<a id="action-block-qualify" class="waves-effect waves-light btn blue-principal" href="directorio" style="border-radius: 20px;">Calificar</a>
 							</div>
 						</div>
 					</div>
@@ -251,47 +295,43 @@
 
 						<div class="owl-carousel owl-theme">
 
-							<div class="item">
-								<div class="card horizontal">
-									<div class="card-stacked">
-										<div class="card-content">
-											<img src="https://static.pexels.com/photos/42273/doctor-medical-medicine-health-42273.jpeg">
-											<br>
-											<div class="date pull-left">
-												<div class="day">
-													12
-												</div>
-												<div class="month">
-													Mayo
-												</div>
-											</div>
-											<h5 class="card-dr-title">La grasa vuelve a acumularse después de la liposucción</h5>
-											<p class="card-dr-address">Después de la liposucción la grasa puede volver a acumularse un año después, así lo revela un equipo de la Facultad de Medicina de la Universidad de Colorado en Estados Unidos, comentando que la grasa...</p>
-										</div>
-									</div>
-								</div>
-							</div>
+							<?php
+								while ($article = $listArticles->fetch(PDO::FETCH_ASSOC))
+								{
+							?>
+									<div class="item" onclick="window.location.href='noticia/<?= $article["ArticleId"] ?>_<?= $article["Slug"] ?>'" style="cursor:pointer;">
+										<div class="card horizontal" style="min-height: 353px;">
+											<div class="card-stacked">
+												<div class="card-content">
 
-							<div class="item">
-								<div class="card horizontal">
-									<div class="card-stacked">
-										<div class="card-content">
-											<img src="https://static.pexels.com/photos/42273/doctor-medical-medicine-health-42273.jpeg">
-											<br>
-											<div class="date pull-left">
-												<div class="day">
-													12
-												</div>
-												<div class="month">
-													Mayo
+													<img src="images/blog/<?= $article["Photo"] ?>">
+
+													<br>
+
+													<?php
+														$d = date_parse($article["PublishDate"]);
+														$monthNum = $d["month"];
+														$months = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+														$monthName = $months[$monthNum - 1];
+													?>
+
+													<div class="date pull-left">
+														<div class="day">
+															<?= $d["day"] ?>
+														</div>
+														<div class="month">
+															<?= $monthName ?>
+														</div>
+													</div>
+													<h5 class="card-dr-title"><?= $article["Title"] ?></h5>
+													<p class="card-dr-address"><?= $article["MetaDescription"] ?></p>
 												</div>
 											</div>
-											<h5 class="card-dr-title">La grasa vuelve a acumularse después de la liposucción</h5>
-											<p class="card-dr-address">Después de la liposucción la grasa puede volver a acumularse un año después, así lo revela un equipo de la Facultad de Medicina de la Universidad de Colorado en Estados Unidos, comentando que la grasa...</p>
 										</div>
 									</div>
-								</div>
-							</div>
+							<?php
+								}
+							?>
 
 						</div>
 
@@ -303,14 +343,17 @@
 				<div class="row">
 					<div class="col s12 center-align">
 
-						<ul class="pagination">
-							<li class="waves-effect"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
-							<li class="waves-effect"><a href="#!">1</a></li>
-							<li class="waves-effect"><a href="#!">2</a></li>
-							<li class="waves-effect"><a href="#!">3</a></li>
-							<li class="waves-effect"><a href="#!">4</a></li>
-							<li class="waves-effect"><a href="#!">5</a></li>
-							<li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
+						<ul class="pagination" id="customDots">
+							<li class="waves-effect"><a href="javascript:void(0)" onclick="toPosition(0)">1</a></li>
+							<li class="waves-effect"><a href="javascript:void(0)" onclick="toPosition(1)">2</a></li>
+							<li class="waves-effect"><a href="javascript:void(0)" onclick="toPosition(2)">3</a></li>
+							<li class="waves-effect"><a href="javascript:void(0)" onclick="toPosition(3)">4</a></li>
+							<li class="waves-effect"><a href="javascript:void(0)" onclick="toPosition(4)">5</a></li>
+							<li class="waves-effect"><a href="javascript:void(0)" onclick="toPosition(5)">6</a></li>
+							<li class="waves-effect"><a href="javascript:void(0)" onclick="toPosition(6)">7</a></li>
+							<li class="waves-effect"><a href="javascript:void(0)" onclick="toPosition(7)">8</a></li>
+							<li class="waves-effect"><a href="javascript:void(0)" onclick="toPosition(8)">9</a></li>
+							<li class="waves-effect"><a href="javascript:void(0)" onclick="toPosition(9)">10</a></li>
 						</ul>
 
 					</div>
@@ -322,110 +365,7 @@
 
 			<!-- side bar (columna derecha) -->
 			<div class="col m3 s12 hide-on-small-only">
-
-				<!--<div class="side-bar-block">
-
-					Título
-					<div class="title-divider">
-						<h1>Directorio Médico</h1>
-					</div>
-					Fin título
-
-					directorio médico
-					<div class="collection">
-
-						<a href="#!" class="collection-item avatar truncate valigncenter">
-							<img src="http://cirugiaplasticacolombia.com/wp-content/uploads/2017/02/VIP-Esthetic-Recovery-House-Cali-Colombia-Casa-De-Recuperacion-2-150x150.png" class="circle">
-							<span class="truncate">VIP Esthetic Recovery House</span>
-						</a>
-
-						<a href="#!" class="collection-item avatar truncate valigncenter">
-							<img src="http://cirugiaplasticacolombia.com/wp-content/uploads/2015/09/dra-maria-mercedes-valencia-cirugia-plastica-cali-banner-300x300-150x150.jpg" class="circle">
-							<span class="truncate">Dra. María Mercedes Valencia</span>
-						</a>
-
-						<a href="#!" class="collection-item avatar truncate valigncenter">
-							<img src="http://cirugiaplasticacolombia.com/wp-content/uploads/2015/09/cirujano-plastico-colombia-150x150.jpg" class="circle">
-							<span class="truncate">Herley Aguirre</span>
-						</a>
-
-						<a href="#!" class="collection-item avatar truncate valigncenter">
-							<img src="http://cirugiaplasticacolombia.com/wp-content/uploads/2015/09/alejandro-afanador-bogota-colombia-150x150.jpg" class="circle">
-							<span class="truncate">Alejandro Afanador</span>
-						</a>
-
-						<a href="#!" class="collection-item avatar truncate valigncenter">
-							<img src="http://cirugiaplasticacolombia.com/wp-content/uploads/2015/09/Glenia-Valera-150x150.jpg" class="circle">
-							<span class="truncate">Glenia Del Carmen Valera Zapata</span>
-						</a>
-					</div>
-					fin directorio médico
-
-				</div>-->
-
-				<div class="side-bar-block">
-
-					<!-- Video -->
-					<div class="title-divider">
-						<h1>Últimos Videos</h1>
-					</div>
-					<iframe width="100%" height="200" src="https://www.youtube.com/embed/q_mB-3x_PsQ?ecver=1" frameborder="0" allowfullscreen></iframe>
-					<!-- fin de video -->
-
-				</div>
-
-				<div class="side-bar-block">
-
-					<!-- Instagram -->
-					<div class="title-divider">
-						<h1>Instagram</h1>
-					</div>
-					<!-- fin de Instagram -->
-
-					<img src="https://static.pexels.com/photos/42273/doctor-medical-medicine-health-42273.jpeg" width="100%">
-					<br>
-					<img src="https://static.pexels.com/photos/42273/doctor-medical-medicine-health-42273.jpeg" width="100%">
-					<br>
-					<img src="https://static.pexels.com/photos/42273/doctor-medical-medicine-health-42273.jpeg" width="100%">
-
-				</div>
-
-				<!--<div class="side-bar-block">
-					Blog
-					<div class="title-divider">
-						<h1>Blog</h1>
-					</div>
-
-					<div class="collection">
-
-						<a href="#!" class="collection-item avatar truncate valigncenter">
-							<img src="http://cirugiaplasticacolombia.com/wp-content/uploads/2017/05/Desmontando-los-10-mitos-m%C3%A1s-comunes-de-la-cirug%C3%ADa-pl%C3%A1stica-cirujano-plastico-cirujano-corporal-cirugia-plastica-colombia-plastic-surgery-surgeon-150x150.jpg" class="circle">
-							<span class="truncate">Desmontando los 10 mitos más comunes de la cirugía plástica</span>
-						</a>
-
-						<a href="#!" class="collection-item avatar truncate valigncenter">
-							<img src="http://cirugiaplasticacolombia.com/wp-content/uploads/2017/05/Medicina-est%C3%A9tica-Cuidado-con-los-retoques-que-te-puedan-deformar-cirujano-plastico-cirujano-corporal-cirugia-plastica-colombia-plastic-surgery-surgeon-150x150.jpeg" class="circle">
-							<span class="truncate">Medicina estética: Cuidado con los retoques que te puedan deformar</span>
-						</a>
-
-						<a href="#!" class="collection-item avatar truncate valigncenter">
-							<img src="http://cirugiaplasticacolombia.com/wp-content/uploads/2017/05/te-has-hecho-un-retoque-cirujano-plastico-cirujano-corporal-cirugia-plastica-colombia-plastic-surgery-surgeon-150x150.jpeg" class="circle">
-							<span class="truncate">Cirugía plástica ¿Te has hecho un retoque?</span>
-						</a>
-
-						<a href="#!" class="collection-item avatar truncate valigncenter">
-							<img src="http://cirugiaplasticacolombia.com/wp-content/uploads/2017/05/pensando-en-una-cirug%C3%ADa-pl%C3%A1stica-qu%C3%A9-considerar-antes-del-retoque-cirujano-plastico-cirujano-corporal-cirugia-plastica-colombia-plastic-surgery-surgeon-150x150.jpg" class="circle">
-							<span class="truncate">¿Pensando en una cirugía plástica? Qué considerar antes del “retoque”</span>
-						</a>
-
-						<a href="#!" class="collection-item avatar truncate valigncenter">
-							<img src="http://cirugiaplasticacolombia.com/wp-content/uploads/2017/05/rinoplast%C3%ADa-en-hombres-cirujano-plastico-cirujano-corporal-cirugia-plastica-colombia-plastic-surgery-surgeon-150x150.jpeg" class="circle">
-							<span class="truncate">Rinoplastia en Hombres</span>
-						</a>
-					</div>
-					fin blog
-				</div>-->
-
+				<?php include("includes/sidebar_home.php"); ?>
 			</div>
 			<!-- fin side bar (columna derecha) -->
 

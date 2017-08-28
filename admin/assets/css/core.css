@@ -22,6 +22,11 @@ File: Core
 /* =============
    Common
 ============= */
+
+.bootstrap-datetimepicker-widget {
+  z-index: 1000 !important;
+}
+
 body {
   background: #ebeff2;
   font-family: 'Noto Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;

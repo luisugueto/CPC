@@ -1,5 +1,5 @@
 <?php
-include_once('Connection.php');
+	include_once('Connection.php');
 
 	Class Plans extends Connection
 	{
@@ -57,7 +57,7 @@ include_once('Connection.php');
 				$sql = "INSERT INTO Plans
 										(Name, Price, Characteristic)
 										VALUES
-										($this->Name, $this->Price, $this->Characteristic)";
+										($this->Name, $this->Price, '$this->Characteristic')";
 
 				$result = $this->sentence("SET CHARACTER SET utf8");
 				$result = $this->sentence($sql);
@@ -83,7 +83,7 @@ include_once('Connection.php');
 		{
 			try
 			{
-				$sql = "SELECT PlanId, Name, Price, Characteristic FROM Plans WHERE PlanId = $this->PlanId";
+				$sql = "SELECT * FROM Plans WHERE PlanId = $this->PlanId";
 
 				$result = $this->sentence("SET CHARACTER SET utf8");
 				$result = $this->sentence($sql);
@@ -161,7 +161,7 @@ include_once('Connection.php');
 		{
 			try
 			{
-				$sql = "UPDATE plans SET Name = $this->Name, Price = $this->Price, Characteristic = $this->Characteristic
+				$sql = "UPDATE Plans SET Name = $this->Name, Price = $this->Price, Characteristic = '$this->Characteristic'
 										WHERE PlanId = $this->PlanId";
 
 				$result = $this->sentence("SET CHARACTER SET utf8");

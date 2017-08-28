@@ -1,5 +1,5 @@
 // JavaScript Custom Template
-jQuery(document).ready(function($) {
+/*jQuery(document).ready(function($) {
 	jQuery('.counter').counterUp({
 		delay: 100,
 		time: 1200
@@ -7,11 +7,11 @@ jQuery(document).ready(function($) {
 
 	jQuery(".knob").knob();
 
-});
+});*/
 
 
 //PICKERS
-jQuery(document).ready(function() {
+/*jQuery(document).ready(function() {
 	//colorpicker start
 	jQuery('.colorpicker-default').colorpicker({
 		format: 'hex'
@@ -30,7 +30,7 @@ jQuery(document).ready(function() {
 		autoclose: true,
 		todayHighlight: true
 	});
-});
+});*/
 //$('#editableTable').editableTableWidget().numericInputExample().find('td:first').focus();
 //PICKERS
 

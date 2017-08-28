@@ -16,14 +16,21 @@
 			<div class="container">
 
 				<?php
-					if (!in_array("per_categorias_blog_ver", $permisos_usuario))
+					if (in_array("per_planes_crear", $permisos_usuario) || in_array("per_planes_editar", $permisos_usuario) || in_array("per_planes_eliminar", $permisos_usuario))
 					{
 				?>
 
 						<div class="row">
 							<div class="col-sm-12">
 								<div class="btn-group pull-right m-t-15">
-									<a href="javascript:void(0)" onclick="modalCall('planes','form','0')" class="btn btn-default btn-md waves-effect waves-light m-b-30"><i class="md md-add"></i> Agregar</a>
+									<?php
+										if (in_array("per_planes_crear", $permisos_usuario))
+										{
+									?>
+											<a href="javascript:void(0)" onclick="modalCall('planes','form','0')" class="btn btn-default btn-md waves-effect waves-light m-b-30"><i class="md md-add"></i> Agregar</a>
+									<?php
+										}
+									?>
 								</div>
 								<h4 class="page-title">Planes</h4>
 								<ol class="breadcrumb">
@@ -40,13 +47,12 @@
 						<div class="row">
 							<div class="col-sm-12">
 								<div class="card-box m-b-0">
-									<table class="tablesaw table m-b-0" data-tablesaw-mode="swipe" data-tablesaw-sortable data-tablesaw-sortable-switch>
+									<table class="tablesaw table m-b-0" data-tablesaw-mode="swipe" data-tablesaw-sortable data-tablesaw-sortable-switch id="example">
 										<thead>
 											<tr>
 												<th scope="col" data-tablesaw-sortable-col data-tablesaw-sortable-default-col data-tablesaw-priority="persist">Id</th>
 												<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">Nombre</th>
 												<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">Precio</th>
-												<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">Característica</th>
 												<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="1">Acciones</th>
 											</tr>
 										</thead>
@@ -62,10 +68,21 @@
 														<td><?= $id ?></td>
 														<td><?= $Plan['Name'] ?></td>
 														<td><?= $Plan['Price'] ?></td>
-														<td><?= $Plan['Characteristic'] ?></td>
 														<td>
-															<a href="javascript:void(0)" onclick="modalCall('<?= $content ?>','form','<?= $id;?>')" class="btn btn-inverse btn-custom waves-effect waves-light btn-xs"><i class="fa fa-pencil"></i></a>
-															<a href="javascript:void(0)" onclick="deleteItem('<?= $content ?>','<?= $id ?>','<?= $name ?>')" class="btn btn-danger btn-custom waves-effect waves-light btn-xs"><i class="fa fa-remove"></i></a>
+															<?php
+																if (in_array("per_planes_editar", $permisos_usuario))
+																{
+															?>
+																	<a href="javascript:void(0)" onclick="modalCall('<?= $content ?>','form','<?= $id;?>')" class="btn btn-inverse btn-custom waves-effect waves-light btn-xs"><i class="fa fa-pencil"></i></a>
+															<?php
+																}	
+																if (in_array("per_planes_eliminar", $permisos_usuario))
+																{
+															?>
+																	<a href="javascript:void(0)" onclick="deleteItem('<?= $content ?>','<?= $id ?>','<?= $name ?>')" class="btn btn-danger btn-custom waves-effect waves-light btn-xs"><i class="fa fa-remove"></i></a>
+															<?php
+																}
+															?>
 														</td>
 													</tr>
 											<?php
@@ -83,8 +100,7 @@
 
 <?php
 	include("includes/footer.php");
-    /*
-	if (!in_array("per_categorias_blog_ver", $permisos_usuario))
+	if ((!in_array("per_planes_crear", $permisos_usuario)) && (!in_array("per_planes_editar", $permisos_usuario)) && (!in_array("per_planes_eliminar", $permisos_usuario)))
 	{
 		echo '<script type="text/javascript">swal({
 				html:true,
@@ -100,5 +116,5 @@
 				$("#fullscreenloading").show();
 				location.href = "index.php";
 			});</script>';
-	}*/
+	}
 ?>

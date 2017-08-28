@@ -86,8 +86,8 @@
 			case 'delete':
 				if($id != '0')
 				{
-					$plans->setClientId($id);
-					echo json_encode($plans->DeleteClient());
+					$clients->setClientId($id);
+					echo json_encode($clients->DeleteClient());
                     exit();
 				}
 			break;

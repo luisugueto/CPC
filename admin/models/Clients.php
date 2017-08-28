@@ -222,6 +222,24 @@
 			}
 		}
 
+		public function numClientContent()
+		{
+			try
+			{
+				$sql = "SELECT * FROM Clients WHERE ClientId = $this->ClientId";
+
+				$result = $this->sentence("SET CHARACTER SET utf8");
+				$result = $this->sentence($sql);
+
+				return $result->rowCount();
+			}
+			catch(Exception $e)
+			{
+				echo $e;
+				return false;
+			}
+		}
+
 		public function ListClients($buscar = NULL)
 		{
 			if (isset($buscar))
@@ -306,7 +324,7 @@
 		{
 			try
 			{
-				$result = $this->sentence("DELETE FROM clients WHERE ClientId = $this->ClientId");
+				$result = $this->sentence("DELETE FROM Clients WHERE ClientId = $this->ClientId");
 
 				if($result->rowCount() > 0)
 				{

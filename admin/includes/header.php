@@ -1,4 +1,6 @@
 <?php
+	session_start();
+
 	// Si no existe la sesión, redirigir al inicio de sesión.
 	if(!isset($_COOKIE['UserId']))
 	{
@@ -9,9 +11,18 @@
 	$page_url  = basename($_SERVER['PHP_SELF']);
 
 	require_once("models/Users.php");
+	require_once("models/PlanClients.php");
+	require_once("models/Clients.php");
+
 	$users = new Users();
+	$planClient = new PlanClients();
 	$users->setUserId($_COOKIE['UserId']);
 	$usuario = $users->GetUserContent();
+
+	if($usuario['Type']=='Client')
+	{
+		$clientId = $usuario['TypeId'];
+	}
 
 	$permisos_usuario = unserialize($usuario["Permissions"]);
 ?>
@@ -33,13 +44,18 @@
         <link href="assets/plugins/select2/select2.css" rel="stylesheet" type="text/css" />
 
         <link href="assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+        <link href="assets/css/dataTables.bootstrap.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/css/core.css" rel="stylesheet" type="text/css" />
         <link href="assets/css/components.css" rel="stylesheet" type="text/css" />
         <link href="assets/css/icons.css" rel="stylesheet" type="text/css" />
         <link href="assets/css/pages.css" rel="stylesheet" type="text/css" />
         <link href="assets/css/menu.css" rel="stylesheet" type="text/css" />
         <link href="assets/css/responsive.css" rel="stylesheet" type="text/css" />
-        <link href="assets/plugins/cropper/cropper.css" rel="stylesheet" type="text/css" />
+		<link href="css/awesome-bootstrap-checkbox.css" rel="stylesheet" type="text/css" />
+		<link href="css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
+		<link href="css/bootstrap-select.css" rel="stylesheet" type="text/css" />
+		<link href="css/bootstrap-switch.min.css" rel="stylesheet" type="text/css" />
+		<link href="css/cropper.min.css" rel="stylesheet" type="text/css" />
 
 		<!-- font-awesome -->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
@@ -49,6 +65,7 @@
 		<!-- Style -->
 		<link href="css/slim.min.css" rel="stylesheet">
 		<link href="style.css" rel="stylesheet">
+		<link href="../css/styles.css" rel="stylesheet">
 
 		<!-- HTML5 Shiv and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -85,12 +102,17 @@
 								<ul class="dropdown-menu">
 									<li><a href="javascript:void(0)" onclick="modalCall('usuarios','form','<?= $_COOKIE["UserId"] ?>')"><i class="ti-user m-r-5"></i>Mi cuenta</a></li>
 									<?php
-										if (in_array("per_usuarios_ver", $permisos_usuario))
+										if (in_array("per_usuarios_editar", $permisos_usuario))
 										{
 									?>
 											<li><a href="usuarios.php"><i class="fa fa-users"></i> Usuarios</a></li>
 									<?php
 										}
+									?>
+									<?php
+										if(isset($clientId))
+											if($planClient->numPlanClient($clientId) == 0)
+												echo "<li><a href='javascript:void(0)' onclick='modalCall('plan','form','0')'><i class='ti-power-off m-r-5'></i> Pago de Plan</a></li>";
 									?>
 									<li><a href="logout.php"><i class="ti-power-off m-r-5"></i> Salir</a></li>
 								</ul>
@@ -113,38 +135,76 @@
 				<div class="container">
 					<div id="navigation">
 						<ul class="navigation-menu">
+
 							<?php
-								if (in_array("per_clientes_ver", $permisos_usuario))
+								if ((in_array("per_blog_crear", $permisos_usuario)) || (in_array("per_blog_editar", $permisos_usuario)) || (in_array("per_blog_eliminar", $permisos_usuario)))
 								{
 							?>
-									<li data-toggle="dropdown" aria-expanded="true" <?php if ($page_url == "articulos.php" || $page_url = "categorias_blog.php") { echo 'class="active"'; } ?>><a href="javascript:void(0)"><i class="fa fa-newspaper-o"></i>Blog</a>
+									<li <?php if ($page_url == "articulos.php") { echo 'class="active"'; } ?>>
+										<a href="articulos.php"><i class="fa fa-newspaper-o"></i>Blog</a>
 									</li>
-									<ul class="dropdown-menu">
-										<li><a href="articulos.php">Artículos</a></li>
-										<li><a href="categorias_blog.php">Categorías</a></li>
-									</ul>
-
+							<?php
+								}
+								if (in_array("per_medicos_crear", $permisos_usuario) || in_array("per_medicos_editar", $permisos_usuario) || in_array("per_medicos_eliminar", $permisos_usuario) || in_array("per_medico_info", $permisos_usuario) || in_array("per_medico_descripcion", $permisos_usuario) || in_array("per_medico_galeria", $permisos_usuario) || in_array("per_medico_calificaciones", $permisos_usuario))
+								{
+							?>
+									<li <?php if (($page_url == "medicos.php") || ($page_url == "perfil_medico.php")) { echo 'class="active"'; } ?>>
+										<a href="medicos.php"><i class="fa fa-user-md"></i>Médicos</a>
+									</li>
+							<?php
+								}
+								if ((in_array("per_planes_crear", $permisos_usuario)) || (in_array("per_planes_editar", $permisos_usuario)) || (in_array("per_planes_eliminar", $permisos_usuario)))
+								{
+							?>
+									<li <?php if ($page_url == "planes.php") { echo 'class="active"'; } ?>>
+										<a href="planes.php"><i class="fa fa-credit-card"></i>Planes</a>
+									</li>
+							<?php
+								}
+								if ((in_array("per_procedimientos_crear", $permisos_usuario)) || (in_array("per_procedimientos_editar", $permisos_usuario)) || (in_array("per_procedimientos_eliminar", $permisos_usuario)))
+								{
+							?>
+									<li <?php if ($page_url == "categorias.php") { echo 'class="active"'; } ?>>
+										<a href="categorias.php"><i class="fa fa-medkit"></i>Procedimientos</a>
+									</li>
+									<li <?php if ($page_url == "subcategorias.php") { echo 'class="active"'; } ?>>
+										<a href="subcategorias.php"><i class="fa fa-medkit"></i>Sub Procedimientos</a>
+									</li>
+							<?php
+								}
+								if ((in_array("per_clientes_crear", $permisos_usuario)) || (in_array("per_clientes_editar", $permisos_usuario)) || (in_array("per_clientes_eliminar", $permisos_usuario)))
+								{
+							?>
+									<li <?php if ($page_url == "clientes.php") { echo 'class="active"'; } ?>>
+										<a href="clientes.php"><i class="fa fa-users"></i>Clientes</a>
+									</li>
+							<?php
+								}
+								if ((in_array("per_publicidad_crear", $permisos_usuario)) || (in_array("per_publicidad_editar", $permisos_usuario)) || (in_array("per_publicidad_eliminar", $permisos_usuario)))
+								{
+							?>
+									<li <?php if ($page_url == "publicidad.php") { echo 'class="active"'; } ?>>
+										<a href="publicidad.php"><i class="fa fa-puzzle-piece"></i>Publicidad</a>
+									</li>
+							<?php
+								}
+								if ((in_array("per_pagos_crear", $permisos_usuario)) || (in_array("per_pagos_editar", $permisos_usuario)) || (in_array("per_pagos_eliminar", $permisos_usuario)))
+								{
+							?>
+									<li <?php if ($page_url == "pagos.php") { echo 'class="active"'; } ?>>
+										<a href="pagos.php"><i class="fa fa-money"></i>Pagos</a>
+									</li>
+							<?php
+								}
+								if ((in_array("per_seo_editar", $permisos_usuario)))
+								{
+							?>
+									<li <?php if ($page_url == "sections.php") { echo 'class="active"'; } ?>>
+										<a href="sections.php"><i class="fa fa-info-circle"></i>SEO</a>
+									</li>
 							<?php
 								}
 							?>
-							<li <?php if (($page_url == "medicos.php") || ($page_url == "perfil_medico.php")) { echo 'class="active"'; } ?>>
-								<a href="medicos.php"><i class="fa fa-user-md"></i>Médicos</a>
-							</li>
-							<li <?php if ($page_url == "planes.php") { echo 'class="active"'; } ?>>
-								<a href="planes.php"><i class="fa fa-bars"></i>Planes</a>
-							</li>
-							<li <?php if ($page_url == "categorias.php") { echo 'class="active"'; } ?>>
-								<a href="categorias.php"><i class="fa fa-newspaper-o"></i>Categorias</a>
-							</li>
-							<li <?php if ($page_url == "subcategorias.php") { echo 'class="active"'; } ?>>
-								<a href="subcategorias.php"><i class="fa fa-newspaper-o"></i>SubCategorias</a>
-							</li>
-							<li <?php if ($page_url == "clientes.php") { echo 'class="active"'; } ?>>
-								<a href="clientes.php"><i class="fa fa-user"></i>Clientes</a>
-							</li>
-							<li <?php if ($page_url == "publicidad.php") { echo 'class="active"'; } ?>>
-								<a href="publicidad.php"><i class="fa fa-user"></i>Publicidad</a>
-							</li>
 						</ul>
 					</div>
 				</div>

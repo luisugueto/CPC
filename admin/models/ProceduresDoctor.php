@@ -1,5 +1,5 @@
 <?php
-include_once('Connection.php');
+	include_once('Connection.php');
 
 	Class ProceduresDoctor extends Connection
 	{
@@ -78,6 +78,35 @@ include_once('Connection.php');
 				return false;
 			}
 		}
+		public function ListProceduresName()
+		{
+			try
+			{
+				$result = $this->sentence("SET CHARACTER SET utf8");
+				$result = $this->sentence("SELECT pro.*, pro.DoctorId as proDoctorId, d.*, d.DoctorId as doctoridd FROM ProceduresDoctor as pro INNER JOIN Doctors as d ON d.DoctorId=pro.DoctorId INNER JOIN PlanClients as pl ON pl.DoctorId = d.DoctorId WHERE pl.status = 'Active'");
+
+				return $result;
+			}
+			catch(Exception $e)
+			{
+				echo $e;
+			}
+		}
+
+		public function ListProceduresCategory()
+		{
+			try
+			{
+				$result = $this->sentence("SET CHARACTER SET utf8");
+				$result = $this->sentence("SELECT pro.*, pro.DoctorId as proDoctorId, d.* FROM ProceduresDoctor as pro INNER JOIN Doctors as d ON d.DoctorId=pro.DoctorId INNER JOIN PlanClients as pl ON pl.DoctorId = d.DoctorId WHERE pl.status = 'Active' AND pro.CategoryId = $this->CategoryId");
+
+				return $result;
+			}
+			catch(Exception $e)
+			{
+				echo $e;
+			}
+		}
 
 		public function GetProceduresDoctorforDoctor($id)
 		{
@@ -85,8 +114,44 @@ include_once('Connection.php');
 			{
 				$result = $this->sentence("SET CHARACTER SET utf8");
 				$result = $this->sentence("SELECT
-											DoctorId, CategoryId, SubCategoryId
+											*
 											FROM ProceduresDoctor WHERE DoctorId = $id
+										");
+
+				return $result;
+			}
+			catch(Exception $e)
+			{
+				echo $e;
+			}
+		}
+
+		public function GetDoctorProcedures($id)
+		{
+			try
+			{
+				$result = $this->sentence("SET CHARACTER SET utf8");
+				$result = $this->sentence("SELECT DISTINCT
+											CategoryId
+											FROM ProceduresDoctor WHERE DoctorId = $id
+										");
+
+				return $result;
+			}
+			catch(Exception $e)
+			{
+				echo $e;
+			}
+		}
+
+		public function GetDoctorSubProcedures($id, $catId)
+		{
+			try
+			{
+				$result = $this->sentence("SET CHARACTER SET utf8");
+				$result = $this->sentence("SELECT
+											SubCategoryId
+											FROM ProceduresDoctor WHERE DoctorId = $id AND CategoryId = $catId
 										");
 
 				return $result;

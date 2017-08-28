@@ -1,11 +1,11 @@
 <?php
-include_once('Connection.php');
+	include_once('Connection.php');
 
 	Class ValidationCalificationDoctors extends Connection
 	{
 		private $ValidationCalificationDoctorId;
     	private $CalificationDoctorId;
-		private $Link;
+		private $Code;
     	private $Status;
 
 		//SET
@@ -19,9 +19,9 @@ include_once('Connection.php');
 			$this->CalificationDoctorId = $value;
 		}
 
-		public function setLink($value)
+		public function setCode($value)
 		{
-			$this->Link = $value;
+			$this->Code = $value;
 		}
 
 		public function setStatus($value)
@@ -40,9 +40,9 @@ include_once('Connection.php');
 			return $this->CalificationDoctorId;
 		}
 
-		public function getLink()
+		public function getCode()
 		{
-			return $this->Link;
+			return $this->Code;
 		}
 
 		public function getStatus()
@@ -54,13 +54,15 @@ include_once('Connection.php');
 		{
 			try
 			{
-				$sql = "INSERT INTO ValidationCalificationDoctors
-										(CalificationDoctorId, Link, Status)
-										VALUES
-										($this->CalificationDoctorId, $this->Link, $this->Status)";
+				$result = $this->connection->prepare("INSERT INTO ValidationCalificationDoctors (CalificationDoctorId, Code) VALUES (?, ?)");
+				$result->bindParam(1, $CalificationDoctorId);
+				$result->bindParam(2, $Code);
 
-				$result = $this->sentence("SET CHARACTER SET utf8");
-				$result = $this->sentence($sql);
+				// insertar una fila
+				$Code = $this->Code;
+				$CalificationDoctorId = $this->CalificationDoctorId;
+
+				$result->execute();
 
 				if($result->rowCount() > 0)
 				{
@@ -123,12 +125,34 @@ include_once('Connection.php');
 			}
 		}
 
+		public function GetCalificationDoctorIdForCode($catId)
+		{
+			try
+			{
+				$sql = "SELECT * FROM ValidationCalificationDoctors WHERE `Code` = '$catId'";
+
+				$result = $this->sentence("SET CHARACTER SET utf8");
+				$result = $this->sentence($sql);
+
+				if($result->rowCount() > 0)
+				{
+					$fetchResult = $result->fetch(PDO::FETCH_ASSOC);
+					return $fetchResult["CalificationDoctorId"];
+				} 
+			}
+			catch(Exception $e)
+			{
+				echo $e;
+				return false;
+			}
+		}
+
 		public function GetAllValidationCalificationDoctors()
 		{
 			try
 			{
 				$res = $this->sentence("SET CHARACTER SET utf8");
-				$res = $this->sentence("SELECT * FROM ValidationCalificationDoctors");
+				$res = $this->sentence("SELECT * FROM ValidationCalificationDoctors ORDER BY ValidationCalificationDoctorId ASC");
 				return $res;
 			}
 			catch(Exception $e)
@@ -157,16 +181,14 @@ include_once('Connection.php');
 			}
 		}
 
-		public function UpdateValidationCalificationDoctor()
+		public function UpdateValidationCalificationDoctor($code)
 		{
 			try
 			{
-				$sql = "UPDATE ValidationCalificationDoctors SET CalificationDoctorId = $this->CalificationDoctorId, Link = $this->Link, Status = $this->Status
-										WHERE ValidationCalificationDoctorId = $this->ValidationCalificationDoctorId";
+				$result = $this->connection->prepare("UPDATE ValidationCalificationDoctors SET Status = 'Active' WHERE Code = :code");
+				$result->bindParam(':code', $code);
 
-				$result = $this->sentence("SET CHARACTER SET utf8");
-				$result = $this->sentence($sql);
-
+				$result->execute();
 				$query = $result->rowCount() ? true : false;
 				if($query)
 				{
@@ -204,6 +226,28 @@ include_once('Connection.php');
 			catch(Exception $e)
 			{
 				echo $e;
+			}
+		}
+
+		public function getValidationId($code)
+		{
+			try
+			{
+				$sql = "SELECT CalificationDoctorId FROM ValidationCalificationDoctors WHERE Code = $code";
+
+				$result = $this->sentence("SET CHARACTER SET utf8");
+				$result = $this->sentence($sql);
+
+				if($result->rowCount() > 0)
+				{
+					$fetchResult = $result->fetch(PDO::FETCH_ASSOC);
+					return $fetchResult["CalificationDoctorId"];
+				}
+			}
+			catch(Exception $e)
+			{
+				echo $e;
+				return false;
 			}
 		}
 

@@ -49,7 +49,7 @@ if (!isset($image['output']['data'])) {
 $namePhoto = slugify($image['input']['name']);
 
 // Save the file
-$file = Slim::saveFile($image['output']['data'], $namePhoto, "../img/doctors");
+$file = Slim::saveFile($image['output']['data'], $namePhoto, "../img/doctors/");
 
 // Return results as JSON
 Slim::outputJSON(array(

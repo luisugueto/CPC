@@ -1,5 +1,5 @@
 <?php
-include_once('Connection.php');
+	include_once('Connection.php');
 
 	Class DataDoctors extends Connection
 	{
@@ -54,7 +54,8 @@ include_once('Connection.php');
 		{
 			try
 			{
-				$result = $this->connection->prepare("INSERT INTO data (DoctorId, Name, Description) VALUES (?, ?, ?)");
+				$result = $this->sentence("SET CHARACTER SET utf8");
+				$result = $this->connection->prepare("INSERT INTO Data (DoctorId, Name, Description) VALUES (?, ?, ?)");
 				$result->bindParam(1, $DoctorId);
 				$result->bindParam(2, $Name);
 				$result->bindParam(3, $Description);
@@ -87,7 +88,7 @@ include_once('Connection.php');
 				$result = $this->sentence("SET CHARACTER SET utf8");
 				$result = $this->sentence("SELECT
 											DataDoctorId,DoctorId, Name, Description
-											FROM data WHERE DoctorId = $id
+											FROM Data WHERE DoctorId = $id
 										");
 
 				return $result;
@@ -102,7 +103,7 @@ include_once('Connection.php');
 		{
 			try
 			{
-				$sql = "SELECT Name FROM data WHERE DoctorId = $catId";
+				$sql = "SELECT Name FROM Data WHERE DoctorId = $catId";
 
 				$result = $this->sentence("SET CHARACTER SET utf8");
 				$result = $this->sentence($sql);
@@ -186,7 +187,7 @@ include_once('Connection.php');
 		{
 			try
 			{
-				$result = $this->connection->prepare("DELETE FROM data WHERE DataDoctorId = ?");
+				$result = $this->connection->prepare("DELETE FROM Data WHERE DataDoctorId = ?");
 				$result->bindParam(1, $DataDoctorId);
 
 				// insertar una fila
@@ -197,7 +198,7 @@ include_once('Connection.php');
 
 				if($result->rowCount() > 0)
 				{
-					return "success";
+					return "exito";
 				}
 				else
 				{

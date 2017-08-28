@@ -21,14 +21,21 @@
 			<div class="container">
 
 				<?php
-					if (!in_array("per_articulos_ver", $permisos_usuario))
+					if (in_array("per_medicos_crear", $permisos_usuario) || in_array("per_medicos_editar", $permisos_usuario) || in_array("per_medicos_eliminar", $permisos_usuario) || in_array("per_medico_info", $permisos_usuario) || in_array("per_medico_descripcion", $permisos_usuario) || in_array("per_medico_galeria", $permisos_usuario) || in_array("per_medico_calificaciones", $permisos_usuario))
 					{
 				?>
 
 						<div class="row">
 							<div class="col-sm-12">
 								<div class="btn-group pull-right m-t-15">
-									<a href="javascript:void(0)" onclick="modalCall('medicos','form','0')" class="btn btn-default btn-md waves-effect waves-light m-b-30"><i class="md md-add"></i> Agregar</a>
+									<?php
+										if (in_array("per_medicos_crear", $permisos_usuario))
+										{
+									?>
+											<a href="javascript:void(0)" onclick="modalCall('medicos','form','0')" class="btn btn-default btn-md waves-effect waves-light m-b-30"><i class="md md-add"></i> Agregar</a>
+									<?php
+										}
+									?>
 								</div>
 								<h4 class="page-title">Médicos</h4>
 								<ol class="breadcrumb">
@@ -45,7 +52,7 @@
 						<div class="row">
 							<div class="col-sm-12">
 								<div class="card-box m-b-0">
-									<table class="tablesaw table m-b-0" data-tablesaw-mode="swipe" data-tablesaw-sortable data-tablesaw-sortable-switch>
+									<table class="tablesaw table m-b-0" data-tablesaw-mode="swipe" data-tablesaw-sortable data-tablesaw-sortable-switch id="example">
 										<thead>
 											<tr>
 												<th scope="col" data-tablesaw-sortable-col data-tablesaw-sortable-default-col data-tablesaw-priority="persist">Id</th>
@@ -71,9 +78,26 @@
 														<td><?= $Doctor['Description'] ?></td>
 														<td><?= $plan->GetPlanName($Doctor['PlanId']) ?></td>
 														<td>
-															<a href="perfil_medico.php?id=<?= $Doctor['DoctorId']?>"class="btn btn-primary btn-custom waves-effect waves-light btn-xs"><i class="fa fa-eye"></i></a>
-															<a href="javascript:void(0)" onclick="modalCall('<?= $content ?>','edit','<?= $id;?>')" class="btn btn-inverse btn-custom waves-effect waves-light btn-xs"><i class="fa fa-pencil"></i></a>
-															<a href="javascript:void(0)" onclick="deleteItem('<?= $content ?>','<?= $id ?>','<?= $name ?>')" class="btn btn-danger btn-custom waves-effect waves-light btn-xs"><i class="fa fa-remove"></i></a>
+															<?php
+																if (in_array("per_medico_info", $permisos_usuario) || in_array("per_medico_descripcion", $permisos_usuario) || in_array("per_medico_galeria", $permisos_usuario) || in_array("per_medico_calificaciones", $permisos_usuario))
+																{
+															?>
+																	<a href="perfil_medico.php?id=<?= $Doctor['DoctorId']?>"class="btn btn-primary btn-custom waves-effect waves-light btn-xs"><i class="fa fa-eye"></i></a>
+															<?php
+																}	
+																if (in_array("per_medicos_editar", $permisos_usuario))
+																{
+															?>
+																	<a href="javascript:void(0)" onclick="modalCall('<?= $content ?>','edit','<?= $id;?>')" class="btn btn-inverse btn-custom waves-effect waves-light btn-xs"><i class="fa fa-pencil"></i></a>
+															<?php
+																}	
+																if (in_array("per_medicos_eliminar", $permisos_usuario))
+																{
+															?>
+																	<a href="javascript:void(0)" onclick="deleteItem('<?= $content ?>','<?= $id ?>','<?= $name ?>')" class="btn btn-danger btn-custom waves-effect waves-light btn-xs"><i class="fa fa-remove"></i></a>
+															<?php
+																}
+															?>
 														</td>
 													</tr>
 											<?php
@@ -91,7 +115,7 @@
 
 <?php
 	include("includes/footer.php");
-	/*if (!in_array("per_articulos_ver", $permisos_usuario))
+	if ((!in_array("per_medicos_crear", $permisos_usuario)) && (!in_array("per_medicos_editar", $permisos_usuario)) && (!in_array("per_medicos_eliminar", $permisos_usuario)) && (!in_array("per_medico_info", $permisos_usuario)) && (!in_array("per_medico_descripcion", $permisos_usuario)) && (!in_array("per_medico_galeria", $permisos_usuario)) && (!in_array("per_medico_calificaciones", $permisos_usuario)))
 	{
 		echo '<script type="text/javascript">swal({
 				html:true,
@@ -107,5 +131,5 @@
 				$("#fullscreenloading").show();
 				location.href = "index.php";
 			});</script>';
-	}*/
+	}
 ?>
