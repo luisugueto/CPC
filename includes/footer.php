@@ -131,10 +131,10 @@
 
 					switch (resultado[0]) {
 						case 'Procedimiento':
-							type="procedimientos-detalle.php"
+							type="procedimiento/search"
 							break;
 						case 'Doctor':
-							type="directorio-detalle.php"
+							type="doctor/search"
 							break;
 						default:
 
