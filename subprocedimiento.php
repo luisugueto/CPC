@@ -48,7 +48,7 @@
 			<!-- columna izquierda -->
 			<div class="col m9 s12">
 
-				<section class="hide-on-small-only">
+				<section>
 					<!-- Título -->
           			<div class="title-divider">
 						<h1><?= $subCategory["Name"] ?></h1>

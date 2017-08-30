@@ -82,14 +82,6 @@
                         if ($item['url'] == $videoId[0])
                         {
                 ?>
-                            <section class="hide-on-small-only">
-                                <!-- Título -->
-                                <div class="title-divider">
-                                    <h1><?= $item["title"] ?></h1>
-                                </div>
-                                <!-- Fin título -->
-                            </section>
-
                             <!-- video -->
                             <div class="row">
                                 <div class="col s12">
@@ -98,7 +90,8 @@
                                             <div class="card-content">
                                                 <iframe width="100%" height="380" src="https://www.youtube.com/embed/<?= $item['url'] ?>?rel=0&amp;showinfo=0" frameborder="0" allowfullscreen></iframe>
                                                 <br><br>
-                                                <p><?= $item["description"] ?></p>
+												<h5><?= $item["title"] ?></h5>
+                                                <p><?= nl2br($item["description"]) ?></p>
                                             </div>
                                         </div>
                                     </div>

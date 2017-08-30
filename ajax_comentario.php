@@ -255,20 +255,12 @@
 					$mail->CharSet = 'UTF-8';
 
 					$mail->Subject = "Validación de comentario en Cirugía Plástica Colombia";
-<<<<<<< HEAD
 
 					$msg = "La url para validar el comentario en Cirugía Plástica Colombia es: http://" . $_SERVER['HTTP_HOST']."?validationComment=".$code."-".$id."";
 					$mail->Body = $msg;
 
 					if(!$mail->send())
 					{
-=======
-					$msg = "La url para validar el comentario en Cirugía Plástica Colombia es: http://" . $_SERVER['HTTP_HOST']."?validationComment=".$codeCalification."-".$id."";
-					$mail->Body = $msg;
-
-					if(!$mail->send())
-					{	
->>>>>>> b10cb1e92f8486b22ee6ab29490dffebefdf2de8
 						echo trim("fallo");
 					}
 					else

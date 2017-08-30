@@ -12,6 +12,17 @@
 	$article->setAuthor($_POST["hdAuthor"]);
 	$article->setSlug($_POST["slug-article"]);
 
+	if ($_POST["txtPhotoAlt"] == "")
+	{
+		$article->setPhotoAlt($_POST["txtTitle"]);
+	}
+	else
+	{
+		$article->setPhotoAlt($_POST["txtPhotoAlt"]);
+	}
+
+	$article->setTags($_POST["txtTags"]);
+
 	if ($_FILES['imgSlide']['name'] != NULL)
 	{
 		$alowedExt = array("jpg","png","gif");

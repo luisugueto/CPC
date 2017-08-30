@@ -76,6 +76,17 @@
                                                 http://www.cirugiaplasticacolombia.com/ <input type="text" id="slug-article" name="slug-article" class="form-control" style="text-transform:none;display:inline-block;width:50%;" onblur="createSlug(this)" value="<?= $article->getSlug() ?>">
                                             </div>
 
+                                            <div class="form-group">
+                                                <label>Tags:</label>
+                                                <input type="text" id="txtTags" name="txtTags" class="input-style form-control" data-role="tagsinput" value="<?= $article->getTags() ?>">
+                                                <small>Separar con "," (comas)</small>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>ALT para imágenes del artículo:</label>
+                                                <input type="text" id="txtAltPhotos" name="txtAltPhotos" class="form-control" style="text-transform:none;" value="<?= $article->getAltPhotos() ?>">
+                                            </div>
+
                                         </div>
                                     </div>
                                 </div>

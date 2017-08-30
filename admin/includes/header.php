@@ -56,6 +56,7 @@
 		<link href="css/bootstrap-select.css" rel="stylesheet" type="text/css" />
 		<link href="css/bootstrap-switch.min.css" rel="stylesheet" type="text/css" />
 		<link href="css/cropper.min.css" rel="stylesheet" type="text/css" />
+		<link rel="stylesheet" href="css/bootstrap-tagsinput.css" type="text/css">
 
 		<!-- font-awesome -->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">

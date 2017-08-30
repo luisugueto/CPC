@@ -79,10 +79,7 @@
 
 	<script type="text/javascript" src="js/materialize.min.js"></script>
 	<script type="text/javascript" src="js/owl.carousel.min.js"></script>
-	<script type="text/javascript" src="js/lity.js"></script>
 	<script type="text/javascript">
-
-		$(document).on('click', '[data-lightbox]', lity);
 
 		$("#consulta-en-linea").click(function() {
 			ga('send', 'event', 'Botones', 'click', 'Consulta en línea');
