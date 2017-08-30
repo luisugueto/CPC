@@ -134,6 +134,17 @@
 	include("includes/header.php");
 ?>
 
+	<div id="lightbox-gallery" class="modal">
+		<div class="modal-content">
+			<div class="carousel carousel-slider" id="lightbox-content">
+			</div>
+		</div>
+		<div class="modal-footer">
+			<a href="javascript:void(0)" id="next-lightbox" style="margin: 10px;" class="btn-floating btn-large waves-effect waves-light blue darken-1"><i class="material-icons">keyboard_arrow_right</i></a>
+			<a href="javascript:void(0)" id="prev-lightbox" style="margin: 10px;" class="btn-floating btn-large waves-effect waves-light blue darken-1"><i class="material-icons">keyboard_arrow_left</i></a>
+		</div>
+	</div>
+
 	<?php
 		/* ===================================================== */
 		/*             VERSIÓN PARA ESCRITORIO                   */
@@ -206,7 +217,7 @@
 						}
 					?>
 
-					<a class="waves-effect waves-light btn profile-btn" id="calificar-web" onclick="modalCallSite('comentario','form','<?= $id;?>')" style="background-color:#ffa200"><i class="material-icons left" style="margin-right:5px; font-size:12px">star</i> Calificar</a>
+					<a class="waves-effect waves-light btn profile-btn" id="calificar-web" onclick="modalCallSite('comentario','form','<?= $id;?>', '<?= $_GET["calificationCode"] ?>')" style="background-color:#ffa200"><i class="material-icons left" style="margin-right:5px; font-size:12px">star</i> Calificar</a>
 
 					<br><br>
 
@@ -414,7 +425,7 @@
 
 							while ($Gallery = $imageList->fetch(PDO::FETCH_ASSOC))
 							{
-								echo "<div class='col m4'><a href='admin/img/doctors/galleries/".$Gallery['Location']."' data-lity><img src='admin/img/doctors/galleries/".$Gallery['Location']."' width='100%'></a></div>";
+								echo "<div class='col m4'><a href='javascript:void' class='lightbox' light-target='admin/img/doctors/galleries/".$Gallery['Location']."' data-lightbox='deskGal'><div style='margin-bottom:20px; width:100%; height:100px; background-size:cover; background-position:center; background-image:url(admin/img/doctors/galleries/".$Gallery['Location'].");'></div></a></div>";
 							}
 
 							echo "</div>";
@@ -425,7 +436,7 @@
 							{
 								while ($GalleryUser = $imageUserList->fetch(PDO::FETCH_ASSOC))
 								{
-									echo "<div class='col m4'><a href='admin/files/images/".$Gallery['Location']."' data-lity><img src='admin/files/images/".$GalleryUser['Location']."' width='100%'></a></div>";
+									echo "<div class='col m4'><a href='javascript:void(0)' class='lightbox' light-target='admin/files/images/".$GalleryUser['Location']."' data-lightbox='deskGal'><div style='margin-bottom:20px; width:100%; height:100px; background-size:cover; background-position:center; background-image:url(admin/files/images/".$GalleryUser['Location'].");'></div></a></div>";
 								}
 							}
 
@@ -438,7 +449,7 @@
 	
 							while ($Gallery = $videoList->fetch(PDO::FETCH_ASSOC))
 							{
-								echo "<div class='col m4'><a href='https://www.youtube.com/embed/".$Gallery['Location']."' data-lity><iframe width='100%' style='height='100px' src='https://www.youtube.com/embed/".$Gallery['Location']."' frameborder='0' allowfullscreen></iframe></a></div>";
+								echo "<div class='col m4'><a href='javascript:void(0)' class='lightbox' light-target='https://www.youtube.com/embed/".$Gallery['Location']."' data-lightbox='deskGal'><img width='100%' src='https://img.youtube.com/vi/".$Gallery['Location']."/0.jpg'></a></div>";
 							}
 
 							echo "</div>";
@@ -449,7 +460,7 @@
 							{
 								while ($GalleryUser = $videoUserList->fetch(PDO::FETCH_ASSOC))
 								{
-									echo "<div class='col m4'><a href='https://www.youtube.com/embed/".$Gallery['Location']."' data-lity><iframe width='100%' style='height='100px' src='https://www.youtube.com/embed/".$GalleryUser['Location']."' frameborder='0' allowfullscreen></iframe></a></div>";
+									echo "<div class='col m4'><a href='javascript:void(0)' class='lightbox' light-target='https://www.youtube.com/embed/".$GalleryUser['Location']."' data-lightbox='deskGal'><img width='100%' src='https://img.youtube.com/vi/".$GalleryUser['Location']."/0.jpg'></a></div>";
 								}
 							}
 
@@ -464,7 +475,7 @@
 							
 							while ($GalleryUser = $imageUserList->fetch(PDO::FETCH_ASSOC))
 							{
-								echo "<div class='col m4'><a href='admin/files/images/".$GalleryUser['Location']."' data-lity><img src='admin/files/images/".$GalleryUser['Location']."' width='100%'></a></div>";
+								echo "<div class='col m4'><a href='javascript:void(0)' class='lightbox' light-target='admin/files/images/".$GalleryUser['Location']."' data-lightbox='deskGal'><div style='margin-bottom:20px; width:100%; height:100px; background-size:cover; background-position:center; background-image:url(admin/files/images/".$GalleryUser['Location'].");'></div></a></div>";
 							}
 
 							echo "</div>";
@@ -475,7 +486,7 @@
 
 							while ($GalleryUser = $videoUserList->fetch(PDO::FETCH_ASSOC))
 							{
-								echo "<div class='col m4'><a href='https://www.youtube.com/embed/".$GalleryUser['Location']."' data-lity><iframe width='100%' style='height='100px' src='https://www.youtube.com/embed/".$GalleryUser['Location']."' frameborder='0' allowfullscreen></iframe></a></div>";
+								echo "<div class='col m4'><a href='javascript:void(0)' class='lightbox' light-target='https://www.youtube.com/embed/".$GalleryUser['Location']."' data-lightbox='deskGal'><img width='100%' src='https://img.youtube.com/vi/".$GalleryUser['Location']."/0.jpg'></a></div>";
 							}
 
 							echo "</div>";
@@ -497,6 +508,7 @@
 							<ul id="comments-list" class="comments-list">
 					<?php
 								$first_image = "";
+								$first_type = "";
 
 								while($Comments = $calificationsListComments->fetch(PDO::FETCH_ASSOC))
 								{
@@ -513,39 +525,99 @@
 									}
 									else
 									{
-										while($Gallery = $listGalleryComment->fetch(PDO::FETCH_ASSOC))
+										$totalImages = 0;
+										$totalVideos = 0;
+										$imagesComment = "";
+										$videosComment = "";
+										$comentarios_images_counter = 0;
+
+										while($galeria_comentario = $listGalleryComment->fetch(PDO::FETCH_ASSOC))
 										{
-											if($Gallery['Type'] == 'Image')
+											if($galeria_comentario['Type'] == 'Image')
 											{
-												$first_image = $Gallery['Location'];
+												if ($comentarios_images_counter == 0)
+												{
+													$first_image = "admin/files/images/".$galeria_comentario['Location'];
+													$first_type = "image";
+												}
+												else
+												{
+													$imagesComment.= "<a href='javascript:void(0)' class='lightbox' light-target='admin/files/images/".$galeria_comentario['Location']."' data-lightbox='commentGal".$Comments['CalificationDoctorId']."'><img src='admin/files/images/".$galeria_comentario['Location']."'></a>";
+												}
+
+												$totalImages++;
 											}
-											elseif($Gallery['Type'] == 'Video')
+											elseif($galeria_comentario['Type'] == 'Video')
 											{
-												
+												if ($comentarios_images_counter == 0)
+												{
+													$first_image = "https://img.youtube.com/vi/".$galeria_comentario['Location']."/0.jpg";
+													$first_type = "video";
+												}
+												else
+												{
+													$videosComment.= "<a href='javascript:void(0)' class='lightbox' light-target='https://www.youtube.com/embed/".$galeria_comentario['Location']."' data-lightbox='commentGal".$Comments['CalificationDoctorId']."'><img src='https://img.youtube.com/vi/".$galeria_comentario['Location']."/0.jpg'></a>";
+												}
+
+												$totalVideos++;
 											}
-										}	
+
+											$comentarios_images_counter++;
+										}
 									}
 					?>
 									<li>
 										<div class="comment-main-level">
 										
 											<!-- Avatar -->
-											<div class="comment-avatar">
-												<?php
-													if ($first_image != "")
-													{
-												?>
-														<img src="admin/files/images/<?= $first_image ?>">
-												<?php
-													}
-													else
-													{
-												?>
-														<img src="images/placeholder.jpg">
-												<?php
-													}
-												?>
-											</div>
+											<?php
+												if ($first_image != "" && $first_type == "image")
+												{
+											?>
+													<a href='javascript:void(0)' class='lightbox' light-target='<?= $first_image ?>' data-lightbox='commentGal<?= $Comments['CalificationDoctorId'] ?>'>
+														<div class="comment-avatar" style="background-image: url('<?= $first_image ?>'); background-size: cover; background-position: center;">
+														
+															<div class="comment-gallery-indicators">
+																
+																<div class="num-indicator"> <?= $totalImages ?></div> <i class="material-icons" style="font-size: 14px;">insert_photo</i>
+
+																<div class="num-indicator"><?= $totalVideos ?></div> <i class="material-icons" style="font-size: 14px;">video_library</i>
+
+															</div>
+														
+														</div>
+													</a>
+											<?php
+												}
+												elseif ($first_image != "" && $first_type == "video")
+												{
+													$video_id = explode("/", $first_image);
+													$video_id = $video_id[count($video_id) - 2];
+											?>
+													<a href='javascript:void(0)' class='lightbox' light-target='https://www.youtube.com/embed/<?= $video_id ?>' data-lightbox='commentGal<?= $Comments['CalificationDoctorId'] ?>'>
+														<div class="comment-avatar" style="background-image: url('<?= $first_image ?>'); background-size: cover; background-position: center;">
+														
+															<div class="comment-gallery-indicators">
+																
+																<div class="num-indicator"> <?= $totalImages ?></div> <i class="material-icons" style="font-size: 14px;">insert_photo</i>
+
+																<div class="num-indicator"><?= $totalVideos ?></div> <i class="material-icons" style="font-size: 14px;">video_library</i>
+																
+															</div>
+														
+														</div>
+													</a>
+											<?php
+												}
+												else
+												{
+											?>
+													<div class="comment-avatar" style="background-image: url('images/placeholder.jpg'); background-size: cover; background-position: center;"></div>
+											<?php
+												}
+											?>
+
+											<div style="display:none"><?= $imagesComment ?> <?= $videosComment ?></div>
 
 											<!-- Contenedor del Comentario -->
 											<div class="comment-box">
@@ -556,22 +628,20 @@
 													$months = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
 													$monthName = $months[$monthNum - 1];
 
-													if($califications->GetStatusCalification($Comments['CalificationDoctorId']) == 'Active')
-													{
 					?>
-														<h6 class="comment-name by-author"><?= $Comments['NameUser'] ?> <span><?= $d["day"] ?> de <?= $monthName ?> del <?= $d["year"] ?></span></h6> <span class="new badge">validado</span>
+													<h6 class="comment-name by-author"><?= $Comments['NameUser'] ?> <span><?= $d["day"] ?> de <?= $monthName ?> del <?= $d["year"] ?></span></h6>
 					<?php
-													}
-													else
-													{
+
+													if($califications->GetStatusCalification($Comments['CalificationDoctorId']) == 'Active')
+													{	
 					?>
-														<h6 class="comment-name by-author"><?= $Comments['NameUser'] ?> <span><?= $d["day"] ?> de <?= $monthName ?> del <?= $d["year"] ?></span></h6>
+														<svg data-position="bottom" data-delay="50" data-tooltip="Validado por correo electrónico" class="tooltipped" id="Layer_1" style="width: 24px; float: right; margin: 0 10px;" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20.14 23.3"><defs><style>.cls-1{fill:#02a5dd;}.cls-2{fill:#ff7a2d;}.cls-3{fill:#ffe15c;}.cls-4{fill:#ffc900;}</style></defs><path class="cls-1" d="M18.39,14.81a1.88,1.88,0,0,0,.09-.55,2.3,2.3,0,0,1,1.19-2.07,1.25,1.25,0,0,0,.51-1.89,2.3,2.3,0,0,1,0-2.39A1.25,1.25,0,0,0,19.67,6a2.3,2.3,0,0,1-1.19-2.07,1.24,1.24,0,0,0-1.39-1.39A2.3,2.3,0,0,1,15,1.37,1.24,1.24,0,0,0,13.13.86a2.31,2.31,0,0,1-2.39,0,1.25,1.25,0,0,0-1.89.51A2.3,2.3,0,0,1,6.78,2.56,1.24,1.24,0,0,0,5.39,3.95,2.3,2.3,0,0,1,4.2,6a1.25,1.25,0,0,0-.51,1.89,2.29,2.29,0,0,1,0,2.39,1.25,1.25,0,0,0,.51,1.89,2.3,2.3,0,0,1,1.19,2.07,1.93,1.93,0,0,0,.07.44l-3.6,7.07,3-.34,1.66,2.5s2.18-4.55,3.08-6.39a1.39,1.39,0,0,0,1.13-.18,2.3,2.3,0,0,1,2.39,0,1.34,1.34,0,0,0,1.19.16L18,23.85l1-2.69,3,.38Z" transform="translate(-1.86 -0.62)"/><circle class="cls-2" cx="10.07" cy="8.33" r="5.59"/><circle class="cls-3" cx="10.07" cy="8.33" r="5.08"/><path class="cls-4" d="M7.89,12a5.07,5.07,0,1,0,8-6.27Z" transform="translate(-1.86 -0.62)"/></svg>
 					<?php
 													}
 													if($califications->GetStatusDoctorCalification($Comments['CalificationDoctorId']) == 'Active')
 													{
 					?>
-														<span class="new badge verified">verificado</span>
+														<svg data-position="bottom" data-delay="50" data-tooltip="Verificado por Doctor" class="tooltipped" id="sello" style="width: 24px; float: right; margin: 0 10px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20.14 23.3"><defs><style>.cls-1-blue{fill:#0259a5;}.cls-2{fill:#ff7a2d;}.cls-3{fill:#ffe15c;}.cls-4{fill:#ffc900;}</style></defs><path class="cls-1-blue" d="M18.39,14.81a1.88,1.88,0,0,0,.09-.55,2.3,2.3,0,0,1,1.19-2.07,1.25,1.25,0,0,0,.51-1.89,2.3,2.3,0,0,1,0-2.39A1.25,1.25,0,0,0,19.67,6a2.3,2.3,0,0,1-1.19-2.07,1.24,1.24,0,0,0-1.39-1.39A2.3,2.3,0,0,1,15,1.37,1.24,1.24,0,0,0,13.13.86a2.31,2.31,0,0,1-2.39,0,1.25,1.25,0,0,0-1.89.51A2.3,2.3,0,0,1,6.78,2.56,1.24,1.24,0,0,0,5.39,3.95,2.3,2.3,0,0,1,4.2,6a1.25,1.25,0,0,0-.51,1.89,2.29,2.29,0,0,1,0,2.39,1.25,1.25,0,0,0,.51,1.89,2.3,2.3,0,0,1,1.19,2.07,1.93,1.93,0,0,0,.07.44l-3.6,7.07,3-.34,1.66,2.5s2.18-4.55,3.08-6.39a1.39,1.39,0,0,0,1.13-.18,2.3,2.3,0,0,1,2.39,0,1.34,1.34,0,0,0,1.19.16L18,23.85l1-2.69,3,.38Z" transform="translate(-1.86 -0.62)"/><circle class="cls-2" cx="10.07" cy="8.33" r="5.59"/><circle class="cls-3" cx="10.07" cy="8.33" r="5.08"/><path class="cls-4" d="M7.89,12a5.07,5.07,0,1,0,8-6.27Z" transform="translate(-1.86 -0.62)"/></svg>
 					<?php
 													}
 													
@@ -592,8 +662,8 @@
 					?>
 													</div>
 
-													<a href="javascript:void(0)" onclick="modalCallSite('contestUser','form','<?= $Comments['CalificationDoctorId'];?>')">
-														<i class="material-icons reply">comment</i>
+													<a href="javascript:void(0)" class="comment-link" onclick="modalCallSite('contestUser','form','<?= $Comments['CalificationDoctorId'];?>')">
+														Comentar
 													</a>
 
 												</div>
@@ -752,7 +822,7 @@
 						}
 					?>
 
-					<a class="waves-effect waves-light btn profile-btn" onclick="modalCallSite('comentario','form','<?= $id;?>')" id="calificar-mobile" style="background-color:#ffa200"><i class="material-icons left" style="margin-right:5px; font-size:12px">star</i> Calificar</a>
+					<a class="waves-effect waves-light btn profile-btn" onclick="modalCallSite('comentario','form','<?= $id;?>', '<?= $_GET["calificationCode"] ?>')" id="calificar-mobile" style="background-color:#ffa200"><i class="material-icons left" style="margin-right:5px; font-size:12px">star</i> Calificar</a>
 
 					<br>
 
@@ -957,17 +1027,45 @@
 									}
 									else
 									{
-										while($Gallery = $list_gallery_comment->fetch(PDO::FETCH_ASSOC))
+										$totalImages = 0;
+										$totalVideos = 0;
+										$imagesComment = "";
+										$videosComment = "";
+										$comentarios_images_counter = 0;
+
+										while($gallery_comment = $list_gallery_comment->fetch(PDO::FETCH_ASSOC))
 										{
-											if($Gallery['Type'] == 'Image')
+											if($gallery_comment['Type'] == 'Image')
 											{
-												$first_image = $Gallery['Location'];
+												if ($comentarios_images_counter == 0)
+												{
+													$first_image = "admin/files/images/".$gallery_comment['Location'];
+													$first_type = "image";
+												}
+												else
+												{
+													$imagesComment.= "<a href='javascript:void(0)' class='lightbox' light-target='admin/files/images/".$gallery_comment['Location']."' data-lightbox='commentGalMobile".$Comments['CalificationDoctorId']."'><img src='admin/files/images/".$gallery_comment['Location']."'></a>";
+												}
+
+												$totalImages++;
 											}
-											elseif($Gallery['Type'] == 'Video')
+											elseif($gallery_comment['Type'] == 'Video')
 											{
-												
+												if ($comentarios_images_counter == 0)
+												{
+													$first_image = "https://img.youtube.com/vi/".$gallery_comment['Location']."/0.jpg";
+													$first_type = "video";
+												}
+												else
+												{
+													$videosComment.= "<a href='javascript:void(0)' class='lightbox' light-target='https://www.youtube.com/embed/".$gallery_comment['Location']."' data-lightbox='commentGalMobile".$Comments['CalificationDoctorId']."'><img src='https://img.youtube.com/vi/".$gallery_comment['Location']."/0.jpg'></a>";
+												}
+
+												$totalVideos++;
 											}
-										}	
+
+											$comentarios_images_counter++;
+										}
 									}
 
 					?>
@@ -975,22 +1073,54 @@
 										<div class="comment-main-level">
 										
 											<!-- Avatar -->
-											<div class="comment-avatar">
-												<?php
-													if ($first_image != "")
-													{
-												?>
-														<img src="admin/files/images/<?= $first_image ?>">
-												<?php
-													}
-													else
-													{
-												?>
-														<img src="images/placeholder.jpg">
-												<?php
-													}
-												?>
-											</div>
+											<?php
+												if ($first_image != "" && $first_type == "image")
+												{
+											?>
+													<a href='javascript:void(0)' class='lightbox' light-target='admin/files/images/<?= $GalleryUser['Location'] ?>' data-lightbox='commentGalMobile<?= $Comments['CalificationDoctorId'] ?>'>
+														<div class="comment-avatar" style="background-image: url('<?= $first_image ?>'); background-size: cover; background-position: center;">
+
+															<div class="comment-gallery-indicators">
+																
+																<div class="num-indicator"> <?= $totalImages ?></div> <i class="material-icons" style="font-size: 14px;">insert_photo</i>
+
+																<div class="num-indicator"><?= $totalVideos ?></div> <i class="material-icons" style="font-size: 14px;">video_library</i>
+
+															</div>
+
+														</div>
+													</a>
+											<?php
+												}
+												elseif ($first_image != "" && $first_type == "video")
+												{
+													$video_id = explode("/", $first_image);
+													$video_id = $video_id[count($video_id) - 2];
+											?>
+													<a href='javascript:void(0)' class='lightbox' light-target='https://www.youtube.com/embed/<?= $video_id ?>' data-lightbox='commentGalMobile<?= $Comments['CalificationDoctorId'] ?>'>
+														<div class="comment-avatar" style="background-image: url('<?= $first_image ?>'); background-size: cover; background-position: center;">
+													
+															<div class="comment-gallery-indicators">
+																	
+																<div class="num-indicator"> <?= $totalImages ?></div> <i class="material-icons" style="font-size: 14px;">insert_photo</i>
+
+																<div class="num-indicator"><?= $totalVideos ?></div> <i class="material-icons" style="font-size: 14px;">video_library</i>
+
+															</div>
+													
+														</div>
+													</a>
+											<?php
+												}
+												else
+												{
+											?>
+													<div class="comment-avatar" style="background-image: url('images/placeholder.jpg'); background-size: cover; background-position: center;"></div>
+											<?php
+												}
+											?>
+
+											<div style="display:none"><?= $imagesComment ?> <?= $videosComment ?></div>
 
 											<!-- Contenedor del Comentario -->
 											<div class="comment-box">
@@ -1000,17 +1130,20 @@
 													$monthNum = $d["month"];
 													$months = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
 													$monthName = $months[$monthNum - 1];
+					?>
+													<h6 class="comment-name by-author"><?= $Comments['NameUser'] ?> <span><?= $d["day"] ?> de <?= $monthName ?> del <?= $d["year"] ?></span></h6>
+					<?php
 
 													if($califications->GetStatusCalification($Comments['CalificationDoctorId']) == 'Active')
 													{
 					?>
-														<h6 class="comment-name by-author"><?= $Comments['NameUser'] ?> <span><?= $d["day"] ?> de <?= $monthName ?> del <?= $d["year"] ?></span></h6> <span class="new badge">validado</span>
+														<svg data-position="bottom" data-delay="50" data-tooltip="Validado por correo electrónico" class="tooltipped" id="Layer_1" style="width: 24px; float: right; margin: 0 10px;" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20.14 23.3"><defs><style>.cls-1{fill:#02a5dd;}.cls-2{fill:#ff7a2d;}.cls-3{fill:#ffe15c;}.cls-4{fill:#ffc900;}</style></defs><path class="cls-1" d="M18.39,14.81a1.88,1.88,0,0,0,.09-.55,2.3,2.3,0,0,1,1.19-2.07,1.25,1.25,0,0,0,.51-1.89,2.3,2.3,0,0,1,0-2.39A1.25,1.25,0,0,0,19.67,6a2.3,2.3,0,0,1-1.19-2.07,1.24,1.24,0,0,0-1.39-1.39A2.3,2.3,0,0,1,15,1.37,1.24,1.24,0,0,0,13.13.86a2.31,2.31,0,0,1-2.39,0,1.25,1.25,0,0,0-1.89.51A2.3,2.3,0,0,1,6.78,2.56,1.24,1.24,0,0,0,5.39,3.95,2.3,2.3,0,0,1,4.2,6a1.25,1.25,0,0,0-.51,1.89,2.29,2.29,0,0,1,0,2.39,1.25,1.25,0,0,0,.51,1.89,2.3,2.3,0,0,1,1.19,2.07,1.93,1.93,0,0,0,.07.44l-3.6,7.07,3-.34,1.66,2.5s2.18-4.55,3.08-6.39a1.39,1.39,0,0,0,1.13-.18,2.3,2.3,0,0,1,2.39,0,1.34,1.34,0,0,0,1.19.16L18,23.85l1-2.69,3,.38Z" transform="translate(-1.86 -0.62)"/><circle class="cls-2" cx="10.07" cy="8.33" r="5.59"/><circle class="cls-3" cx="10.07" cy="8.33" r="5.08"/><path class="cls-4" d="M7.89,12a5.07,5.07,0,1,0,8-6.27Z" transform="translate(-1.86 -0.62)"/></svg>
 					<?php
 													}
-													else
+													if($califications->GetStatusDoctorCalification($Comments['CalificationDoctorId']) == 'Active')
 													{
 					?>
-														<h6 class="comment-name by-author"><?= $Comments['NameUser'] ?> <span><?= $d["day"] ?> de <?= $monthName ?> del <?= $d["year"] ?></span></h6>
+														<svg data-position="bottom" data-delay="50" data-tooltip="Verificado por Doctor" class="tooltipped" id="sello" style="width: 24px; float: right; margin: 0 10px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20.14 23.3"><defs><style>.cls-1-blue{fill:#0259a5;}.cls-2{fill:#ff7a2d;}.cls-3{fill:#ffe15c;}.cls-4{fill:#ffc900;}</style></defs><path class="cls-1-blue" d="M18.39,14.81a1.88,1.88,0,0,0,.09-.55,2.3,2.3,0,0,1,1.19-2.07,1.25,1.25,0,0,0,.51-1.89,2.3,2.3,0,0,1,0-2.39A1.25,1.25,0,0,0,19.67,6a2.3,2.3,0,0,1-1.19-2.07,1.24,1.24,0,0,0-1.39-1.39A2.3,2.3,0,0,1,15,1.37,1.24,1.24,0,0,0,13.13.86a2.31,2.31,0,0,1-2.39,0,1.25,1.25,0,0,0-1.89.51A2.3,2.3,0,0,1,6.78,2.56,1.24,1.24,0,0,0,5.39,3.95,2.3,2.3,0,0,1,4.2,6a1.25,1.25,0,0,0-.51,1.89,2.29,2.29,0,0,1,0,2.39,1.25,1.25,0,0,0,.51,1.89,2.3,2.3,0,0,1,1.19,2.07,1.93,1.93,0,0,0,.07.44l-3.6,7.07,3-.34,1.66,2.5s2.18-4.55,3.08-6.39a1.39,1.39,0,0,0,1.13-.18,2.3,2.3,0,0,1,2.39,0,1.34,1.34,0,0,0,1.19.16L18,23.85l1-2.69,3,.38Z" transform="translate(-1.86 -0.62)"/><circle class="cls-2" cx="10.07" cy="8.33" r="5.59"/><circle class="cls-3" cx="10.07" cy="8.33" r="5.08"/><path class="cls-4" d="M7.89,12a5.07,5.07,0,1,0,8-6.27Z" transform="translate(-1.86 -0.62)"/></svg>
 					<?php
 													}
 													if($califications->GetStatusDoctorCalification($Comments['CalificationDoctorId']) == 'Active')
@@ -1037,8 +1170,8 @@
 					?>
 													</div>
 
-													<a href="javascript:void(0)" onclick="modalCallSite('contestUser','form','<?= $Comments['CalificationDoctorId'];?>')">
-														<i class="material-icons reply">comment</i>
+													<a href="javascript:void(0)" class="comment-link" onclick="modalCallSite('contestUser','form','<?= $Comments['CalificationDoctorId'];?>')">
+														Comentar
 													</a>
 
 												</div>
@@ -1138,7 +1271,7 @@
 
 						while ($Gallery = $image_list_responsive->fetch(PDO::FETCH_ASSOC))
 						{
-							echo "<div class='col s6'><a href='admin/img/doctors/galleries/".$Gallery['Location']."' data-lity><img src='admin/img/doctors/galleries/".$Gallery['Location']."' width='100%'></a></div>";
+							echo "<div class='col m4'><a href='javascript:void' class='lightbox' light-target='admin/img/doctors/galleries/".$Gallery['Location']."' data-lightbox='mobileGal'><div style='margin-bottom:20px; width:100%; height:100px; background-size:cover; background-position:center; background-image:url(admin/img/doctors/galleries/".$Gallery['Location'].");'></div></a></div>";
 						}
 
 						echo "</div>";
@@ -1149,7 +1282,7 @@
 						{
 							while ($GalleryUser = $image_user_list_responsive->fetch(PDO::FETCH_ASSOC))
 							{
-								echo "<div class='col s6'><a href='admin/files/images/".$GalleryUser['Location']."' data-lity><img src='admin/files/images/".$GalleryUser['Location']."' width='100%'></a></div>";
+								echo "<div class='col m4'><a href='javascript:void(0)' class='lightbox' light-target='admin/files/images/".$GalleryUser['Location']."' data-lightbox='mobileGal'><div style='margin-bottom:20px; width:100%; height:100px; background-size:cover; background-position:center; background-image:url(admin/files/images/".$GalleryUser['Location'].");'></div></a></div>";
 							}
 						}
 
@@ -1162,7 +1295,7 @@
 
 						while ($Gallery = $video_list_responsive->fetch(PDO::FETCH_ASSOC))
 						{
-							echo "<div class='col s6'><a href='https://www.youtube.com/embed/".$Gallery['Location']."' data-lity><iframe width='100%' style='height='100px' src='https://www.youtube.com/embed/".$Gallery['Location']."' frameborder='0' allowfullscreen></iframe></a></div>";
+							echo "<div class='col m4'><a href='javascript:void(0)' class='lightbox' light-target='https://www.youtube.com/embed/".$Gallery['Location']."' data-lightbox='mobileGal'><img width='100%' src='https://img.youtube.com/vi/".$Gallery['Location']."/0.jpg'></a></div>";
 						}
 
 						echo "</div>";
@@ -1173,7 +1306,7 @@
 						{
 							while ($GalleryUser = $video_user_list_responsive->fetch(PDO::FETCH_ASSOC))
 							{
-								echo "<div class='col s6'><a href='https://www.youtube.com/embed/".$GalleryUser['Location']."' data-lity><iframe width='100%' style='height='100px' src='https://www.youtube.com/embed/".$GalleryUser['Location']."' frameborder='0' allowfullscreen></iframe></a></div>";
+								echo "<div class='col m4'><a href='javascript:void(0)' class='lightbox' light-target='https://www.youtube.com/embed/".$GalleryUser['Location']."' data-lightbox='mobileGal'><img width='100%' src='https://img.youtube.com/vi/".$GalleryUser['Location']."/0.jpg'></a></div>";
 							}
 						}
 
@@ -1188,7 +1321,7 @@
 						
 						while ($GalleryUser = $image_user_list_responsive->fetch(PDO::FETCH_ASSOC))
 						{
-							echo "<div class='col s6'><a href='admin/files/images/".$GalleryUser['Location']."' data-lity><img src='admin/files/images/".$GalleryUser['Location']."'></a></div>";
+							echo "<div class='col m4'><a href='javascript:void(0)' class='lightbox' light-target='admin/files/images/".$GalleryUser['Location']."' data-lightbox='mobileGal'><div style='margin-bottom:20px; width:100%; height:100px; background-size:cover; background-position:center; background-image:url(admin/files/images/".$GalleryUser['Location'].");'></div></a></div>";
 						}
 
 						echo "</div>";
@@ -1199,7 +1332,7 @@
 
 						while ($GalleryUser = $video_user_list_responsive->fetch(PDO::FETCH_ASSOC))
 						{
-							echo "<div class='col s6'><a href='https://www.youtube.com/embed/".$GalleryUser['Location']."' data-lity><iframe width='100%' style='height='100px' src='https://www.youtube.com/embed/".$GalleryUser['Location']."' frameborder='0' allowfullscreen></iframe></a></div>";
+							echo "<div class='col m4'><a href='javascript:void(0)' class='lightbox' light-target='https://www.youtube.com/embed/".$GalleryUser['Location']."' data-lightbox='mobileGal'><img width='100%' src='https://img.youtube.com/vi/".$GalleryUser['Location']."/0.jpg'></a></div>";
 						}
 
 						echo "</div>";
@@ -1310,4 +1443,56 @@
 				$('.bar span').fadeIn('slow');
 			}, 800);
 		});
+
+		$(".lightbox").click(function() {
+			var galName = $(this).attr("data-lightbox");
+			var sameItems = $("[data-lightbox=" + galName + "]");
+			var content = "";
+
+			for (var i = 0; i < sameItems.length; i++) {
+				var target = sameItems[i].attributes[2].value;
+				var explode = target.split(":", 1);
+				
+				if (explode == "https") {
+					content += "<a class='carousel-item' href='javascript:void(0)'><iframe width='100%' src='" + target + "' height='400'></iframe></a>";
+				} else {
+					content += "<a class='carousel-item' href='javascript:void(0)'><img src='" + target + "'></a>";
+				}
+			}
+
+			$('#lightbox-content').html(content);
+
+			$('#lightbox-gallery').modal({
+				dismissible: true,
+				opacity: .5,
+				inDuration: 300,
+				outDuration: 200,
+				startingTop: '4%',
+				endingTop: '10%',
+				ready: function(modal, trigger) {
+					$('.carousel').carousel({
+						fullWidth: false,
+						dist: 0
+					});
+					$('#lightbox-content').attr("style","height:400px");
+				},
+				complete: function() { 
+					$('#lightbox-content').html('');
+					if ($('.carousel').hasClass('initialized')){
+						$('.carousel').removeClass('initialized')
+					}
+				}
+			});
+
+			$('#lightbox-gallery').modal('open');
+		});
+
+		$('#next-lightbox').click(function() {
+			$('.carousel').carousel('next');
+		})
+
+		$('#prev-lightbox').click(function() {
+			$('.carousel').carousel('prev');
+		})
+
 	</script>

@@ -32,6 +32,16 @@
 		$id = '0';
 	}
 
+	if (isset($_POST["args"]))
+	{
+		$get_code = explode(".", $_POST["args"]);
+		$get_code = $get_code[0];
+	}
+	else
+	{
+		$get_code = "";
+	}
+
 	$registro = array(
 		'DoctorId' => $id,
 		'Name' => '',
@@ -245,11 +255,20 @@
 					$mail->CharSet = 'UTF-8';
 
 					$mail->Subject = "Validación de comentario en Cirugía Plástica Colombia";
+<<<<<<< HEAD
+
+					$msg = "La url para validar el comentario en Cirugía Plástica Colombia es: http://" . $_SERVER['HTTP_HOST']."?validationComment=".$code."-".$id."";
+					$mail->Body = $msg;
+
+					if(!$mail->send())
+					{
+=======
 					$msg = "La url para validar el comentario en Cirugía Plástica Colombia es: http://" . $_SERVER['HTTP_HOST']."?validationComment=".$codeCalification."-".$id."";
 					$mail->Body = $msg;
 
 					if(!$mail->send())
 					{	
+>>>>>>> b10cb1e92f8486b22ee6ab29490dffebefdf2de8
 						echo trim("fallo");
 					}
 					else
@@ -364,7 +383,7 @@
 							<div class="form-group">
 								<label class="col-sm-3 control-label">Código Doctor</label>
 								<div class="col-sm-6">
-									<input autocomplete="off" id="cod" maxlength="4" type="text" class="form-control" parsley-trigger="change" onkeyup="verifyCode()" onpaste="return false;" placeholder=""/>
+									<input autocomplete="off" id="cod" maxlength="4" type="text" class="form-control" parsley-trigger="change" onkeyup="verifyCode()" onpaste="return false;" placeholder="" value="<?= $get_code ?>"/>
 									<span id="verifyCode"></span>
 								</div>
 							</div>

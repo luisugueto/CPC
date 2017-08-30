@@ -13,6 +13,8 @@
 		private $Slug;
 		private $MetaTitle;
 		private $MetaDescription;
+		private $Tags;
+		private $AltPhotos;
 
 		//SET
 		public function setArticleId($value)
@@ -63,6 +65,16 @@
 		public function setMetaDescription($value)
 		{
 			$this->MetaDescription = $value;
+		}
+
+		public function setTags($value)
+		{
+			$this->Tags = $value;
+		}
+
+		public function setAltPhotos($value)
+		{
+			$this->AltPhotos = $value;
 		}
 
 		//GET
@@ -116,6 +128,16 @@
 			return $this->MetaDescription;
 		}
 
+		public function getTags()
+		{
+			return $this->Tags;
+		}
+
+		public function getAltPhotos()
+		{
+			return $this->AltPhotos;
+		}
+
 		public function CreateArticle()
 		{
 			try
@@ -129,7 +151,9 @@
 										, Author
 										, Slug
 										, MetaTitle
-										, MetaDescription)
+										, MetaDescription
+										, Tags
+										, AltPhotos)
 										VALUES
 										('$this->Title'
 										, '$this->Photo'
@@ -139,7 +163,9 @@
 										, '$this->Author'
 										, '$this->Slug'
 										, '$this->MetaTitle'
-										, '$this->MetaDescription')";
+										, '$this->MetaDescription'
+										, '$this->Tags'
+										, '$this->AltPhotos')";
 
 				$result = $this->sentence("SET CHARACTER SET utf8");
 				$result = $this->sentence($sql);
@@ -314,6 +340,8 @@
 										, Slug = '$this->Slug'
 										, MetaTitle = '$this->MetaTitle'
 										, MetaDescription = '$this->MetaDescription'
+										, Tags = '$this->Tags'
+										, AltPhotos = '$this->AltPhotos'
 										WHERE ArticleId = '$this->ArticleId'";
 
 				$result = $this->sentence("SET CHARACTER SET utf8");
@@ -412,6 +440,8 @@
 					$this->setAuthor($fetchResult["Author"]);
 					$this->setMetaTitle($fetchResult["MetaTitle"]);
 					$this->setMetaDescription($fetchResult["MetaDescription"]);
+					$this->setTags($fetchResult["Tags"]);
+					$this->setAltPhotos($fetchResult["AltPhotos"]);
 					return true;
 				}
 			}
@@ -554,6 +584,35 @@
 			}
 		}
 
+		public function ListRelatedArticles($tag, $aId)
+		{
+			try
+			{
+				$result = $this->sentence("SET CHARACTER SET utf8");
+				$result = $this->sentence("SELECT
+												A.ArticleId
+												,A.Title
+												,A.Photo
+												,A.Content
+												,A.PublishDate
+												,A.Author
+												,A.MetaDescription
+												,A.Slug
+											FROM Articles A
+											WHERE A.Tags LIKE '%$tag%'
+											AND A.StatusId = 1
+											AND A.ArticleId != $aId
+											ORDER BY A.PublishDate DESC
+										");
+
+				return $result;
+			}
+			catch(Exception $e)
+			{
+				echo $e;
+			}
+		}
+
 		public function GetAllArticles($pag, $num, $today)
 		{
 			try
@@ -574,7 +633,6 @@
 									FROM Articles A
 									WHERE A.PublishDate <= '$today'
 									AND A.StatusId = 1
-									AND (SELECT AC.CategoryId FROM ArticleCategories AC WHERE AC.ArticleId = A.ArticleId LIMIT 1) != '8'
 									ORDER BY A.PublishDate DESC
 									LIMIT $begin, $num");
 				return $res;

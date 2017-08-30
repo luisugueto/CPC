@@ -63,7 +63,8 @@
 	$gallery = new GalleryDoctors();
 	$galleryList = $gallery->ListGallery();
 
-	if(isset($_GET['validationComment'])){
+	if(isset($_GET['validationComment']))
+	{
 		$validationCommentParts = explode("-", $_GET['validationComment']);
 		$doctorRedirect->setDoctorId($validationCommentParts[1]);
 		$contentRedirect = $doctorRedirect->GetDoctorContent();
@@ -77,7 +78,8 @@
 					window.location.href='/doctor/".$validationCommentParts[1]."_".slugify($contentRedirect['Name'])."';
 				</script>"; 
 		}
-		else{
+		else
+		{
 			echo "<script>
 					alert('El Código de validación para la calificación es Incorrecto o la calificación ya está validada.');
 			</script>";

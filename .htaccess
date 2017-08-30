@@ -14,6 +14,7 @@ Rewriterule ^inicio_(.+)$ index.php?page=$1
 Rewriterule ^blog_(.+)$ blog.php?page=$1
 Rewriterule ^noticia/(.+)_(.+)$ blog-detalle.php?id=$1&title=$2
 Rewriterule ^doctor/(.+)_(.+)$ directorio-detalle.php?id=$1&title=$2
+Rewriterule ^doctor/calificar/(.+)/(.+)$ directorio-detalle.php?id=$1&calificationCode=$2
 Rewriterule ^procedimiento/(.+)_(.+)$ procedimientos-detalle.php?id=$1&title=$2
 Rewriterule ^subprocedimiento/(.+)_(.+)$ subprocedimiento.php?id=$1&title=$2
 Rewriterule ^video/(.+)$ video.php?id=$1

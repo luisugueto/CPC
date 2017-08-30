@@ -11,8 +11,6 @@
 	$procedures = new ProceduresDoctor();
 
 	$subCategories = new SubCategories();
-	$subCategories->setCategoryId($_GET["id"]);
-	$listSubCategories = $subCategories->GetSubCategoriesByCategory();
 
 	if(isset($_POST['search']))
 	{
@@ -21,12 +19,16 @@
 		$procedures->setCategoryId($string[1]);
 		$categories->setCategoryId($string[1]);
 		$content = $categories->GetCategoryContent();
+		$subCategories->setCategoryId($string[1]);
+		$listSubCategories = $subCategories->GetSubCategoriesByCategory();
 	}
 	elseif(isset($_GET['id']))
 	{
 		$procedures->setCategoryId($_GET['id']);
 		$categories->setCategoryId($_GET['id']);
 		$content = $categories->GetCategoryContent();
+		$subCategories->setCategoryId($_GET["id"]);
+		$listSubCategories = $subCategories->GetSubCategoriesByCategory();
 	}
 
 	$proceduresCategory = $procedures->ListProceduresCategory();
@@ -69,7 +71,7 @@
 			<!-- columna izquierda -->
 			<div class="col m9 s12">
 
-				<section class="hide-on-small-only">
+				<section>
 					<!-- Título -->
           			<div class="title-divider">
 						<h1><?= $content['Name'] ?></h1>

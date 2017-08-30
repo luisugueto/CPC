@@ -51,7 +51,6 @@
 
 	<link type="text/css" rel="stylesheet" href="css/owl.carousel.min.css" />
 	<link type="text/css" rel="stylesheet" href="css/owl.theme.default.min.css" />
-	<link type="text/css" rel="stylesheet" href="css/lity.css" />
 
 	<link type="text/css" rel="stylesheet" href="css/styles.css" media="screen,projection" />
 
@@ -167,6 +166,7 @@
 				require_once("admin/models/Categories.php");
 				$categories = new Categories();
 				$categoriesList = $categories->ListCategories();
+				$list_categories = $categories->ListCategories();
 			?>
 
 			<nav>
@@ -186,7 +186,7 @@
 					<ul class="right hide-on-med-and-down">
 						<li><a href="inicio">Inicio</a></li>
 						<li><a href="directorio">Especialistas</a></li>
-						<li><a class="dropdown-button" href="javascript:void(0)" data-activates="dropdown1">Procedimientos <i class="material-icons right">arrow_drop_down</i></a></li>
+						<li><a class="dropdown-button" id="dropdown-desk" href="javascript:void(0)" data-activates="dropdown1">Procedimientos <i class="material-icons right">arrow_drop_down</i></a></li>
 						<li><a href="videos">Videos</a></li>
 						<li><a href="blog_1">Blog</a></li>
 					</ul>
@@ -206,23 +206,33 @@
 
 						<li><a href="inicio"><i class="material-icons left">home</i> Inicio</a></li>
 						<li><a href="directorio"><i class="material-icons left">perm_contact_calendar</i> Especialistas</a></li>
-						<li><a class="dropdown-button" href="javascript:void(0)" data-activates="procedures-dropdown">Procedimientos <i class="material-icons right">arrow_drop_down</i></a></li>
+						<li><a class="dropdown-button" id="dropdown-mobile" href="javascript:void(0)" data-activates="dropdown-mobile-procedures"><i class="material-icons left">face</i> Procedimientos <i class="material-icons right">arrow_drop_down</i></a></li>
 						<li><a href="videos"><i class="material-icons left">video_library</i> Videos</a></li>
 						<li><a href="blog_1"><i class="material-icons left">speaker_notes</i> Blog</a></li>
 					</ul>
 					<!-- Fin Menú Responsive -->
 
-					<ul id="dropdown1" class="dropdown-content">
-						<?php
-							while ($Procedures = $categoriesList->fetch(PDO::FETCH_ASSOC))
-							{
-								echo "<li><a href='procedimiento/".$Procedures['CategoryId']."_".slugify($Procedures['Name'])."'>".$Procedures['Name']."</a></li>";
-							}
-						?>
-					</ul>
-
 				</div>
 			</nav>
+
+			<ul id="dropdown1" class="dropdown-content">
+				<?php
+					while ($Procedures = $categoriesList->fetch(PDO::FETCH_ASSOC))
+					{
+						echo "<li><a href='procedimiento/".$Procedures['CategoryId']."_".slugify($Procedures['Name'])."'>".$Procedures['Name']."</a></li>";
+					}
+				?>
+			</ul>
+
+			<ul id="dropdown-mobile-procedures" class="dropdown-content">
+				<?php
+					while ($categories_procedures = $list_categories->fetch(PDO::FETCH_ASSOC))
+					{
+						echo "<li><a href='procedimiento/".$categories_procedures['CategoryId']."_".slugify($categories_procedures['Name'])."'>".$categories_procedures['Name']."</a></li>";
+					}
+				?>
+			</ul>
+
 		</div>
 	</header>
 	<!-- Fin cabecera -->
