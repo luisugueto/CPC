@@ -1,4 +1,4 @@
-				<?php
+<?php
 					require_once("admin/models/Articles.php");
 					require_once("admin/models/CalificationDoctors.php");
 					require_once("admin/models/GalleryDoctors.php");
@@ -33,7 +33,7 @@
 							$listGalleryComment = $galleryDoctors->GetGalleryForComment($calification['CalificationDoctorId']);
 							$galeria = $listGalleryComment->fetch(PDO::FETCH_ASSOC);
 							
-							if($Gallery['Type'] == 'Image')
+							if($galeria['Type'] == 'Image')
 							{
 								$first_image = "admin/files/images/".$galeria['Location'];
 							}

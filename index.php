@@ -15,7 +15,12 @@
 	require_once("admin/models/GalleryDoctors.php");
 	require_once("admin/models/Categories.php");
 
-	$page = (isset($_GET['page'])) ? $_GET['page'] : 1;
+	$uri = $_SERVER['REQUEST_URI']; // Get URI
+	$uri_array = explode( "/", $uri ); 
+	$last_uri = count($uri_array)-1; // Get last element in URI
+	$uriParts = explode("_", $uri_array[$last_uri]); 
+	
+	$page = (count($uriParts) == 2) ? $uriParts[1] : 1;
 	$doctorByPage = 6;
 
 	$doctor = new Doctors();
@@ -118,108 +123,110 @@
 				<!-- Fin título -->
 
 				<!-- Listado doctores -->
-				<?php
-					$count_doctors = 0;
+				<div class="row">
+					<?php
+						$count_doctors = 0;
 
-					while ($Doctor = $listDoctor->fetch(PDO::FETCH_ASSOC))
-					{
-						$content = 'medicos';
-						$id = $Doctor["DoctorId"];
-						$name = '<strong>Médico No.'.$id.'</strong> ('.$Doctor['Name'].')';
-						$dataList = $data->GetDataforDoctor($id);
-						$logo = ($Doctor['Logo'] != '') ? 'admin/img/doctors/'.$Doctor['Logo'] : 'images/placeholder.jpg';
-
-						if ($count_doctors == 0)
+						while ($Doctor = $listDoctor->fetch(PDO::FETCH_ASSOC))
 						{
-							echo "<div class='row'>";
-							echo "<div class='col m6 s12'>";
-						}
-						elseif ($count_doctors == 1)
-						{
-							echo "<div class='col m6 s12'>";
-						}
-				?>
-						<ul class="collection">
-							<a class="collection-item avatar truncate cirujanos" href="doctor/<?= $id ?>_<?= slugify($Doctor['Name']) ?>">
-								<div class="circle" style="background-image: url(<?= $logo ?>)"></div>
-								<span class="title">Dr. <?= $Doctor['Name'] ?></span>
-								<p style="color:#626262;">
-									<?php
-										if (strlen($Doctor['Description']) > 50)
-										{
-											echo substr($Doctor['Description'], 0, 50)."...";
-										}
-										else
-										{
-											echo $Doctor['Description'];
-										}
-									?>
-								</p>
+							$content = 'medicos';
+							$id = $Doctor["DoctorId"];
+							$name = '<strong>Médico No.'.$id.'</strong> ('.$Doctor['Name'].')';
+							$dataList = $data->GetDataforDoctor($id);
+							$logo = ($Doctor['Logo'] != '') ? 'admin/img/doctors/'.$Doctor['Logo'] : 'images/placeholder.jpg';
 
-				<?php
-								$califications->setDoctorId($id);
-								$calificationsList = $califications->GetCalificationDoctorContent();
+							if ($count_doctors == 0)
+							{
+								echo "<div class='col m6 s12'>";
+							}
+							elseif ($count_doctors > 0)
+							{
+								echo "<div class='col m6 s12'>";
+							}
+					?>
+							<ul class="collection">
+								<a class="collection-item avatar truncate cirujanos" href="doctor/<?= $id ?>_<?= slugify($Doctor['Name']) ?>">
+									<div class="circle" style="background-image: url(<?= $logo ?>)"></div>
+									<span class="title">Dr. <?= $Doctor['Name'] ?></span>
+									<p style="color:#626262;">
+										<?php
+											if (strlen($Doctor['Description']) > 50)
+											{
+												echo substr($Doctor['Description'], 0, 50)."...";
+											}
+											else
+											{
+												echo $Doctor['Description'];
+											}
+										?>
+									</p>
 
-								if($califications->numCalificationsForDoctor() > 0)
-								{
-									$countStars = 0;
-									$i = 0;
+					<?php
+									$califications->setDoctorId($id);
+									$calificationsList = $califications->GetCalificationDoctorContent();
 
-									while($Calification = $calificationsList->fetch(PDO::FETCH_ASSOC))
+									if($califications->numCalificationsForDoctor() > 0)
 									{
-										$countStars+=$Calification['CountStars'];
-										$i++;
+										$countStars = 0;
+										$i = 0;
+
+										while($Calification = $calificationsList->fetch(PDO::FETCH_ASSOC))
+										{
+											$countStars+=$Calification['CountStars'];
+											$i++;
+										}
+
+										$totalStars = intval($countStars/$i);
+										$emptyStars = 5 - $totalStars;
+
+					?>
+										<div class='stars-rate'>
+					<?php
+											for ($x = 0; $x < $totalStars; $x++)
+											{
+												echo "<i class='material-icons left'>star</i>";
+											}
+											for ($x = 0; $x < $emptyStars; $x++)
+											{
+												echo "<i class='material-icons inactive left'>star</i>";
+											}
+											if ($i == 1)
+											{
+												$comment = "Reseña";
+											}
+											else
+											{
+												$comment = "Reseñas";
+											}
+					?>
+											<span style='margin-left:10px; color: black'><?= $i ?> <?= $comment ?></span>
+										</div>
+					<?php
 									}
-
-									$totalStars = intval($countStars/$i);
-									$emptyStars = 5 - $totalStars;
-
-				?>
-									<div class='stars-rate'>
-				<?php
-										for ($x = 0; $x < $totalStars; $x++)
-										{
-											echo "<i class='material-icons left'>star</i>";
-										}
-										for ($x = 0; $x < $emptyStars; $x++)
-										{
-											echo "<i class='material-icons inactive left'>star</i>";
-										}
-										if ($i == 1)
-										{
-											$comment = "Reseña";
-										}
-										else
-										{
-											$comment = "Reseñas";
-										}
-				?>
-										<span style='margin-left:10px; color: black'><?= $i ?> <?= $comment ?></span>
-									</div>
-				<?php
-								}
-								else
-								{
-									echo "<div class='stars-rate'><i class='material-icons inactive left'>star</i><i class='material-icons inactive left'>star</i><i class='material-icons inactive left'>star</i><i class='material-icons inactive left'>star</i><i class='material-icons inactive left'>star</i><span style='margin-left:10px; color: black'>0 Reseñas</span></div>";
-								}
-				?>
-							</a>
-						</ul>
-				<?php
-						if ($count_doctors == 0)
-						{
-							echo "</div>";
-							$count_doctors++;
+									else
+									{
+										echo "<div class='stars-rate'><i class='material-icons inactive left'>star</i><i class='material-icons inactive left'>star</i><i class='material-icons inactive left'>star</i><i class='material-icons inactive left'>star</i><i class='material-icons inactive left'>star</i><span style='margin-left:10px; color: black'>0 Reseñas</span></div>";
+									}
+					?>
+								</a>
+							</ul>
+					<?php
+							if ($count_doctors == 0)
+							{
+								echo "</div>";
+								$count_doctors++;
+							}
+							elseif ($count_doctors > 0)
+							{
+								$count_doctors = 0;
+								echo "</div>";
+							}
 						}
-						elseif ($count_doctors == 1)
-						{
-							$count_doctors = 0;
-							echo "</div>";
-							echo "</div>";
-						}
-					}
-				?>
+					?>
+				</div>
+				
 				<!-- Fin listado doctores -->
+				
 
 				<?php
 					if ($totallPages > 1)

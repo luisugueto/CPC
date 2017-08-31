@@ -12,6 +12,7 @@ RewriteCond %{SCRIPT_FILENAME} !-f
 Rewriterule ^inicio index.php
 Rewriterule ^inicio_(.+)$ index.php?page=$1
 Rewriterule ^blog_(.+)$ blog.php?page=$1
+Rewriterule ^directorio_(.+)$ directorio.php?page=$1
 Rewriterule ^noticia/(.+)_(.+)$ blog-detalle.php?id=$1&title=$2
 Rewriterule ^doctor/(.+)_(.+)$ directorio-detalle.php?id=$1&title=$2
 Rewriterule ^doctor/search directorio-detalle.php
