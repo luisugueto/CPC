@@ -20,7 +20,7 @@
 	$uriParts = explode("_", $uri_array[$last_uri]); 
 	
 	$page = (count($uriParts) == 2) ? $uriParts[1] : 1;
-	$doctorByPage = 1;
+	$doctorByPage = 5;
 
 	///// Pagination Doctors
 	
