@@ -42,7 +42,7 @@
 
 	while($Doctor = $doctorss->fetch(PDO::FETCH_ASSOC))
 	{
-		$arrayDoctors[$Doctor['DoctorName']." - ".$Doctor['SubTitle']. " [Doctor]"] = null;
+		$arrayDoctors[$Doctor['DoctorName']." -".$Doctor['SubTitle']. " - [Doctor] - ".$Doctor['DoctorId'].""] = null;
 	}
 
 	$jsonDoctors = json_encode($arrayDoctors);
@@ -98,7 +98,7 @@
 							echo "<div class='col m4 s12'>";
 						}
 				?>
-						<div class="card horizontal" style="height: 250px">
+						<div class="card horizontal" style="height: 300px">
 							<div class="card-stacked">
 								<div class="card-content">
 									<a href="subprocedimiento/<?= $subCategory["SubCategoryId"] ?>_<?= slugify($subCategory["Name"]) ?>">

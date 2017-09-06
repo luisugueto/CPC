@@ -31,7 +31,7 @@
 
 	$articles = new Articles();
 	$listArticles = $articles->GetAllArticles($page, $articlesByPage, $tomorrow);
-	$totalArticles = $articles->GetTotalArticles();
+	$totalArticles = $articles->GetTotalArticles($tomorrow);
 
 	$total = $totalArticles->fetch(PDO::FETCH_ASSOC);
 	$totalPages = ceil($total["Total"] / $articlesByPage);
@@ -131,7 +131,7 @@
 	$arrayDoctors = array();
 
 	while($Doctor = $doctorss->fetch(PDO::FETCH_ASSOC)){
-		$arrayDoctors[$Doctor['DoctorName']." - ".$Doctor['SubTitle']. " [Doctor]"] = null;
+		$arrayDoctors[$Doctor['DoctorName']." -".$Doctor['SubTitle']. " - [Doctor] - ".$Doctor['DoctorId'].""] = null;		
 	}
 	$jsonDoctors = json_encode($arrayDoctors);
 

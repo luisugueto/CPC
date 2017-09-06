@@ -20,7 +20,7 @@
 	$uriParts = explode("_", $uri_array[$last_uri]); 
 	
 	$page = (count($uriParts) == 2) ? $uriParts[1] : 1;
-	$doctorByPage = 5;
+	$doctorByPage = 6;
 
 	///// Pagination Doctors
 	
@@ -47,7 +47,7 @@
 	$arrayDoctors = array();
 
 	while($Doctor = $doctorss->fetch(PDO::FETCH_ASSOC)){
-		$arrayDoctors[$Doctor['DoctorName']." - ".$Doctor['SubTitle']. " [Doctor]"] = null;
+		$arrayDoctors[$Doctor['DoctorName']." -".$Doctor['SubTitle']. " - [Doctor] - ".$Doctor['DoctorId'].""] = null;
 	}
 	$jsonDoctors = json_encode($arrayDoctors);
 
@@ -107,16 +107,16 @@
 							<ul class="collection">
 								<a class="collection-item avatar truncate cirujanos" href="doctor/<?= $id ?>_<?= slugify($Doctor['Name']) ?>">
 									<div class="circle" style="background-image: url(<?= $logo ?>)"></div>
-									<span class="title">Dr. <?= $Doctor['Name'] ?></span>
+									<span class="title"><?= $Doctor['Name'] ?></span>
 									<p style="color:#626262;">
 										<?php
-											if (strlen($Doctor['Description']) > 50)
+											if (strlen($Doctor['SubTitle']) > 50)
 											{
-												echo substr($Doctor['Description'], 0, 50)."...";
+												echo substr($Doctor['SubTitle'], 0, 50)."...";
 											}
 											else
 											{
-												echo $Doctor['Description'];
+												echo $Doctor['SubTitle'];
 											}
 										?>
 									</p>

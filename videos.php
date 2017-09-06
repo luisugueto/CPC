@@ -5,6 +5,29 @@
 	$contentSection = $section->GetSectionContent();
  	include("includes/header.php");
 	require_once("admin/models/GalleryDoctors.php");
+	require_once("admin/models/Categories.php");
+	require_once("admin/models/Doctors.php");
+
+	$doctor = new Doctors();
+	
+	$doctorss = $doctor->ListDoctorsName();
+	$arrayDoctors = array();
+
+	while($Doctor = $doctorss->fetch(PDO::FETCH_ASSOC)){
+		$arrayDoctors[$Doctor['DoctorName']." -".$Doctor['SubTitle']. " - [Doctor] - ".$Doctor['DoctorId'].""] = null;
+	}
+	$jsonDoctors = json_encode($arrayDoctors);
+
+	$categories = new Categories();
+	$categoriesList = $categories->ListCategories();
+
+	$arrayProcedures = array();
+
+	while($Procedures = $categoriesList->fetch(PDO::FETCH_ASSOC)){
+		$arrayProcedures[$Procedures['Name']." - ".$Procedures['CategoryId']." - [Procedimiento]"] = null;
+	}
+	$jsonProcedures = json_encode($arrayProcedures);
+	$arrayMerge = array_merge($arrayDoctors, $arrayProcedures);
 
 	$gallery = new GalleryDoctors();
 
@@ -106,7 +129,7 @@
 										<div class="card-content" style="height:430px">
 											<img src="<?= $item['image'] ?>" width="100%">
 											<br><br>
-											<h5 class="card-dr-title"><?= $item["title"] ?></h5>
+											<h5 class="card-dr-title" style="color:#333"><?= $item["title"] ?></h5>
 										</div>
 									</div>
 								</div>

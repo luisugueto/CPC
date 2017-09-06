@@ -95,7 +95,7 @@
 	$arrayDoctors = array();
 
 	while($Doctor = $doctorss->fetch(PDO::FETCH_ASSOC)){
-		$arrayDoctors[$Doctor['DoctorName']." - ".$Doctor['SubTitle']. " [Doctor]"] = null;
+		$arrayDoctors[$Doctor['DoctorName']." -".$Doctor['SubTitle']. " - [Doctor] - ".$Doctor['DoctorId'].""] = null;
 	}
 	$jsonDoctors = json_encode($arrayDoctors);
 
@@ -147,16 +147,16 @@
 							<ul class="collection">
 								<a class="collection-item avatar truncate cirujanos" href="doctor/<?= $id ?>_<?= slugify($Doctor['Name']) ?>">
 									<div class="circle" style="background-image: url(<?= $logo ?>)"></div>
-									<span class="title">Dr. <?= $Doctor['Name'] ?></span>
+									<span class="title"><?= $Doctor['Name'] ?></span>
 									<p style="color:#626262;">
 										<?php
-											if (strlen($Doctor['Description']) > 50)
+											if (strlen($Doctor['SubTitle']) > 50)
 											{
-												echo substr($Doctor['Description'], 0, 50)."...";
+												echo substr($Doctor['SubTitle'], 0, 50)."...";
 											}
 											else
 											{
-												echo $Doctor['Description'];
+												echo $Doctor['SubTitle'];
 											}
 										?>
 									</p>
@@ -309,7 +309,7 @@
 								{
 							?>
 									<div class="item" onclick="window.location.href='noticia/<?= $article["ArticleId"] ?>_<?= $article["Slug"] ?>'" style="cursor:pointer;">
-										<div class="card horizontal" style="min-height: 353px;">
+										<div class="card horizontal" style="min-height: 415px;">
 											<div class="card-stacked">
 												<div class="card-content">
 
