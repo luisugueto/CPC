@@ -26,7 +26,7 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<base href="http://cpc.cirugiaplasticacolombia.com/">
+	<base href="http://localhost:86/CPC/">
 
 	<?php
 		if(!empty($contentSection))
