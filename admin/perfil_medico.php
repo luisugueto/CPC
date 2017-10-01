@@ -175,7 +175,7 @@
 								?>
 
 								<div class="member-info">
-									<h4 class="m-t-0 m-b-5 header-title"><b>Dr  <?= $content["Name"] ?></b></h4>
+									<h4 class="m-t-0 m-b-5 header-title"><b><?= $content["Name"] ?></b></h4>
 
 									<?php
 										if (array_key_exists("plan_datos", $plan_caracteristicas))
@@ -190,6 +190,9 @@
 											}
 										}
 									?>
+
+									<br>
+									Enlace de calificación: <a href="http://www.cirugiaplasticacolombia.com/doctor/calificar/<?= base64_encode($id) ?>-<?= base64_encode($content["Code"]) ?>">http://www.cirugiaplasticacolombia.com/doctor/calificar/<?= base64_encode($id) ?>-<?= base64_encode($content["Code"]) ?></a>
 										
 									<div class="m-t-20">
 

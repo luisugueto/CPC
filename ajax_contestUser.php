@@ -60,6 +60,9 @@
 
 <div class="modal-dialog modal-lg">
     <div class="modal-content">
+		<div class="close-modal" onclick="closePrincipalModal()">
+			<i class="material-icons">close</i>
+		</div>
       <div class="modal-header">
       	<h4>Comentar calificación de: <?= $registro['NameUser'] ?></h4>
       </div>

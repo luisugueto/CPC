@@ -31,7 +31,7 @@
             <div class="profile-doctor" style="background-image: url(<?= $logo ?>)">
 			</div>
             <div class="profile-actions">
-                <h6 style="margin:0;">Dr. <?= $content["Name"] ?></h6>
+                <h6 style="margin:0;"><?= $content["Name"] ?></h6>
                 <small>Cirujano plástico</small>
                 <br>
                 <?php

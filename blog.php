@@ -1,7 +1,5 @@
 <?php
 	require_once("admin/models/Sections.php");
-	require_once("admin/models/Categories.php");
-	require_once("admin/models/Doctors.php");
 
 	$section = new Sections();
 	$section->setSectionId(4);
@@ -14,7 +12,7 @@
 	include("includes/header.php");
 	require_once("admin/models/Articles.php");
 
-	$articlesByPage = 5;
+	$articlesByPage = 10;
 	$page = 1;
 
 	if (isset($_GET["page"]))
@@ -37,9 +35,9 @@
 	$totalPages = ceil($total["Total"] / $articlesByPage);
 
 	$total = $total["Total"];
-	$adjacents = 1;
+	$adjacents = 2;
 	$targetpage = "blog_";
-	$limit = 5;
+	$limit = 10;
 
 	if($page)
 	{
@@ -63,7 +61,7 @@
 		$pagination .= "<ul class='pagination'>";
 		if ($page > $counter+1)
 		{
-			$pagination.= "<li class='waves-effect'><a href=\"$targetpage$prev\"><i class='fa fa-angle-double-left'></i></a></li>";
+			$pagination.= "<li class='waves-effect'><a href=\"$targetpage$prev\"><i class='material-icons'>keyboard_arrow_left</i></a></li>";
 		}
 		if ($lastpage < 7 + ($adjacents * 2))
 		{
@@ -86,9 +84,9 @@
 					else
 					$pagination.= "<li class='waves-effect'><a href=\"$targetpage$counter\">$counter</a></li>";
 				}
-				//$pagination.= "<li>...</li>";
-				//$pagination.= "<li><a href=\"$targetpage$lpm1\">$lpm1</a></li>";
-				//$pagination.= "<li><a href=\"$targetpage$lastpage\">$lastpage</a></li>";
+				$pagination.= "<li>...</li>";
+				$pagination.= "<li><a href=\"$targetpage$lpm1\">$lpm1</a></li>";
+				$pagination.= "<li><a href=\"$targetpage$lastpage\">$lastpage</a></li>";
 			}
 			elseif($lastpage - ($adjacents * 2) > $page && $page > ($adjacents * 2))
 			{
@@ -106,8 +104,8 @@
 			}
 			else
 			{
-				//$pagination.= "<li><a href=\"$targetpage\"1>1</a></li>";
-				//$pagination.= "<li>...</li>";
+				$pagination.= "<li><a href='blog_1'>1</a></li>";
+				$pagination.= "<li>...</li>";
 				for ($counter = $lastpage - (2 + ($adjacents * 2)); $counter <= $lastpage; $counter++)
 				{
 					if ($counter == $page)
@@ -119,32 +117,11 @@
 		}
 
 		if ($page < $counter - 1)
-			$pagination.= "<li class='waves-effect'><a href=\"$targetpage$next\"><i class='fa fa-angle-double-right'></i></a></li>";
+			$pagination.= "<li class='waves-effect'><a href=\"$targetpage$next\"><i class='material-icons'>keyboard_arrow_right</i></a></li>";
 		else
 			$pagination.= "";
 			$pagination.= "</ul>";
 	}
-
-	$doctor = new Doctors();
-
-	$doctorss = $doctor->ListDoctorsName();
-	$arrayDoctors = array();
-
-	while($Doctor = $doctorss->fetch(PDO::FETCH_ASSOC)){
-		$arrayDoctors[$Doctor['DoctorName']." -".$Doctor['SubTitle']. " - [Doctor] - ".$Doctor['DoctorId'].""] = null;		
-	}
-	$jsonDoctors = json_encode($arrayDoctors);
-
-	$categories = new Categories();
-	$categoriesList = $categories->ListCategories();
-
-	$arrayProcedures = array();
-
-	while($Procedures = $categoriesList->fetch(PDO::FETCH_ASSOC)){
-		$arrayProcedures[$Procedures['Name']." - ".$Procedures['CategoryId']." - [Procedimiento]"] = null;
-	}
-	$jsonProcedures = json_encode($arrayProcedures);
-	$arrayMerge = array_merge($arrayDoctors, $arrayProcedures);
 ?>
 
 	<!-- Contenido -->
@@ -192,7 +169,11 @@
 													<?= $monthName ?>
 												</div>
 											</div>
-											<h5 class="card-dr-title"><?= $article["Title"] ?></h5>
+											
+											<a href="noticia/<?= $article["ArticleId"] ?>_<?= $article["Slug"] ?>">
+												<h5 class="card-dr-title"><?= $article["Title"] ?></h5>
+											</a>
+											
 											<p class="card-dr-address"><?= $article["MetaDescription"] ?></p>
 										</div>
 									</div>

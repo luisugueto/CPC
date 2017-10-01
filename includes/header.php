@@ -20,6 +20,44 @@
 
 	    return $cadena;
 	}
+
+	require_once("admin/models/Doctors.php");
+	require_once("admin/models/Categories.php");
+
+	$doctor_autocomplete_model = new Doctors();
+	$procedures_autocomplete_model = new Categories();
+
+	$doctors_names = $doctor_autocomplete_model->ListDoctorsName();
+	$arrayDoctors = array();
+	
+	$jsonDoctors = json_encode($arrayDoctors);
+
+	$doctors_names_plan_free = $doctor_autocomplete_model->ListDoctorsNamePlanFree();
+	$arrayDoctors = array();
+
+	while($doctor_autocomplete = $doctors_names->fetch(PDO::FETCH_ASSOC))
+	{
+		$arrayDoctors[$doctor_autocomplete['DoctorName']] = null;
+	}
+
+	/* DOCTORS WITH PLAN FREE */
+
+	while($doctor_autocomplete_free = $doctors_names_plan_free->fetch(PDO::FETCH_ASSOC))
+	{
+		$arrayDoctors[$doctor_autocomplete_free['DoctorName']] = null;
+	}
+
+	/*$procedures_names = $procedures_autocomplete_model->ListCategories();
+	$arrayProcedures = array();
+
+	while($procedure_autocomplete = $procedures_names->fetch(PDO::FETCH_ASSOC))
+	{
+		$arrayProcedures[$procedure_autocomplete['Name']] = null;
+	}*/
+
+	//$jsonProcedures = json_encode($arrayProcedures);
+	$arrayProcedures = array();
+	$arrayMerge = array_merge($arrayDoctors, $arrayProcedures);
 ?>
 
 <!DOCTYPE html>
@@ -92,6 +130,8 @@
 	</script>
 
 </head>
+
+<?php include('switcher/switcher.php');?>
 
 <div class="loader" id="pageloader">
 	<div class="loader-container">
@@ -174,7 +214,7 @@
 
 					<!-- Logo -->
 					<a href="inicio" class="brand-logo">
-						<img src="images/logo.png">
+						<img src="images/logo.png" width="200">
 					</a>
 					<!-- Logo -->
 
@@ -197,7 +237,7 @@
 						<!-- Logo menu responsive -->
 						<div class="center-align">
 							<div class="valign-wrapper menu-logo-responsive">
-								<img src="images/logo.png">
+								<img src="images/logo.png" width="100%" style="padding: 0 20px;">
 							</div>
 						</div>
 						<!-- Fin logo menu responsive -->
@@ -247,14 +287,14 @@
 			<div class="image-header valign-wrapper" style="background-image:url('images/cpc-1.jpg')">
 				<div class="container">
 					<div class="row" style="margin-bottom:0">
-						<div class="input-field col m6 s10 offset-m3">
+						<div class="input-field col m6 s10 offset-m3" style="text-align:center">
 							<h5 style="color: #fff; text-shadow: 0px 2px 2px rgba(0, 0, 0, 0.28);">Encuentra información sobre especialistas y procedimientos de tu interés</h5>
 						</div>
 					</div>
 					<div class="row">
 						<div class="input-field col m6 s10 offset-m3">
 							<form method="post" id="formSearch">
-								<input id="autocomplete-input" class="autocomplete header-search" type="text" placeholder="Buscar procedimiento, o por nombre..." name="search" autocomplete="off">
+								<input id="autocomplete-input" class="autocomplete header-search" type="text" placeholder="Buscar por nombre..." name="search" autocomplete="off">
 								<button class="header-search-btn" type="submit"><i class="material-icons" style="padding-left: 2px;">search</i></button>
 							</form>
 						</div>
@@ -303,7 +343,7 @@
 						<div class="container">
 							<div class="row">
 								<div class="input-field col s12">
-										<input id="autocomplete-input" class="autocomplete search-input" type="text" placeholder="Buscar procedimiento, o por nombre..." name="search" autocomplete="off">
+										<input id="autocomplete-input" class="autocomplete search-input" type="text" placeholder="Buscar por nombre..." name="search" autocomplete="off">
 										<button class="submit-search" type="submit"><i class="material-icons">search</i></button>
 								</div>
 							</div>

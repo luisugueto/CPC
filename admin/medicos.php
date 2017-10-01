@@ -58,7 +58,6 @@
 												<th scope="col" data-tablesaw-sortable-col data-tablesaw-sortable-default-col data-tablesaw-priority="persist">Id</th>
 												<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">Nombre</th>
 												<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">SubTítulo</th>
-												<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">Descripción</th>
 												<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">Plan</th>
 												<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="1">Acciones</th>
 											</tr>
@@ -75,7 +74,6 @@
 														<td><?= $id ?></td>
 														<td><?= $Doctor['Name'] ?></td>
 														<td><?= $Doctor['SubTitle'] ?></td>
-														<td><?= $Doctor['Description'] ?></td>
 														<td><?= $plan->GetPlanName($Doctor['PlanId']) ?></td>
 														<td>
 															<?php

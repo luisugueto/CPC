@@ -4,7 +4,7 @@
 	//Obtener la información de la sección proveniente del formulario
 	$article = new Articles();
 	$article->setTitle($_POST["txtTitle"]);
-	$article->setContent($_POST["content"]);
+	$article->setContent(base64_decode($_POST["content"]));
 	$article->setMetaDescription($_POST["txtMetaDescription"]);
 	$article->setMetaTitle($_POST["txtMetaTitle"]);
 	$article->setStatusId($_POST["status"]);
@@ -12,13 +12,13 @@
 	$article->setAuthor($_POST["hdAuthor"]);
 	$article->setSlug($_POST["slug-article"]);
 
-	if ($_POST["txtPhotoAlt"] == "")
+	if ($_POST["txtAltPhotos"] == "")
 	{
-		$article->setPhotoAlt($_POST["txtTitle"]);
+		$article->setAltPhotos($_POST["txtTitle"]);
 	}
 	else
 	{
-		$article->setPhotoAlt($_POST["txtPhotoAlt"]);
+		$article->setAltPhotos($_POST["txtAltPhotos"]);
 	}
 
 	$article->setTags($_POST["txtTags"]);

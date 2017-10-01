@@ -360,7 +360,7 @@
 						$('#previewImage').attr('src', e.target.result);
 						$('#previewImage').fadeIn(500);
 						$('#previewImage').cropper({
-							aspectRatio: 24 / 5,
+							aspectRatio: 96 / 35,
 							autoCropArea: 0,
 							strict: true,
 							guides: true,
@@ -372,7 +372,7 @@
 							zoomable: false,
 							dragMode: "move",
 							built: function () {
-								$('#previewImage').cropper('setData', {"x":0,"y":0,"width":960,"height":200,"rotate":0,"scaleX":1,"scaleY":1});
+								$('#previewImage').cropper('setData', {"x":0,"y":0,"width":960,"height":350,"rotate":0,"scaleX":1,"scaleY":1});
 							}
 						});
 						Loader.fadeOut(500);

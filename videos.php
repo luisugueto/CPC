@@ -4,38 +4,12 @@
 	$section->setSectionId(5);
 	$contentSection = $section->GetSectionContent();
  	include("includes/header.php");
-	require_once("admin/models/GalleryDoctors.php");
-	require_once("admin/models/Categories.php");
-	require_once("admin/models/Doctors.php");
-
-	$doctor = new Doctors();
-	
-	$doctorss = $doctor->ListDoctorsName();
-	$arrayDoctors = array();
-
-	while($Doctor = $doctorss->fetch(PDO::FETCH_ASSOC)){
-		$arrayDoctors[$Doctor['DoctorName']." -".$Doctor['SubTitle']. " - [Doctor] - ".$Doctor['DoctorId'].""] = null;
-	}
-	$jsonDoctors = json_encode($arrayDoctors);
-
-	$categories = new Categories();
-	$categoriesList = $categories->ListCategories();
-
-	$arrayProcedures = array();
-
-	while($Procedures = $categoriesList->fetch(PDO::FETCH_ASSOC)){
-		$arrayProcedures[$Procedures['Name']." - ".$Procedures['CategoryId']." - [Procedimiento]"] = null;
-	}
-	$jsonProcedures = json_encode($arrayProcedures);
-	$arrayMerge = array_merge($arrayDoctors, $arrayProcedures);
-
-	$gallery = new GalleryDoctors();
 
 	function getYoutubeVideos($playlistID)
 	{
 		$list = $playlistID;
 		$key = "AIzaSyBMKyjwq9euxN_XvJrehe8gN_ZbSKym-2A";
-		$maxVideos = "8";
+		$maxVideos = "30";
 
 		if ($key && $list)
 		{
@@ -115,7 +89,7 @@
 				<?php
 					$i = 0;
 
-					foreach($youtube as $item)
+					for ($v = 0; $v < 10; $v++)
 					{
 						if ($i == 0)
 						{
@@ -123,13 +97,13 @@
 						}
 				?>
 						<div class="col m6 s12">
-							<a href="video/<?= $item["url"] ?>">
+							<a href="video/<?= $youtube[$v]["url"] ?>">
 								<div class="card horizontal">
 									<div class="card-stacked">
 										<div class="card-content" style="height:430px">
-											<img src="<?= $item['image'] ?>" width="100%">
+											<img src="<?= $youtube[$v]['image'] ?>" width="100%">
 											<br><br>
-											<h5 class="card-dr-title" style="color:#333"><?= $item["title"] ?></h5>
+											<h5 class="card-dr-title" style="color:#333"><?= $youtube[$v]["title"] ?></h5>
 										</div>
 									</div>
 								</div>
@@ -145,6 +119,121 @@
 						{
 							$i++;
 						}
+					}
+
+					if (count($youtube) > 10)
+					{
+
+				?>
+
+				<div class="container" id="showMore-1">
+					<div class="row">
+						<div class="col s12 m12 center-align">
+							<a class="waves-effect waves-light btn" href="javascript:void(0)" onclick="showMoreVideos(1)" style="border-radius: 30px; background-color: #03a5dd;">Ver más</a>
+						</div>
+					</div>
+				</div>
+
+				<div id="videos-1" style='display:none;'>
+				
+				<?php
+						$i = 0;
+						
+						for ($v = 10; $v < 20; $v++)
+						{
+							if (isset($youtube[$v]["title"]))
+							{
+								if ($i == 0)
+								{
+									echo "<div class='row'>";
+								}
+				?>
+								<div class="col m6 s12">
+									<a href="video/<?= $youtube[$v]["url"] ?>">
+										<div class="card horizontal">
+											<div class="card-stacked">
+												<div class="card-content" style="height:430px">
+													<img src="<?= $youtube[$v]['image'] ?>" width="100%">
+													<br><br>
+													<h5 class="card-dr-title" style="color:#333"><?= $youtube[$v]["title"] ?></h5>
+												</div>
+											</div>
+										</div>
+									</a>
+								</div>
+				<?php
+								if ($i == 1)
+								{
+									$i = 0;
+									echo "</div>";
+								}
+								else
+								{
+									$i++;
+								}
+							}
+						}
+					}
+				?>
+
+				</div>
+
+				<?php
+					if (count($youtube) > 20)
+					{
+
+				?>
+
+				<div class="container" id="showMore-2">
+					<div class="row">
+						<div class="col s12 m12 center-align">
+							<a class="waves-effect waves-light btn" href="javascript:void(0)" onclick="showMoreVideos(2)" style="border-radius: 30px; background-color: #03a5dd;">Ver más</a>
+						</div>
+					</div>
+				</div>
+
+				<div id="videos-2" style='display:none;'>
+
+				<?php
+						$i = 0;
+						
+						for ($v = 20; $v < 30; $v++)
+						{
+							if (isset($youtube[$v]["title"]))
+							{
+								if ($i == 0)
+								{
+									echo "<div class='row'>";
+								}
+				?>
+								<div class="col m6 s12">
+									<a href="video/<?= $youtube[$v]["url"] ?>">
+										<div class="card horizontal">
+											<div class="card-stacked">
+												<div class="card-content" style="height:430px">
+													<img src="<?= $youtube[$v]['image'] ?>" width="100%">
+													<br><br>
+													<h5 class="card-dr-title" style="color:#333"><?= $youtube[$v]["title"] ?></h5>
+												</div>
+											</div>
+										</div>
+									</a>
+								</div>
+				<?php
+								if ($i == 1)
+								{
+									$i = 0;
+									echo "</div>";
+								}
+								else
+								{
+									$i++;
+								}
+							}
+						}
+				?>
+						</div>
+				<?php
 					}
 				?>
 				<!-- Fin listado videos -->
@@ -165,3 +254,10 @@
 	<br>
 
 	<?php include("includes/footer.php"); ?>
+
+	<script>
+		function showMoreVideos(i) {
+			$("#videos-" + i).fadeIn(500);
+			$("#showMore-" + i).fadeOut(500);
+		}
+	</script>

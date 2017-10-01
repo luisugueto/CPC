@@ -157,7 +157,7 @@
 										VALUES
 										('$this->Title'
 										, '$this->Photo'
-										, '$this->Content'
+										, '".$this->Content."'
 										, STR_TO_DATE('$this->PublishDate', '%d/%m/%Y')
 										, '$this->StatusId'
 										, '$this->Author'
@@ -208,24 +208,21 @@
 			}
 		}
 
-		public function LastArticleDashboard()
+		public function LastArticlesFooter()
 		{
 			try
 			{
 				$result = $this->sentence("SET CHARACTER SET utf8");
 				$result = $this->sentence("SELECT
 											A.ArticleId
-											, A.Title
 											, A.Photo
-											, A.Content
-											, A.PublishDate
-											, A.MetaDescription
-											, A.StatusId
-											, A.Author
+											, A.Title
 											, A.Slug
+											, A.PublishDate
 											FROM Articles A
+											WHERE StatusId = 1
 											ORDER BY ArticleId DESC
-											LIMIT 1
+											LIMIT 2
 										");
 
 				return $result;
@@ -474,12 +471,12 @@
 			}
 		}
 
-		public function GetTotalArticles()
+		public function GetTotalArticles($today)
 		{
 			try
 			{
 				$res = $this->sentence("SET CHARACTER SET utf8");
-				$res = $this->sentence("SELECT A.ArticleId, COUNT(*) AS Total FROM Articles A WHERE (SELECT AC.CategoryId FROM ArticleCategories AC WHERE AC.ArticleId = A.ArticleId LIMIT 1) != '8'");
+				$res = $this->sentence("SELECT COUNT(*) AS Total FROM Articles WHERE PublishDate <= '$today'");
 				return $res;
 			}
 			catch(Exception $e)
@@ -603,6 +600,7 @@
 											AND A.StatusId = 1
 											AND A.ArticleId != $aId
 											ORDER BY A.PublishDate DESC
+											LIMIT 6
 										");
 
 				return $result;

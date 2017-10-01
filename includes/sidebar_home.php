@@ -35,7 +35,7 @@
 							<ul class="collection">
 								<a class="collection-item avatar truncate cirujanos" href="doctor/<?= $calification["DoctorId"] ?>_<?= slugify($calification['Name']) ?>">
 									<div class="circle" style="background-image: url(<?= $first_image ?>)"></div>
-									<span class="title">Dr. <?= $calification['Name'] ?></span>
+									<span class="title"><?= $calification['Name'] ?></span>
 									<p style="color:#626262;">
 										<?php
 											if (strlen($calification['Comment']) > 15)

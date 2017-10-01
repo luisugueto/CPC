@@ -1,7 +1,5 @@
 <?php
 	require_once("admin/models/Articles.php");
-	require_once("admin/models/Categories.php");
-	require_once("admin/models/Doctors.php");
 
     $articleId = $_GET["id"];
 	$article = new Articles();
@@ -17,28 +15,6 @@
 	$meta_desc  = $pageDescription;
 
     include("includes/header.php");
-
-	$doctor = new Doctors();
-
-	$doctorss = $doctor->ListDoctorsName();
-	$arrayDoctors = array();
-
-	while($Doctor = $doctorss->fetch(PDO::FETCH_ASSOC)){
-		$arrayDoctors[$Doctor['DoctorName']." - ".$Doctor['SubTitle']. " [Doctor]"] = null;
-	}
-	$jsonDoctors = json_encode($arrayDoctors);
-
-	$categories = new Categories();
-	$categoriesList = $categories->ListCategories();
-
-	$arrayProcedures = array();
-
-	while($Procedures = $categoriesList->fetch(PDO::FETCH_ASSOC)){
-		$arrayProcedures[$Procedures['Name']." - ".$Procedures['CategoryId']." - [Procedimiento]"] = null;
-	}
-
-	$jsonProcedures = json_encode($arrayProcedures);
-	$arrayMerge = array_merge($arrayDoctors, $arrayProcedures);
 
 	$tags = explode(",", $article->getTags());
 
@@ -78,7 +54,7 @@
                                 <div class="card-content">
                                     <img src="images/blog/<?= $article->getPhoto() ?>" width="100%">
                                     <br><br>
-                                    <p class="card-dr-address"><?= $article->getContent() ?></p>
+                                    <p class="card-dr-address"><?= nl2br($article->getContent()) ?></p>
                                 </div>
                             </div>
                         </div>
@@ -104,9 +80,9 @@
 								{
 							?>
 									<div class="item" onclick="window.location.href='noticia/<?= $article["ArticleId"] ?>_<?= $article["Slug"] ?>'" style="cursor:pointer;">
-										<div class="card horizontal" style="min-height: 353px;">
+										<div class="card horizontal" style="min-height: 415px;">
 											<div class="card-stacked">
-												<div class="card-content">
+												<div class="card-content" style="line-height: 22px; font-size: 14px;">
 
 													<img src="images/blog/<?= $article["Photo"] ?>">
 

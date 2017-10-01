@@ -98,7 +98,7 @@
 			try
 			{
 				$result = $this->sentence("SET CHARACTER SET utf8");
-				$result = $this->sentence("SELECT pro.*, pro.DoctorId as proDoctorId, d.* FROM ProceduresDoctor as pro INNER JOIN Doctors as d ON d.DoctorId=pro.DoctorId INNER JOIN PlanClients as pl ON pl.DoctorId = d.DoctorId WHERE pl.status = 'Active' AND pro.CategoryId = $this->CategoryId");
+				$result = $this->sentence("SELECT pro.*, pro.DoctorId as proDoctorId, d.* FROM ProceduresDoctor as pro INNER JOIN Doctors as d ON d.DoctorId=pro.DoctorId INNER JOIN PlanClients as pl ON pl.DoctorId = d.DoctorId WHERE d.PlanId != 9 AND pl.status = 'Active' AND pro.SubCategoryId = $this->CategoryId");
 
 				return $result;
 			}

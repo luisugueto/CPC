@@ -1,3 +1,9 @@
+.bootstrap-tagsinput .label-info {
+    background-color: #0059a5 !important;
+    display: inline-block;
+    padding: 5px;
+}
+
 .dish-photo {
 	background-color: #0059a5;
 }

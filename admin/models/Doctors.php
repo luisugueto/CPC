@@ -306,7 +306,7 @@
 			{
 				$begin = ($page - 1) * $num;
 				$result = $this->sentence("SET CHARACTER SET utf8");
-				$result = $this->sentence("SELECT *	FROM Doctors as d INNER JOIN PlanClients as pl ON pl.DoctorId = d.DoctorId ORDER BY Name ASC LIMIT $begin, $num");
+				$result = $this->sentence("SELECT *, (SELECT COUNT(*) FROM CalificationDoctors WHERE DoctorId = d.DoctorId) AS TotalCalifications FROM Doctors as d INNER JOIN PlanClients as pl ON pl.DoctorId = d.DoctorId WHERE d.PlanId != 9 AND pl.Status = 'Active' ORDER BY TotalCalifications DESC LIMIT $begin, $num");
 
 				return $result;
 			}
@@ -375,6 +375,22 @@
 				echo $e;
 			}
 		}
+		
+		public function ListDoctorsNamePlanFree()
+		{
+			try
+			{
+				$result = $this->sentence("SET CHARACTER SET utf8");
+				$result = $this->sentence("SELECT Name as DoctorName, SubTitle, PlanId FROM Doctors WHERE PlanId = 9 ORDER BY Name ASC
+										");
+
+				return $result;
+			}
+			catch(Exception $e)
+			{
+				echo $e;
+			}
+		}
 
 		public function existsDoctor()
 		{
@@ -400,7 +416,39 @@
 			{
 				$result = $this->sentence("SET CHARACTER SET utf8");
 				$result = $this->sentence("SELECT dr.Name as DoctorName, dr.SubTitle, pl.DoctorId as plDoctorId, pl.* FROM Doctors as dr INNER JOIN PlanClients as pl ON pl.DoctorId = dr.DoctorId WHERE pl.status = 'Active' ORDER BY Name ASC
-										");
+					");
+
+				return $result;
+			}
+			catch(Exception $e)
+			{
+				echo $e;
+			}
+		}
+
+		public function ListDoctorsSearchFree()
+		{
+			try
+			{
+				$result = $this->sentence("SET CHARACTER SET utf8");
+				$result = $this->sentence("SELECT dr.Name as DoctorName, dr.SubTitle FROM Doctors as dr WHERE dr.PlanId = 9 ORDER BY Name ASC
+					");
+
+				return $result;
+			}
+			catch(Exception $e)
+			{
+				echo $e;
+			}
+		}
+
+		public function ListDoctorsSearch()
+		{
+			try
+			{
+				$result = $this->sentence("SET CHARACTER SET utf8");
+				$result = $this->sentence("SELECT dr.Name as DoctorName, dr.SubTitle, pl.DoctorId as plDoctorId, pl.* FROM Doctors as dr INNER JOIN PlanClients as pl ON pl.DoctorId = dr.DoctorId WHERE pl.Status = 'Active' ORDER BY Name ASC
+					");
 
 				return $result;
 			}
@@ -414,14 +462,23 @@
 		{
 			try
 			{
-				$sql = "UPDATE Doctors SET Name = $this->Name, SubTitle = $this->SubTitle, PlanId = '$this->PlanId', Email = $this->Email, Code = $this->Code
-										WHERE DoctorId = $this->DoctorId";
+				$sql = "UPDATE Doctors SET Name = $this->Name, SubTitle = $this->SubTitle, PlanId = '$this->PlanId', Email = $this->Email
+										WHERE DoctorId = $this->DoctorId"; 
 
 				$result = $this->sentence("SET CHARACTER SET utf8");
 				$result = $this->sentence($sql);
 
-				return "exito";
+				$query = $result->rowCount() ? true : false;
+				if($query)
+				{
+					return "exito";
+				}
+				else
+				{
+					return "fallo";
+				}
 			}
+
 			catch(Exception $e)
 			{
 				echo $e;
@@ -433,7 +490,7 @@
 		{
 			try
 			{
-				$sql = "UPDATE Doctors SET Description = $this->Description
+				$sql = "UPDATE Doctors SET Description = '$this->Description'
 										WHERE DoctorId = $this->DoctorId";
 
 				$result = $this->sentence("SET CHARACTER SET utf8");

@@ -52,7 +52,7 @@
 
 	$articles = new Articles();
 	$listArticles = $articles->GetAllArticles($page, $articlesByPage, $tomorrow);
-	$totalArticles = $articles->GetTotalArticles();
+	$totalArticles = $articles->GetTotalArticles($tomorrow);
 
 	$total = $totalArticles->fetch(PDO::FETCH_ASSOC);
 	$totalPages = ceil($total["Total"] / $articlesByPage);
@@ -90,23 +90,6 @@
 			</script>";
 		}
 	}
-
-	$doctorss = $doctor->ListDoctorsName();
-	$arrayDoctors = array();
-
-	while($Doctor = $doctorss->fetch(PDO::FETCH_ASSOC)){
-		$arrayDoctors[$Doctor['DoctorName']." -".$Doctor['SubTitle']. " - [Doctor] - ".$Doctor['DoctorId'].""] = null;
-	}
-	$jsonDoctors = json_encode($arrayDoctors);
-
-	$proceduress = $procedures->ListProceduresName();
-	$arrayProcedures = array();
-
-	while($Procedures = $categoriesList->fetch(PDO::FETCH_ASSOC)){
-		$arrayProcedures[$Procedures['Name']." - ".$Procedures['CategoryId']." - [Procedimiento]"] = null;
-	}
-	$jsonProcedures = json_encode($arrayProcedures);
-	$arrayMerge = array_merge($arrayDoctors, $arrayProcedures);
 ?>
 
 	<!-- Contenido -->
@@ -131,8 +114,6 @@
 						{
 							$content = 'medicos';
 							$id = $Doctor["DoctorId"];
-							$name = '<strong>Médico No.'.$id.'</strong> ('.$Doctor['Name'].')';
-							$dataList = $data->GetDataforDoctor($id);
 							$logo = ($Doctor['Logo'] != '') ? 'admin/img/doctors/'.$Doctor['Logo'] : 'images/placeholder.jpg';
 
 							if ($count_doctors == 0)

@@ -44,6 +44,11 @@
 			$this->Comment = $value;
 		}
 
+		public function setDateComment($value)
+		{
+			$this->DateComment = $value;
+		}
+
 		public function setStatus($value)
 		{
 			$this->Status = $value;
@@ -85,6 +90,11 @@
 			return $this->Comment;
 		}
 
+		public function getDateComment()
+		{
+			return $this->DateComment;
+		}
+
 		public function getStatus()
 		{
 			return $this->Status;
@@ -107,10 +117,40 @@
 				}
 				else{
 					$sql = "INSERT INTO CalificationDoctors
-					(DoctorId, NameUser, CountStars, Email, Comment, DateComment, Status)
+					(DoctorId, NameUser, CountStars, Email, Comment, DateComment, Status, StatusDoctor)
 					VALUES
-					($this->DoctorId, $this->NameUser, $this->CountStars, $this->Email, $this->Comment, NOW(), 'Inactive')";
+					($this->DoctorId, $this->NameUser, $this->CountStars, $this->Email, $this->Comment, NOW(), 'Inactive', 'Inactive')";
 				}
+
+				$result = $this->sentence("SET CHARACTER SET utf8");
+				$result = $this->sentence($sql);
+
+				if($result->rowCount() > 0)
+				{
+					return "exito";
+				}
+				else
+				{
+					return "fallo";
+				}
+
+			}
+
+			catch(Exception $e)
+			{
+				echo $e;
+				return false;
+			}
+		}
+
+		public function InsertCalificationDoctor()
+		{
+			try
+			{
+				$sql = "INSERT INTO CalificationDoctors
+				(DoctorId, NameUser, CountStars, Email, Comment, DateComment, Status, StatusDoctor)
+				VALUES
+				($this->DoctorId, '$this->NameUser', $this->CountStars, '$this->Email', '$this->Comment', '$this->DateComment', '$this->Status', '$this->StatusDoctor')";
 
 				$result = $this->sentence("SET CHARACTER SET utf8");
 				$result = $this->sentence($sql);
@@ -173,7 +213,7 @@
 		{
 			try
 			{
-				$sql = "SELECT CD.*, D.* FROM CalificationDoctors CD INNER JOIN Doctors D ON D.DoctorId = CD.DoctorID ORDER BY CD.CalificationDoctorId DESC LIMIT 5";
+				$sql = "SELECT CD.*, D.*, PC.* FROM CalificationDoctors CD INNER JOIN Doctors D ON D.DoctorId = CD.DoctorID LEFT JOIN PlanClients PC ON PC.DoctorId = CD.DoctorId WHERE PC.Status = 'Active' ORDER BY CD.CalificationDoctorId DESC LIMIT 5";
 
 				$result = $this->sentence("SET CHARACTER SET utf8");
 				$result = $this->sentence($sql);
@@ -232,6 +272,78 @@
 			try
 			{
 				$sql = "SELECT * FROM CalificationDoctors WHERE DoctorId = $this->DoctorId";
+
+				$result = $this->sentence("SET CHARACTER SET utf8");
+				$result = $this->sentence($sql);
+
+				return $result;
+			}
+			catch(Exception $e)
+			{
+				echo $e;
+				return false;
+			}
+		}
+
+		public function GetCalificationsForDoctorCorreoAndCodigo()
+		{
+			try
+			{
+				$sql = "SELECT * FROM CalificationDoctors WHERE DoctorId = $this->DoctorId AND Status = 'Active' AND StatusDoctor = 'Active'";
+
+				$result = $this->sentence("SET CHARACTER SET utf8");
+				$result = $this->sentence($sql);
+
+				return $result;
+			}
+			catch(Exception $e)
+			{
+				echo $e;
+				return false;
+			}
+		}
+
+		public function GetCalificationsForDoctorCorreo()
+		{
+			try
+			{
+				$sql = "SELECT * FROM CalificationDoctors WHERE DoctorId = $this->DoctorId AND Status = 'Active' AND StatusDoctor = 'Inactive'";
+
+				$result = $this->sentence("SET CHARACTER SET utf8");
+				$result = $this->sentence($sql);
+
+				return $result;
+			}
+			catch(Exception $e)
+			{
+				echo $e;
+				return false;
+			}
+		}
+
+		public function GetCalificationsForDoctorCodigo()
+		{
+			try
+			{
+				$sql = "SELECT * FROM CalificationDoctors WHERE DoctorId = $this->DoctorId AND StatusDoctor = 'Active' AND Status = 'Inactive'";
+
+				$result = $this->sentence("SET CHARACTER SET utf8");
+				$result = $this->sentence($sql);
+
+				return $result;
+			}
+			catch(Exception $e)
+			{
+				echo $e;
+				return false;
+			}
+		}
+
+		public function GetCalificationsForDoctorNoVerificadas()
+		{
+			try
+			{
+				$sql = "SELECT * FROM CalificationDoctors WHERE DoctorId = $this->DoctorId AND StatusDoctor = 'Inactive' AND Status = 'Inactive'";
 
 				$result = $this->sentence("SET CHARACTER SET utf8");
 				$result = $this->sentence($sql);

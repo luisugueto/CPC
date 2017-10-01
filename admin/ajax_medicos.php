@@ -65,8 +65,8 @@
 
 						if ($_POST["hdGeneralAction"] == "description")
 						{
-							$doctors->setDescription(GetSQLValueString($_POST["txtDescription"], "text"));
-							echo json_encode($doctors->UpdateDoctorDescription());
+							$doctors->setDescription($_POST["txtDescription"]);
+							echo $doctors->UpdateDoctorDescription();
 							exit;
 						}
 					}
@@ -74,8 +74,7 @@
 					$doctors->setName(GetSQLValueString($_POST["txtName"], "text"));
 					$doctors->setSubTitle(GetSQLValueString($_POST["txtSubTitle"], "text"));
 					$doctors->setPlanId($_POST["txtPlan"]);
-					$doctors->setEmail(GetSQLValueString($_POST["txtEmail"], "text"));
-					$doctors->setCode(GetSQLValueString($_POST["txtCode"], "text"));
+					$doctors->setEmail(GetSQLValueString($_POST["txtEmail"], "text")); 
 
 					if($doctors->UpdateDoctor() == 'exito')
 					{
@@ -257,6 +256,7 @@
 ?>
 <script src="custom.js"></script>
 <script src="functions.js"></script>
+<script src="js/ckeditor/ckeditor.js"></script>
 
 <div class="modal-dialog modal-lg">
     <div class="modal-content">
@@ -267,7 +267,7 @@
       <div id="modal-result" class="modal-body">
         <div class="row">
             <div class="col-md-12">
-                <form class="form-horizontal group-border-dashed" action="#" id="modalForm" data-parsley-validate novalidat>
+                <form class="form-horizontal group-border-dashed" action="#" id="modalDescriptionDoctor" data-parsley-validate novalidat>
                     <input type="hidden" name="action" value="submit" />
                     <input type="hidden" name="DoctorId" value="<?php echo $registro['DoctorId']; ?>" />
 										<div class="deleted"></div>
@@ -280,17 +280,17 @@
 										<div class="form-group">
                         <label class="col-sm-3 control-label">Descripción</label>
                         <div class="col-sm-6">
-                            <textarea name="txtDescription" class="form-control" parsley-trigger="change" required placeholder=""><?php echo $registro['Description'];?></textarea>
+                            <textarea id="ckEditorText" class="ckeditor" parsley-trigger="change" required placeholder=""><?php echo $registro['Description'];?></textarea>
                         </div>
                     </div>
-										<input type="hidden" name="hdGeneralAction" value="<?= $_POST['action'] ?>">
+										<input type="hidden" name="hdGeneralAction" id="hdGeneralAction" value="<?= $_POST['action'] ?>">
                 </form>
             </div>
         </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-inverse btn-custom waves-effect waves-light" data-dismiss="modal" aria-label="Close"><i class="fa fa-undo m-r-5"></i> <span>Cancelar</span></button>
-        <button id="submitButton" class="btn btn-default waves-effect waves-light" disabled="disabled" onclick="submitModalForm('medicos');"> <i class="fa fa-check m-r-5"></i> <span>ok</span> </button>
+        <button id="submitDoctorDescription" class="btn btn-default waves-effect waves-light btn-danger"><i class="fa fa-save m-r-5"></i> <span>Guardar</span></button>
       </div>
     </div>
 </div>
@@ -483,8 +483,8 @@
 										<hr>
 										<div class="form-group">
                         <label class="col-sm-3 control-label">Código</label>
-                        <div class="col-sm-6">
-                            <input name="txtCode" type="text" pattern='^\d{4}$' maxlength="4" class="form-control" parsley-trigger="change" required placeholder="" value="<?= $registro['Code'];?>"/>
+                        <div class="col-sm-6" align="center">
+													<?= $registro['Code'];?>
                         </div>
                     </div>
                 </form>
@@ -760,7 +760,7 @@ function addSubCategorie(id){
 										<div class="form-group">
 												<label class="col-sm-3 control-label">Código</label>
 												<div class="col-sm-6">
-													<input name="txtCode" type="text" pattern='^\d{4}$' maxlength="4" class="form-control" parsley-trigger="change" required placeholder="" value="<?= $registro['Code'];?>"/>
+													<input name="txtCode" disabled="disabled" type="text" pattern='^\d{4}$' maxlength="4" class="form-control" parsley-trigger="change" placeholder="" value="<?= $registro['Code'];?>"/>
 												</div>
 										</div>
 

@@ -245,8 +245,8 @@
 					// 
 					
 					$mail = new PHPMailer;
-					$mail->setFrom('info@pixelgrafia.com', 'Información Pixelgrafía');
-					$mail->addReplyTo('info@pixelgrafia.com', 'Información Pixelgrafía');
+					$mail->setFrom('info@cirugiaplasticacolombia.com', 'Cirugía Plástica Colombia');
+					$mail->addReplyTo('info@cirugiaplasticacolombia.com', 'Cirugía Plástica Colombia');
 
 					$address = $_POST['txtEmail'];
 					$mail->addAddress($address);
@@ -255,8 +255,287 @@
 					$mail->CharSet = 'UTF-8';
 
 					$mail->Subject = "Validación de comentario en Cirugía Plástica Colombia";
-					$msg = "La url para validar el comentario en Cirugía Plástica Colombia es: http://" . $_SERVER['HTTP_HOST']."/?validationComment=".$codeCalification."-".$id."";
-					$mail->Body = $msg;
+
+					$mail->Body = '
+						<html>
+							<head>
+							<meta name="viewport" content="width=device-width" />
+							<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+							<title>Cirugía Plástica Colombia</title>
+							<style>
+								img {
+								border: none;
+								-ms-interpolation-mode: bicubic;
+								max-width: 100%; }
+								body {
+								background-color: #f6f6f6;
+								font-family: sans-serif;
+								-webkit-font-smoothing: antialiased;
+								font-size: 14px;
+								line-height: 1.4;
+								margin: 0;
+								padding: 0;
+								-ms-text-size-adjust: 100%;
+								-webkit-text-size-adjust: 100%; }
+								table {
+								border-collapse: separate;
+								mso-table-lspace: 0pt;
+								mso-table-rspace: 0pt;
+								width: 100%; }
+								table td {
+									font-family: sans-serif;
+									font-size: 14px;
+									vertical-align: top; }
+								.body {
+								background-color: #f6f6f6;
+								width: 100%; }
+								.container {
+								display: block;
+								Margin: 0 auto !important;
+								max-width: 580px;
+								padding: 10px;
+								width: 580px; }
+								.content {
+								box-sizing: border-box;
+								display: block;
+								Margin: 0 auto;
+								max-width: 580px;
+								padding: 10px; }
+								.main {
+								background: #ffffff;
+								border-radius: 3px;
+								width: 100%; }
+								.wrapper {
+								box-sizing: border-box;
+								padding: 20px; }
+								.content-block {
+								padding-bottom: 10px;
+								padding-top: 10px;
+								}
+								.footer {
+								clear: both;
+								Margin-top: 10px;
+								text-align: center;
+								width: 100%; }
+								.footer td,
+								.footer p,
+								.footer span,
+								.footer a {
+									color: #999999;
+									font-size: 12px;
+									text-align: center; }
+								h1,
+								h2,
+								h3,
+								h4 {
+								color: #000000;
+								font-family: sans-serif;
+								font-weight: 400;
+								line-height: 1.4;
+								margin: 0;
+								Margin-bottom: 30px; }
+								h1 {
+								font-size: 35px;
+								font-weight: 300;
+								text-align: center;
+								text-transform: capitalize; }
+								p,
+								ul,
+								ol {
+								font-family: sans-serif;
+								font-size: 14px;
+								font-weight: normal;
+								margin: 0;
+								Margin-bottom: 15px; }
+								p li,
+								ul li,
+								ol li {
+									list-style-position: inside;
+									margin-left: 5px; }
+								a {
+								color: #3498db;
+								text-decoration: underline; }
+								.btn {
+								box-sizing: border-box;
+								width: 100%; }
+								.btn > tbody > tr > td {
+									padding-bottom: 15px; }
+								.btn table {
+									width: auto; }
+								.btn table td {
+									background-color: #ffffff;
+									border-radius: 5px;
+									text-align: center; }
+								.btn a {
+									background-color: #ffffff;
+									border: solid 1px #3498db;
+									border-radius: 5px;
+									box-sizing: border-box;
+									color: #3498db;
+									cursor: pointer;
+									display: inline-block;
+									font-size: 14px;
+									font-weight: bold;
+									margin: 0;
+									padding: 12px 25px;
+									text-decoration: none;
+									text-transform: capitalize; }
+								.btn-primary table td {
+								background-color: #3498db; }
+								.btn-primary a {
+								background-color: #3498db;
+								border-color: #3498db;
+								color: #ffffff; }
+								.last {
+								margin-bottom: 0; }
+								.first {
+								margin-top: 0; }
+								.align-center {
+								text-align: center; }
+								.align-right {
+								text-align: right; }
+								.align-left {
+								text-align: left; }
+								.clear {
+								clear: both; }
+								.mt0 {
+								margin-top: 0; }
+								.mb0 {
+								margin-bottom: 0; }
+								.preheader {
+								color: transparent;
+								display: none;
+								height: 0;
+								max-height: 0;
+								max-width: 0;
+								opacity: 0;
+								overflow: hidden;
+								mso-hide: all;
+								visibility: hidden;
+								width: 0; }
+								.powered-by a {
+								text-decoration: none; }
+								hr {
+								border: 0;
+								border-bottom: 1px solid #f6f6f6;
+								Margin: 20px 0; }
+								@media only screen and (max-width: 620px) {
+								table[class=body] h1 {
+									font-size: 28px !important;
+									margin-bottom: 10px !important; }
+								table[class=body] p,
+								table[class=body] ul,
+								table[class=body] ol,
+								table[class=body] td,
+								table[class=body] span,
+								table[class=body] a {
+									font-size: 16px !important; }
+								table[class=body] .wrapper,
+								table[class=body] .article {
+									padding: 10px !important; }
+								table[class=body] .content {
+									padding: 0 !important; }
+								table[class=body] .container {
+									padding: 0 !important;
+									width: 100% !important; }
+								table[class=body] .main {
+									border-left-width: 0 !important;
+									border-radius: 0 !important;
+									border-right-width: 0 !important; }
+								table[class=body] .btn table {
+									width: 100% !important; }
+								table[class=body] .btn a {
+									width: 100% !important; }
+								table[class=body] .img-responsive {
+									height: auto !important;
+									max-width: 100% !important;
+									width: auto !important; }}
+								@media all {
+								.ExternalClass {
+									width: 100%; }
+								.ExternalClass,
+								.ExternalClass p,
+								.ExternalClass span,
+								.ExternalClass font,
+								.ExternalClass td,
+								.ExternalClass div {
+									line-height: 100%; }
+								.apple-link a {
+									color: inherit !important;
+									font-family: inherit !important;
+									font-size: inherit !important;
+									font-weight: inherit !important;
+									line-height: inherit !important;
+									text-decoration: none !important; }
+								.btn-primary table td:hover {
+									background-color: #34495e !important; }
+								.btn-primary a:hover {
+									background-color: #34495e !important;
+									border-color: #34495e !important; } }
+							</style>
+							</head>
+							<body class="">
+							<table border="0" cellpadding="0" cellspacing="0" class="body">
+								<tr>
+								<td>&nbsp;</td>
+								<td class="container">
+									<div class="content">
+									<table class="main">
+										<tr>
+										<td class="wrapper">
+											<table border="0" cellpadding="0" cellspacing="0">
+											<tr>
+												<td>
+												<p><img src="http://cirugiaplasticacolombia.com/images/logo.png" width="50%"></p>
+												<p>Hola '.$_POST["txtName"].',</p>
+												<p>En el siguiente enlace podrás validar tu comentario</p>
+												<table border="0" cellpadding="0" cellspacing="0" class="btn btn-primary">
+													<tbody>
+													<tr>
+														<td align="left">
+														<table border="0" cellpadding="0" cellspacing="0">
+															<tbody>
+															<tr>
+																<td> <a href="http://'.$_SERVER['HTTP_HOST'].'/?validationComment='.$codeCalification.'-'.$id.'" target="_blank">Validar comentario</a> </td>
+															</tr>
+															</tbody>
+														</table>
+														</td>
+													</tr>
+													</tbody>
+												</table>
+												<p>Si no funciona el botón, prueba copiando y pegando el siguiente enlace en el navegador: http://'.$_SERVER['HTTP_HOST'].'/?validationComment='.$codeCalification.'-'.$id.'</p>
+												<p>Buena suerte!</p>
+												</td>
+											</tr>
+											</table>
+										</td>
+										</tr>
+									</table>
+									<div class="footer">
+										<table border="0" cellpadding="0" cellspacing="0">
+										<tr>
+											<td class="content-block">
+											<span class="apple-link">Cirugía Plástica Colombia '.date("Y").' &copy;</span>
+											<br>
+											Estás recibiendo este correo a la dirección '.$address.' porque está relacionada con el portal. Si recibiste este mensaje por equivocación puedes ignorarlo.
+											</td>
+										</tr>
+										<tr>
+											<td class="content-block powered-by">
+											¿Necesitas Ayuda? <a href="http://doopla.co">Doopla Marketing</a>
+											</td>
+										</tr>
+										</table>
+									</div>
+									</div>
+								</td>
+								<td>&nbsp;</td>
+								</tr>
+							</table>
+							</body>
+						</html>
+					';
 
 					if(!$mail->send())
 					{	
@@ -325,6 +604,9 @@
 
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
+			<div class="close-modal" onclick="closePrincipalModal()">
+				<i class="material-icons">close</i>
+			</div>
 			<div class="modal-header">
 				<h4>Califica a: <span style="color:#0059a5"><?= $registro['Name'] ?></span></h4>
 			</div>
@@ -335,46 +617,46 @@
 
 							<input type="hidden" name="action" value="submit" />
 							<input type="hidden" name="DoctorId" value="<?php echo $registro['DoctorId']; ?>" />
-							<input type="hidden" name="txtCalification" id="calification" value="0">
+							<input type="hidden" name="txtCalification" id="calification" value="5">
 
 							<div class="form-group">
-								<label class="col-sm-3 control-label">Cantidad de Estrellas</label>
+								<label class="col-sm-3 control-label">Cantidad de Estrellas:</label>
 								<div class="col-sm-6">
 									<div class="stars-form" style="color:#ffa101">
-										<i class="material-icons" style="cursor:pointer;" id="star-1" onclick="setStars(1)">star_border</i>
-										<i class="material-icons" style="cursor:pointer;" id="star-2" onclick="setStars(2)">star_border</i>
-										<i class="material-icons" style="cursor:pointer;" id="star-3" onclick="setStars(3)">star_border</i>
-										<i class="material-icons" style="cursor:pointer;" id="star-4" onclick="setStars(4)">star_border</i>
-										<i class="material-icons" style="cursor:pointer;" id="star-5" onclick="setStars(5)">star_border</i>
+										<i class="material-icons" style="cursor:pointer;" id="star-1" onclick="setStars(1)">star</i>
+										<i class="material-icons" style="cursor:pointer;" id="star-2" onclick="setStars(2)">star</i>
+										<i class="material-icons" style="cursor:pointer;" id="star-3" onclick="setStars(3)">star</i>
+										<i class="material-icons" style="cursor:pointer;" id="star-4" onclick="setStars(4)">star</i>
+										<i class="material-icons" style="cursor:pointer;" id="star-5" onclick="setStars(5)">star</i>
 									</div>
 								</div>
 							</div>
 
 							<div class="form-group">
-								<label class="col-sm-3 control-label">Nombre Completo</label>
+								<label class="col-sm-3 control-label">Nombre Completo:</label>
 								<div class="col-sm-6">
 									<input name="txtName" type="text" class="form-control" parsley-trigger="change" required placeholder=""/>
 								</div>
 							</div>
 
 							<div class="form-group">
-								<label class="col-sm-3 control-label">Correo</label>
+								<label class="col-sm-3 control-label">Correo Electrónico:</label>
 								<div class="col-sm-6">
 									<input name="txtEmail" type="email" class="form-control" parsley-trigger="change" required placeholder=""/>
 								</div>
 							</div>
 
 							<div class="form-group">
-								<label class="col-sm-3 control-label">Comentario</label>
+								<label class="col-sm-3 control-label">Comentario:</label>
 								<div class="col-sm-6">
 									<input name="txtComment" type="text" class="form-control" parsley-trigger="change" required placeholder=""/>
 								</div>
 							</div>
 
 							<div class="form-group">
-								<label class="col-sm-3 control-label">Código Doctor</label>
+								<label class="col-sm-3 control-label">Código Doctor:</label>
 								<div class="col-sm-6">
-									<input autocomplete="off" id="cod" maxlength="4" type="text" class="form-control" parsley-trigger="change" onkeyup="verifyCode()" onpaste="return false;" placeholder="" value="<?= $get_code ?>"/>
+									<input autocomplete="off" id="cod" maxlength="4" type="text" class="form-control" parsley-trigger="change" onkeyup="verifyCode()" onpaste="return false;" placeholder="Si no posee el código, puede omitir este campo" value="<?= $get_code ?>"/>
 									<span id="verifyCode"></span>
 								</div>
 							</div>
@@ -383,12 +665,12 @@
 							<div class="form-group" id="addFoto"></div>
 							<br>
 
-							<div class="form-group" id="addVideo"></div>
-							<br>
+							<!--<div class="form-group" id="addVideo"></div>
+							<br>-->
 
 							<div class="form-group">
 								<a href="javascript:void(0)" onclick="agregarFoto()" class="btn btn-success waves-effect waves-light btn-sm" style="background-color:#0059a5">Agregar Foto</a>
-								<?php
+								<?php/*
 									if (!$client->getAccessToken())
 									{
 										$state = mt_rand();
@@ -404,7 +686,7 @@
 									?>
 										<a href="javascript:void(0)" id="video" onclick="agregarVideo()" class="btn btn-success waves-effect waves-light btn-sm" style="background-color:#00A5E1">Agregar Video</a>
 									<?php
-									}
+									}*/
 								?>
 							</div>
 						</form>

@@ -37,27 +37,6 @@
 	$categoriesList = $categories->ListCategories();
 	$categoriesListt = $categories->ListCategories();
 
-	$doctorss = $doctor->ListDoctorsName();
-	$arrayDoctors = array();
-
-	while($Doctor = $doctorss->fetch(PDO::FETCH_ASSOC))
-	{
-		$arrayDoctors[$Doctor['DoctorName']." -".$Doctor['SubTitle']. " - [Doctor] - ".$Doctor['DoctorId'].""] = null;
-	}
-
-	$jsonDoctors = json_encode($arrayDoctors);
-
-	$proceduress = $procedures->ListProceduresName();
-	$arrayProcedures = array();
-
-	while($Procedures = $categoriesListt->fetch(PDO::FETCH_ASSOC))
-	{
-		$arrayProcedures[$Procedures['Name']." - ".$Procedures['CategoryId']." - [Procedimiento]"] = null;
-	}
-
-	$jsonProcedures = json_encode($arrayProcedures);
-	$arrayMerge = array_merge($arrayDoctors, $arrayProcedures);
-
 	$meta_title = $content['Name']." :: Procedimientos - Cirugía Plástica Colombia";
 	$meta_desc  = $content['Name'];
 

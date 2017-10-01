@@ -4,6 +4,13 @@ body {
 	background-color: #fdfdfd;
 }
 
+hr {
+	margin-top: 20px;
+    margin-bottom: 20px;
+    border: 0;
+    border-top: 1px solid #ccc;
+}
+
 .loader {
 	position: fixed;
 	top: 0;
@@ -370,6 +377,7 @@ nav .button-collapse {
 	font-size: 18px;
 	font-weight: bold;
 	margin-bottom: 8px;
+	color: #333;
 }
 
 .card-dr-address {
@@ -422,7 +430,9 @@ hr.card-dr {
 
 .page-footer {
     padding-top: 20px;
-    background-color: #003366;
+    background-color: #002952;
+	border-top: 1px solid #ededed;
+	color: #fff;
 }
 
 .social-floating {
@@ -478,12 +488,11 @@ hr.card-dr {
 }
 
 .date .month {
-	font-size: 12px;
+	font-size: 9px;
 	line-height: 18px;
 	padding-bottom: 2px;
 	background-color: #00a5dd;
 	color: #fff;
-	font-weight: 100;
 }
 
 .date.pull-left {
@@ -507,7 +516,8 @@ hr.card-dr {
 }
 
 .footer-copyright {
-	background-color: rgb(0,41,82) !important;
+	background-color: #fff !important;
+	color: #333 !important;
 }
 
 .tabs {
@@ -572,6 +582,26 @@ hr.card-dr {
 .content-tab-profile {
 	padding: 10px 15px !important;
     background-color: #f1eded;
+}
+
+.content-tab-profile ul,li {
+	list-style: initial !important;
+}
+
+.content-tab-profile ul {
+	padding-left: 40px !important;
+}
+
+.card-content ul,li {
+	list-style: initial !important;
+}
+
+.card-content ul {
+	padding-left: 40px !important;
+}
+
+footer ul,li {
+	list-style: none !important;
 }
 
 .inner {
@@ -670,6 +700,19 @@ hr.card-dr {
 #bar-one {
 	width: 0;
 	background-color: #FF8B5A;
+}
+
+.close-modal {
+	position: absolute;
+	right: 10px;
+	cursor: pointer;
+	top: 10px;
+}
+
+.close-modal i {
+	background-color: rgba(204, 204, 204, 0.7);
+    border-radius: 50%;
+    padding: 4px;
 }
 
 /** ====================
@@ -844,13 +887,16 @@ span.new.verified {
 
 .comment-link {
 	float: right;
-	margin: 0 10px;
-	position: relative;
-	top: 6px;
-	color: #44a4d8;
+    margin: 0 10px;
+    position: relative;
+    top: 2px;
+    color: #fff;
     font-weight: bold;
     text-transform: uppercase;
     font-size: 10px;
+    background-color: #0059a5;
+    padding: 4px 10px;
+    border-radius: 3px;
 }
 
 .comment-box .comment-head i.reply {
@@ -906,6 +952,33 @@ span.badge.new:after {
 	position: relative;top: -3px;display: inline;font-size: 10px;font-weight: bold;
 }
 
+.parsley-required {
+	color: #f44336;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 30px;
+    margin-top: -20px;
+}
+
+footer a {
+	font-size: 16px;
+	color: #fff !important;
+}
+
+footer a:hover {
+	color: #039be5 !important;
+}
+
+.modal .modal-footer {
+	padding: 0px !important;
+	text-align: right;
+}
+
+.modal .modal-footer .btn, .modal .modal-footer .btn-large, .modal .modal-footer .btn-flat {
+    float: none !important;
+    margin: 6px 0;
+}
+
 @media only screen and (min-width: 993px) {
 	.container {
 		width: 90%;
@@ -925,6 +998,35 @@ span.badge.new:after {
 		margin-bottom: 30px;
 	}
 
+	.close-modal {
+		position: absolute;
+		right: 5px;
+		cursor: pointer;
+		top: 5px;
+	}
+	
+	.close-modal i {
+		background-color: rgba(204, 204, 204, 0.7);
+		border-radius: 50%;
+		padding: 4px;
+		font-size: 18px;
+	}
+
+	.modal-header h4 {
+		font-size: 17px !important;
+	}
+
+	.modal .modal-footer {
+		padding: 0px !important;
+		text-align: left;
+	}
+
+	.modal .modal-footer .btn, .modal .modal-footer .btn-large, .modal .modal-footer .btn-flat {
+		float: none !important;
+		margin: 6px 0;
+		width:100%;
+	}
+
 	.profile-btn {
 		height: 25px;
 		margin-top: 4px;
@@ -937,6 +1039,7 @@ span.badge.new:after {
 
 	.container.responsive-w {
 		width: 100% !important;
+		padding: 0 20px;
 	}
 
 	.inner {
@@ -1037,5 +1140,15 @@ span.badge.new:after {
 
 	.comment-gallery-indicators .num-indicator {
 		font-size: 7px;
+	}
+
+	.profile-doctor {
+		width: 100%;
+		height: 280px;
+		background-size: cover;
+		background-position: center;
+		float: none;
+		margin: 0 auto;
+		margin-bottom: 20px;
 	}
 }
